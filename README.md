@@ -21,42 +21,38 @@
   - Which color would you like to use as the base color?     || Chọn màu mặc định cho project
 
 ## Project Architecture: 
-my-ecommerce-app/
-│
-├── public/
-│   ├── images/
-│   └── favicon.ico
-│
-├── src/
-│   ├── components/
-│   │   ├── common/
-│   │   │   ├── Header.js
-│   │   │   ├── Footer.js
-│   │   │   ├── Button.js
-│   │   │   └── Card.js
-│   │   ├── layout/
-│   │   │   └── Layout.js
-│   │   └── products/
-│   │       ├── ProductList.js
-│   │       └── ProductDetail.js
-│   ├── pages/
-│   │   ├── api/
-│   │   │   └── products.js
-│   │   ├── index.js
-│   │   ├── products/
-│   │   │   ├── index.js
-│   │   │   └── [id].js
-│   │   └── cart.js
-│   ├── styles/
-│   │   ├── globals.css
-│   │   ├── Home.module.css
-│   │   └── Product.module.css
-│   ├── utils/
-│   │   ├── api.js
-│   │   └── helpers.js
-│   └── context/
-│       └── CartContext.js
-│
-├── next.config.js
-├── package.json
-└── README.md
+```
+/agri-ecommerce-app
+│── /public              # Chứa ảnh, favicon, file tĩnh
+│── /src                 # Tách mã nguồn (Best practice)
+│   ├── /app             # (Nếu dùng App Router - Next.js 13+)
+│   │   ├── layout.tsx   # Layout chung
+│   │   ├── page.tsx     # Trang chính (Home)
+│   │   ├── /dashboard   # Trang quản trị
+│   │   │   ├── page.tsx
+│   │   │   ├── layout.tsx
+│   │   └── /products    # Trang sản phẩm
+│   │       ├── page.tsx
+│   │       ├── [id].tsx # Chi tiết sản phẩm (dynamic route)
+│   ├── /components      # Component UI có thể tái sử dụng
+│   │   ├── Button.tsx
+│   │   ├── Navbar.tsx
+│   │   ├── Footer.tsx
+│   ├── /hooks           # Custom Hooks (useAuth, useCart)
+│   ├── /lib             # Chứa file logic như API, helpers
+│   │   ├── api.ts       # Gọi API từ server
+│   │   ├── auth.ts      # Xử lý xác thực
+│   ├── /providers       # Context API, Zustand hoặc Redux Providers
+│   ├── /styles         # Chứa file CSS/Tailwind
+│   │   ├── globals.css  # Styles toàn cục
+│   ├── /utils           # Hàm tiện ích chung (formatDate, debounce)
+│   ├── /config          # Biến môi trường, config constants
+│   ├── /types           # Định nghĩa TypeScript types
+│   ├── /services        # Gọi API từ backend (axios, fetch)
+│   ├── /store           # Quản lý trạng thái (Redux/Zustand)
+│── /node_modules        # Thư viện npm
+│── .env                 # Biến môi trường
+│── next.config.js       # Cấu hình Next.js
+│── package.json         # Khai báo dependencies
+│── tsconfig.json        # Cấu hình TypeScript
+```
