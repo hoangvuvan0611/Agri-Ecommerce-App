@@ -1,106 +1,110 @@
+import React from 'react';
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { ShoppingCart, Heart } from "lucide-react";
+import { Heart, ShoppingCart } from "lucide-react";
 
-interface Product {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-}
-
-const products: Product[] = [
-  {
-    id: "1",
-    name: "Nho xanh",
-    price: 320000,
-    image: "/fruits/grape.png",
-  },
-  {
-    id: "2", 
-    name: "Đào",
-    price: 180000,
-    image: "/fruits/peach.png",
-  },
-  // Thêm các sản phẩm khác
+const products = [
+  { id: 1, name: 'Nho xanh', price: 250000, image: '/api/placeholder/200/200' },
+  { id: 2, name: 'Đào', price: 180000, image: '/api/placeholder/200/200' },
+  { id: 3, name: 'Chanh dây', price: 120000, image: '/api/placeholder/200/200' },
+  { id: 4, name: 'Chuối', price: 80000, image: '/api/placeholder/200/200' },
+  { id: 5, name: 'Dưa leo', price: 45000, image: '/api/placeholder/200/200' },
+  { id: 6, name: 'Ớt', price: 35000, image: '/api/placeholder/200/200' },
+  { id: 7, name: 'Dừa', price: 40000, image: '/api/placeholder/200/200' },
+  { id: 8, name: 'Bông cải', price: 65000, image: '/api/placeholder/200/200' },
+  { id: 9, name: 'Cà chua', price: 55000, image: '/api/placeholder/200/200' },
+  { id: 10, name: 'Lựu', price: 150000, image: '/api/placeholder/200/200' },
 ];
 
-export default function HomePage() {
+const FruitStorePage = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-white">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <div className="flex items-center space-x-4">
-            <h1 className="text-xl font-bold text-green-600">Meta Fruit</h1>
-            <nav className="hidden md:flex space-x-4">
-              <a href="#" className="text-sm font-medium">Trang chủ</a>
-              <a href="#" className="text-sm font-medium">Sản phẩm</a>
-              <a href="#" className="text-sm font-medium">Giới thiệu</a>
-            </nav>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="icon">
-              <Heart className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <ShoppingCart className="h-5 w-5" />
-            </Button>
-          </div>
-        </div>
-      </header>
-
+    <div className="container mx-auto px-4">
       {/* Hero Section */}
-      <section className="relative">
-        <div className="container mx-auto px-4 py-12 grid md:grid-cols-2 gap-8 items-center">
-          <div>
-            <h2 className="text-4xl font-bold mb-4">
-              Trang trại thực phẩm tươi sạch & 100% hữu cơ
-            </h2>
-            <p className="text-gray-600 mb-6">
-              Chúng tôi cung cấp những sản phẩm hữu cơ tốt nhất
-            </p>
-            <Button className="bg-green-600 hover:bg-green-700">
-              Xem ngay
-            </Button>
-          </div>
-          <div className="relative h-96 bg-gray-100 rounded-lg">
-            {/* Add hero image here */}
-          </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
+        <div className="bg-white p-8 rounded-lg">
+          <h1 className="text-3xl font-bold mb-4">Trang trại Thực phẩm<br />tươi sạch & 100% Hữu cơ</h1>
+          <Button className="bg-green-600 hover:bg-green-700">Mua Ngay</Button>
         </div>
-      </section>
+        <div className="bg-orange-300 p-8 rounded-lg text-white">
+          <h2 className="text-2xl font-bold">30% SALE OFF</h2>
+          <p>Spring Fresh Deal</p>
+          <Button variant="outline" className="mt-4 text-white border-white hover:bg-white hover:text-orange-300">
+            Mua Ngay
+          </Button>
+        </div>
+      </div>
 
-      {/* Products Grid */}
-      <section className="container mx-auto px-4 py-12">
-        <h3 className="text-2xl font-bold mb-8">Sản phẩm chất lượng</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {products.map((product) => (
-            <Card key={product.id} className="overflow-hidden">
-              <div className="relative aspect-square">
-                {/* Add product image here */}
+      {/* Features */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-8">
+        {['Tươi sạch', 'Hữu cơ', 'Chất lượng', 'Tự nhiên'].map((feature) => (
+          <div key={feature} className="flex items-center gap-2">
+            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+              <div className="w-6 h-6 bg-green-600 rounded-full" />
+            </div>
+            <span className="font-medium">{feature}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Product Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        {products.map((product) => (
+          <Card key={product.id} className="group">
+            <CardContent className="p-4">
+              <div className="relative">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-full h-48 object-cover rounded-lg"
+                />
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <Heart className="w-5 h-5" />
+                </Button>
               </div>
-              <div className="p-4">
-                <h4 className="font-medium">{product.name}</h4>
-                <p className="text-sm text-gray-600">
-                  {new Intl.NumberFormat('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND'
-                  }).format(product.price)}
-                </p>
-                <div className="mt-4 flex items-center justify-between">
-                  <Button size="sm" variant="outline">
-                    Thêm vào giỏ
-                  </Button>
-                  <Button size="icon" variant="ghost">
-                    <Heart className="h-4 w-4" />
-                  </Button>
-                </div>
+              <h3 className="mt-2 font-medium">{product.name}</h3>
+              <div className="flex items-center justify-between mt-2">
+                <span className="font-bold">{product.price.toLocaleString()}đ</span>
+                <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Thêm
+                </Button>
               </div>
-            </Card>
-          ))}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Promo Banner */}
+      <div className="bg-gray-100 p-4 rounded-lg my-8 text-center">
+        <h3 className="text-xl font-bold">20% OFF</h3>
+        <p>Rau quả bảo bảo cơ</p>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-gray-800 text-white p-6 mt-6">
+        <div className="flex flex-col md:flex-row justify-between">
+          <div>
+            <h4 className="font-bold mb-2">MonaFruit</h4>
+            <p>107/23 Cách Mạng Tháng 8, Q.10, TP.HCM</p>
+            <p>(+84) 093-787-387</p>
+            <p>info@monna.global</p>
+          </div>
+          <div>
+            <h4 className="font-bold mb-2">Liên kết</h4>
+            <ul className="space-y-2">
+              <li>Chính sách giao hàng</li>
+              <li>Chính sách bảo mật</li>
+              <li>Chính sách hoàn trả</li>
+            </ul>
+          </div>
         </div>
-      </section>
+      </footer>
     </div>
   );
-}
+};
+
+export default FruitStorePage;
