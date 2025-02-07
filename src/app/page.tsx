@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, ShoppingCart } from "lucide-react";
+import { Header } from '@/components/layout/header';
 
 const products = [
   { id: 1, name: 'Nho xanh', price: 250000, image: '/api/placeholder/200/200' },
@@ -19,6 +20,9 @@ const products = [
 const FruitStorePage = () => {
   return (
     <div className="container mx-auto px-4">
+      {/* Header */}
+      <Header/>
+
       {/* Hero Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
         <div className="bg-white p-8 rounded-lg">
