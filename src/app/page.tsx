@@ -17,7 +17,7 @@ const products = [
   { id: 10, name: 'Lựu', price: 150000, image: '/api/placeholder/200/200' },
 ];
 
-const FruitStorePage = () => {
+export default function FruitStorePage () {
   return (
     <div className="container mx-auto px-4">
       {/* Header */}
@@ -110,5 +110,3 @@ const FruitStorePage = () => {
     </div>
   );
 };
-
-export default FruitStorePage;

@@ -11,3 +11,7 @@ export const REF_ABOUT = "/about-us";
 export const REF_PRODUCT = "/product";
 export const REF_NEWS = "/news";
 export const REF_CONTACT = "/contact-us";
+
+// Meta data
+export const TITLE = "Dora Agri";
+export const DESCRIPTION = "Chợ nông sản sạch & thuần hữu cơ"
