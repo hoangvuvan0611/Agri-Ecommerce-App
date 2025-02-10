@@ -1,0 +1,16 @@
+.header {
+    transition: height 0.3s ease-in-out;
+}
+
+.header.shrink {
+    height: 50px; /* Chiều cao thu gọn của header */
+}
+
+.navbar {
+    transition: opacity 0.3s ease-in-out;
+}
+
+.navbar.hidden {
+    opacity: 0;
+    pointer-events: none;
+}

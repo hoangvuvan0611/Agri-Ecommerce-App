@@ -19,9 +19,11 @@ const products = [
 
 export default function FruitStorePage () {
   return (
-    <div className="container mx-auto px-4">
+    <div className="container relative mx-auto px-4">
       {/* Header */}
-      <Header/>
+      <div className='sticky top-0 bg-white z-99'>
+        <Header/>
+      </div>
 
       {/* Hero Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">

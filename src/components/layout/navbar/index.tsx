@@ -1,5 +1,6 @@
 import { PAGE_ABOUT, PAGE_CONTACT, PAGE_HOME, PAGE_NEWS, PAGE_PRODUCT, REF_ABOUT, REF_CONTACT, REF_HOME, REF_NEWS, REF_PRODUCT } from "@/lib/constants";
-import { NavigationType } from "../navbar/type";
+import { NavigationType } from "./type";
+import { List } from "lucide-react";
 
 const navigation: NavigationType[] = [
     { id: 1, name: PAGE_HOME, href: REF_HOME},
@@ -11,15 +12,22 @@ const navigation: NavigationType[] = [
 
 export function Navbar() {
     return (
-        <nav>
-            {navigation.map((item: NavigationType) => (
-                <a
-                    href={item.href}
-                    key={item.id}
-                >
-                    {item.name}
-                </a>
-            ))}
-        </nav>
+        <div className="container flex mx-auto items-center space-x-6">
+            <div className="flex items-center space-x-2 bg-lime-600 text-white px-3 py-1.5 rounded-t-lg">
+                <List size={20}/>
+                <span className="text-sm">Danh mục sản phẩm</span>
+            </div>
+            <nav className="flex space-x-4">
+                {navigation.map((item: NavigationType) => (
+                    <a
+                        href={item.href}
+                        key={item.id}
+                        className="text-sm"
+                    >
+                        {item.name}
+                    </a>
+                ))}
+            </nav>
+        </div>
     );
 };
