@@ -15,7 +15,7 @@ export function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 100);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -40,7 +40,7 @@ export function Header() {
               type="text"
               className="pl-8 w-52 md:w-[700px] border focus:outline-none focus:ring-0 focus:border-none"
             />
-            <Button className="absolute right-0 top-0 bg-green-600 hover:bg-green-700">
+            <Button className="absolute right-0 top-0 bg-lime-600 hover:bg-lime-700">
               Tìm kiếm
             </Button>
           </div>
@@ -63,9 +63,9 @@ export function Header() {
               </div>
             ) : (
               <div className="flex space-x-0.5 justify-between items-center cursor-pointer">
-                <a href="/login" className="block px-1 py-2 text-gray-800 hover:text-green-400">Đăng nhập</a>
+                <a href="/login" className="block px-1 py-2 text-gray-800 hover:text-lime-400">Đăng nhập</a>
                 <p>|</p>
-                <a href="/register" className="block px-1 py-2 text-gray-800 hover:text-green-400">Đăng ký</a>
+                <a href="/register" className="block px-1 py-2 text-gray-800 hover:text-lime-400">Đăng ký</a>
               </div>
             )}
           </div>

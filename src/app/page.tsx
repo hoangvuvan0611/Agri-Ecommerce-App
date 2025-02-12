@@ -21,7 +21,7 @@ export default function FruitStorePage () {
   return (
     <div className="container relative mx-auto px-4">
       {/* Header */}
-      <div className='sticky top-0 bg-white z-99'>
+      <div className='sticky top-0 bg-white z-50'>
         <Header/>
       </div>
 
@@ -29,7 +29,7 @@ export default function FruitStorePage () {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
         <div className="bg-white p-8 rounded-lg">
           <h1 className="text-3xl font-bold mb-4">Trang trại Thực phẩm<br />tươi sạch & 100% Hữu cơ</h1>
-          <Button className="bg-green-600 hover:bg-green-700">Mua Ngay</Button>
+          <Button className="bg-lime-600 hover:bg-lime-700">Mua Ngay</Button>
         </div>
         <div className="bg-orange-300 p-8 rounded-lg text-white">
           <h2 className="text-2xl font-bold">30% SALE OFF</h2>
@@ -45,7 +45,7 @@ export default function FruitStorePage () {
         {['Tươi sạch', 'Hữu cơ', 'Chất lượng', 'Tự nhiên'].map((feature) => (
           <div key={feature} className="flex items-center gap-2">
             <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-              <div className="w-6 h-6 bg-green-600 rounded-full" />
+              <div className="w-6 h-6 bg-lime-600 rounded-full" />
             </div>
             <span className="font-medium">{feature}</span>
           </div>
@@ -57,7 +57,7 @@ export default function FruitStorePage () {
         {products.map((product) => (
           <Card key={product.id} className="group">
             <CardContent className="p-4">
-              <div className="relative">
+              <div className="relative z-0">
                 <img
                   src={product.image}
                   alt={product.name}
