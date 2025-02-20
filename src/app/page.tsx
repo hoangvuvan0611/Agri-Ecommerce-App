@@ -19,14 +19,11 @@ const products = [
 
 export default function FruitStorePage () {
   return (
-    <div className="container relative mx-auto px-4">
-      {/* Header */}
-      <div className='sticky top-0 bg-white z-50'>
-        <Header/>
-      </div>
-
+    <div className="container mx-auto px-4">
       {/* Hero Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8 bg-cover bg-center p-4"
+        style={{ backgroundImage: 'url(/hero/organic2-slider-bg-1.jpg)' }}
+      >
         <div className="bg-white p-8 rounded-lg">
           <h1 className="text-3xl font-bold mb-4">Trang trại Thực phẩm<br />tươi sạch & 100% Hữu cơ</h1>
           <Button className="bg-lime-600 hover:bg-lime-700">Mua Ngay</Button>

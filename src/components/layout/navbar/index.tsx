@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { List } from "lucide-react";
 import { PAGE_ABOUT, PAGE_CONTACT, PAGE_HOME, PAGE_NEWS, PAGE_PRODUCT, REF_ABOUT, REF_CONTACT, REF_HOME, REF_NEWS, REF_PRODUCT } from "@/lib/constants";
 import { NavigationType } from "./type";
@@ -27,6 +27,11 @@ const categories = [
 
 export function Navbar() {
     const [isHovered, setIsHovered] = useState(false);
+    const [path, setPath] = useState('');
+
+    useEffect(() => {
+        setPath(window.location.pathname);
+    }, []);
 
     return (
         <div className="container mx-auto relative">
@@ -55,8 +60,11 @@ export function Navbar() {
                                 <a
                                     key={category.id}
                                     href="#"
-                                    className={`flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 transition-all duration-200 ${
-                                        isHovered
+                                    className={`
+                                        flex items-center space-x-3 px-4 py-2 text-gray-700 
+                                        hover:bg-lime-600 transition-all duration-100 
+                                        hover:text-white
+                                        ${isHovered
                                         ? 'opacity-100 translate-y-0'
                                         : 'opacity-0 -translate-y-2'
                                     }`}
@@ -65,7 +73,7 @@ export function Navbar() {
                                     }}
                                 >
                                     <span className="text-lg">{category.icon}</span>
-                                    <span className="text-sm">{category.name}</span>
+                                    <span className="text-sm ">{category.name}</span>
                                 </a>
                             ))}
                         </div>
@@ -78,7 +86,12 @@ export function Navbar() {
                         <a
                             href={item.href}
                             key={item.id}
-                            className="text-sm text-gray-700 hover:text-lime-600"
+                            className={`text-sm text-gray-700 hover:text-lime-600 relative
+                                ${path === item.href 
+                                    ? "after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-black" 
+                                    : "after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-1/2 after:h-0.5 after:bg-lime-600 after:transform after:scale-x-0 hover:after:scale-x-[2] after:transition-transform after:duration-300 after:ease-out after:origin-left"
+                                }`
+                            }
                         >
                             {item.name}
                         </a>
