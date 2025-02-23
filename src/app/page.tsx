@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, ShoppingCart } from "lucide-react";
 import { Header } from '@/components/layout/header';
+import HeroSection from '@/components/layout/hero';
 
 const products = [
   { id: 1, name: 'Nho xanh', price: 250000, image: '/api/placeholder/200/200' },
@@ -21,21 +22,7 @@ export default function FruitStorePage () {
   return (
     <div className="container mx-auto px-4">
       {/* Hero Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8 bg-cover bg-center p-4"
-        style={{ backgroundImage: 'url(/hero/organic2-slider-bg-1.jpg)' }}
-      >
-        <div className="bg-white p-8 rounded-lg">
-          <h1 className="text-3xl font-bold mb-4">Trang trại Thực phẩm<br />tươi sạch & 100% Hữu cơ</h1>
-          <Button className="bg-lime-600 hover:bg-lime-700">Mua Ngay</Button>
-        </div>
-        <div className="bg-orange-300 p-8 rounded-lg text-white">
-          <h2 className="text-2xl font-bold">30% SALE OFF</h2>
-          <p>Spring Fresh Deal</p>
-          <Button variant="outline" className="mt-4 text-white border-white hover:bg-white hover:text-orange-300">
-            Mua Ngay
-          </Button>
-        </div>
-      </div>
+      <HeroSection/>
 
       {/* Features */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 my-8">
