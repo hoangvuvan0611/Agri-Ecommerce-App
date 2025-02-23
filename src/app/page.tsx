@@ -2,9 +2,9 @@ import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Heart, ShoppingCart } from "lucide-react";
-import { Header } from '@/components/layout/header';
 import HeroSection from '@/components/layout/hero';
-import Features from '@/components/common/features';
+import Features from './page/features';
+import ProductsIntro from './page/products';
 
 const products = [
   { id: 1, name: 'Nho xanh', price: 250000, image: '/api/placeholder/200/200' },
@@ -29,45 +29,16 @@ export default function FruitStorePage () {
         {/* Features */}
         <Features/>
 
-        {/* Product Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          {products.map((product) => (
-            <Card key={product.id} className="group">
-              <CardContent className="p-4">
-                <div className="relative z-0">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-48 object-cover rounded-lg"
-                  />
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <Heart className="w-5 h-5" />
-                  </Button>
-                </div>
-                <h3 className="mt-2 font-medium">{product.name}</h3>
-                <div className="flex items-center justify-between mt-2">
-                  <span className="font-bold">{product.price.toLocaleString()}đ</span>
-                  <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                    <ShoppingCart className="w-4 h-4 mr-2" />
-                    Thêm
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <ProductsIntro image={'/images/organic-product-banner-intro-1.png'} products={products} title={"Sản phẩm chất lượng"}/>
 
         {/* Promo Banner */}
         <div className="bg-gray-100 p-4 rounded-lg my-8 text-center">
           <h3 className="text-xl font-bold">20% OFF</h3>
           <p>Rau quả bảo bảo cơ</p>
         </div>
-      </section>
 
+        <ProductsIntro image={'/images/organic-product-banner-intro-2.png'} products={products} title={"Khuyến mãi"}/>
+      </section>
     </div>
   );
 };

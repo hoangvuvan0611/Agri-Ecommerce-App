@@ -36,11 +36,11 @@ export default function Features() {
                     {/* Container cho phần ảnh */}
                     <div className="relative w-40 h-40 flex items-center justify-center">
                         {/* Box shadow container */}
-                        <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center relative"
-                             style={{ boxShadow: "0 0 15px 0px #DDDDDD" }}>
+                        <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center relative shadow-lg"
+                             style={{ boxShadow: "0 0 10px 1px #CCCCCC" }}>
                             {/* Vòng tròn xanh quay */}
                             <div className="absolute inset-0 border-2 border-dashed border-green-500 rounded-full 
-                                        group hover:animate-[spin_8s_linear_infinite] hover:border-2 transition-all duration-700"
+                                group hover:animate-[spin_8s_linear_infinite] hover:border-2 transition-all duration-700"
                             >
                             </div>
                             {/* Ảnh */}
