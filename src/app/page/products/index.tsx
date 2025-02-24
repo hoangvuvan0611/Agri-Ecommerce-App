@@ -18,14 +18,14 @@ export default function ProductsIntro ({image, products, title, titleBgBanner, s
     return (
         <div className="mt-20">
             <h2 className="text-2xl font-bold text-gray-600">{title}</h2>
-            <div className="grid grid-cols-12 gap-4 h-[750px] py-[30px]">
+            <div className="grid grid-cols-12 gap-4 h-[770px] py-[30px]">
                 <div className="col-span-3 relative bg-cover bg-center rounded-xl p-10">
                     {/* Background image */}
                     <div className="absolute inset-0 -z-10"> 
                         <Image
                             src={image}
                             alt="Organic Farm"  
-                            height={720}
+                            height={700}
                             width={360}
                             objectFit="cover"   // Chỉnh ảnh vừa khít với khung
                             objectPosition="center" // Vị trí ảnh trong khung
