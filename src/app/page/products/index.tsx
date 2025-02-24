@@ -3,14 +3,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Heart, ShoppingCart } from "lucide-react";
 import { ProductType } from "./type";
 import Image from "next/image";
+import React from "react";
 
 interface ProductsProps {
     image: string;
     products: ProductType[];
     title: string;
+    titleBgBanner?: string;
+    styleTitleBg?: React.CSSProperties; 
 }
 
-export default function ProductsIntro ({image, products, title }: ProductsProps) {
+export default function ProductsIntro ({image, products, title, titleBgBanner, styleTitleBg }: ProductsProps) {
 
 
     return (
@@ -32,8 +35,8 @@ export default function ProductsIntro ({image, products, title }: ProductsProps)
                             className="rounded-md"
                         />
                     </div>
-                    <div className="text-white text-2xl">
-                        Nông sản <br/> tự nhiên <br/> mỗi ngày
+                    <div className="" style={styleTitleBg}>
+                        {titleBgBanner}
                     </div>
                     <Button className="bg-white hover:bg-lime-600 hover:text-white text-black mt-4">Mua ngay</Button>
                 </div>
@@ -43,10 +46,15 @@ export default function ProductsIntro ({image, products, title }: ProductsProps)
                             <Card key={product.id} className="group">
                                 <CardContent className="p-4">
                                     <div className="relative z-0">
-                                    <img
+                                    <Image
                                         src={product.image}
                                         alt={product.name}
-                                        className="w-full h-48 object-cover rounded-lg"
+                                        width={200}
+                                        height={200}
+                                        objectFit="cover"
+                                        objectPosition="center"
+                                        quality={100}
+                                        className="rounded-md"
                                     />
                                     <Button
                                         size="icon"
