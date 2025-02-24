@@ -3,6 +3,7 @@ import HeroSection from '@/components/layout/hero';
 import Features from './page/features';
 import ProductsIntro from './page/products';
 import BannerImage from '@/components/common/bannerImage';
+import BannerElement from '@/components/common/bannerElement';
 
 const products = [
   { id: 1, name: 'Nho xanh', price: 250000, image: '/images/product-test.png' },
@@ -19,7 +20,7 @@ const products = [
 
 export default function FruitStorePage () {
   return (
-    <div className="">
+    <div className="mx-10">
       {/* Hero Section */}
       <HeroSection/>
 
@@ -48,10 +49,12 @@ export default function FruitStorePage () {
         <ProductsIntro 
           image={'/images/organic-product-banner-intro-2.png'} 
           products={products} 
-          title={"Khuyến mãi"}
+          title={"Bán chạy"}
           titleBgBanner={"Thực phẩm sạch bán chạy"}
           styleTitleBg={{color: 'black', fontSize: '1.6rem', fontWeight: 'lighter', width: '150px'}}
         />
+
+        <BannerElement/>
       </section>
     </div>
   );

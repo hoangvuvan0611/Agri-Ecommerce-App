@@ -39,7 +39,7 @@ export default function HeroSection () {
 
             <div className="container grid grid-cols-12 h-[450]">
                 {/* Left */}
-                <div className="col-span-8 bg-transparent relative">
+                <div className="col-span-8 bg-transparent relative h-[450]">
                     <AnimatePresence initial={true}>
                         <motion.img
                             key={currentImage}
@@ -62,7 +62,7 @@ export default function HeroSection () {
                 </div>
 
                 {/* Right */}
-                <div className="col-span-4 bg-orange-300 p-8 rounded-e-xl text-white group overflow-hidden relative">
+                <div className="col-span-4 h-[450] bg-orange-300 p-8 rounded-e-xl text-white group overflow-hidden relative">
                     {/* Layer background có hiệu ứng zoom */}
                     <div 
                         // absolute inset-0 : Đặt background phủ toàn bộ thẻ div cha

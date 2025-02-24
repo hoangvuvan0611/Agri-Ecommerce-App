@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Heart, ShoppingCart } from "lucide-react";
+import { Eye, Heart, ShoppingCart } from "lucide-react";
 import { ProductType } from "./type";
 import Image from "next/image";
 import React from "react";
@@ -17,7 +16,7 @@ export default function ProductsIntro ({image, products, title, titleBgBanner, s
 
 
     return (
-        <div className="my-20">
+        <div className="mt-20">
             <h2 className="text-2xl font-bold text-gray-600">{title}</h2>
             <div className="grid grid-cols-12 gap-4 h-[750px] py-[30px]">
                 <div className="col-span-3 relative bg-cover bg-center rounded-xl p-10">
@@ -43,37 +42,50 @@ export default function ProductsIntro ({image, products, title, titleBgBanner, s
                 <div className="col-span-9">
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                         {products.map((product: ProductType) => (
-                            <Card key={product.id} className="group">
-                                <CardContent className="p-4">
-                                    <div className="relative z-0">
-                                    <Image
-                                        src={product.image}
-                                        alt={product.name}
-                                        width={200}
-                                        height={200}
-                                        objectFit="cover"
-                                        objectPosition="center"
-                                        quality={100}
-                                        className="rounded-md"
-                                    />
-                                    <Button
-                                        size="icon"
-                                        variant="ghost"
-                                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                                    >
-                                        <Heart className="w-5 h-5" />
-                                    </Button>
+                            <div key={product.id} className="hover:shadow-lg rounded-xl">
+                                <div className="p-4">
+                                    <div className="group relative overflow-hidden rounded-md">
+                                        {/* Ảnh và hiệu ứng zoom */}
+                                        <div className="relative w-full h-48">
+                                            <Image
+                                                src={product.image}
+                                                alt={product.name}
+                                                layout="fill"
+                                                objectFit="cover"
+                                                objectPosition="center"
+                                                quality={100}
+                                                className="transition-transform duration-1000 ease-in-out group-hover:scale-125"
+                                            />
+                                        </div>
+
+                                        {/* Nút yêu thích */}
+                                        <Button
+                                            title="Yêu thích"
+                                            size="icon"
+                                            variant="ghost"
+                                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                                        >
+                                            <Heart className="w-5 h-5" />
+                                        </Button>
+                                        <div 
+                                            title="Xem chi tiết"
+                                            className="absolute bottom-2 right-2 bg-white p-3 duration-150 rounded-md hover:bg-lime-600 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                        >
+                                            <Eye className="w-4 h-4" />
+                                        </div>
                                     </div>
+
+                                    {/* Thông tin sản phẩm */}
                                     <h3 className="mt-2 font-medium">{product.name}</h3>
                                     <div className="flex items-center justify-between mt-2">
-                                    <span className="font-bold">{product.price.toLocaleString()}đ</span>
-                                    <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                                        <ShoppingCart className="w-4 h-4 mr-2" />
-                                        Thêm
-                                    </Button>
+                                        <span className="">{product.price.toLocaleString()}đ</span>
+                                        <Button size="sm" className="bg-lime-600 hover:bg-lime-700">
+                                            <ShoppingCart className="w-4 h-4 mr-2" />
+                                            Thêm
+                                        </Button>
                                     </div>
-                                </CardContent>
-                            </Card>
+                                </div>
+                            </div>
                         ))}
                     </div>
                 </div>
