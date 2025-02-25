@@ -34,6 +34,7 @@ export default function FruitStorePage () {
           title={"Sản phẩm chất lượng"}
           titleBgBanner={"Trái cây tự nhiên mỗi này"}
           styleTitleBg={{color: 'white', fontSize: '1.7rem', fontWeight: 'lighter', width: '100px'}}
+          hasButton={true}
         />
 
         {/* Promo Banner */}
@@ -52,9 +53,19 @@ export default function FruitStorePage () {
           title={"Bán chạy"}
           titleBgBanner={"Thực phẩm sạch bán chạy"}
           styleTitleBg={{color: 'black', fontSize: '1.6rem', fontWeight: 'lighter', width: '150px'}}
+          hasButton={true}
         />
 
         <BannerElement/>
+
+        <ProductsIntro
+            image={'/images/organic-product-banner-intro-3.png'}
+            products={products}
+            title={"Khuyến mãi"}
+            titleBgBanner={""}
+            styleTitleBg={{color: 'black', fontSize: '1.6rem', fontWeight: 'lighter', width: '150px'}}
+            hasButton={false}
+        />
       </section>
     </div>
   );

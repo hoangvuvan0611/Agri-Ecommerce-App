@@ -29,7 +29,7 @@ export default function HeroSection () {
                 <Image
                     src={'/images/organic-slider-bg.webp'}
                     alt="Organic Farm"  
-                    layout="fill" // Fill the container
+                    fill
                     objectFit="cover"   // Chỉnh ảnh vừa khít với khung
                     objectPosition="center" // Vị trí ảnh trong khung
                     priority // Ưu tiên tải ảnh

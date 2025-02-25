@@ -9,10 +9,18 @@ interface ProductsProps {
     products: ProductType[];
     title: string;
     titleBgBanner?: string;
-    styleTitleBg?: React.CSSProperties; 
+    styleTitleBg?: React.CSSProperties;
+    hasButton: boolean;
 }
 
-export default function ProductsIntro ({image, products, title, titleBgBanner, styleTitleBg }: ProductsProps) {
+export default function ProductsIntro ({
+   image,
+   products,
+   title,
+   titleBgBanner,
+   styleTitleBg,
+   hasButton,
+}: ProductsProps) {
 
 
     return (
@@ -37,7 +45,7 @@ export default function ProductsIntro ({image, products, title, titleBgBanner, s
                     <div className="" style={styleTitleBg}>
                         {titleBgBanner}
                     </div>
-                    <Button className="bg-white hover:bg-lime-600 hover:text-white text-black mt-4">Mua ngay</Button>
+                    {hasButton && <Button className="bg-white hover:bg-lime-600 hover:text-white text-black mt-4">Mua ngay</Button>}
                 </div>
                 <div className="col-span-9">
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
