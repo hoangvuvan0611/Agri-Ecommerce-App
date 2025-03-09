@@ -37,13 +37,13 @@ export default function HeroSection () {
                 />
             </div>
 
-            <div className="container grid grid-cols-12 h-[450]">
+            <div className="container grid grid-cols-12 h-[450] min-h-[450px]">
                 {/* Left */}
-                <div className="col-span-8 bg-transparent relative h-[450]">
+                <div className="col-span-8 bg-transparent relative h-full">
                     <AnimatePresence initial={true}>
                         <motion.img
                             key={currentImage}
-                            className="absolute inset-0 bg-cover bg-center rounded-s-xl"
+                            className="absolute inset-0 bg-cover bg-center rounded-s-xl w-full h-full object-cover"
                             src={imageList[currentImage]}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -62,7 +62,7 @@ export default function HeroSection () {
                 </div>
 
                 {/* Right */}
-                <div className="col-span-4 h-[450] bg-orange-300 p-8 rounded-e-xl text-white group overflow-hidden relative">
+                <div className="col-span-4 h-full bg-orange-300 p-8 rounded-e-xl text-white group overflow-hidden relative">
                     {/* Layer background có hiệu ứng zoom */}
                     <div 
                         // absolute inset-0 : Đặt background phủ toàn bộ thẻ div cha

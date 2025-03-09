@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="2c728f3e-4746-4f2f-82f0-733de8fddef6" name="Changes" comment="rollback image">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/logo/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/logo/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +69,7 @@
       <workItem from="1740418091420" duration="172000" />
       <workItem from="1740442327034" duration="752000" />
       <workItem from="1740443103773" duration="36000" />
-      <workItem from="1740494624888" duration="2105000" />
+      <workItem from="1740494624888" duration="3944000" />
     </task>
     <task id="LOCAL-00001" summary="rollback image">
       <option name="closed" value="true" />
