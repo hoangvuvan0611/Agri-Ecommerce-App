@@ -88,8 +88,8 @@ export function Navbar() {
                             key={item.id}
                             className={`text-base font-bold text-gray-700 hover:text-lime-600 relative
                                 ${path === item.href 
-                                    ? "after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-black" 
-                                    : "after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-1/2 after:h-0.5 after:bg-lime-600 after:transform after:scale-x-0 hover:after:scale-x-[2] after:transition-transform after:duration-300 after:ease-out after:origin-left"
+                                    ? "after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-black after:rounded-xl" 
+                                    : "after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-1/2 after:h-0.5 after:bg-lime-600 after:transform after:scale-x-0 hover:after:scale-x-[2] after:transition-transform after:duration-300 after:ease-out after:origin-left after:rounded-xl"
                                 }`
                             }
                         >

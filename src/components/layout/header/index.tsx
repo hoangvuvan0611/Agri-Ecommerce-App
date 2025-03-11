@@ -80,7 +80,7 @@ export function Header() {
         </div>
       </div>
 
-      {/* Navbar with animation */}
+      {/* Navbar with animation: Thanh dieu huong cac page */}
       <div 
         className={`transition-all duration-300 ease-in-out ${
           isScrolled 

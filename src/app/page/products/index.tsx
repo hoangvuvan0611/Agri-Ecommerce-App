@@ -4,6 +4,7 @@ import { Eye, Heart, ShoppingCart } from "lucide-react";
 import { ProductType } from "./type";
 import Image from "next/image";
 import React from "react";
+import Link from "next/link";
 
 interface ProductsProps {
     image: string;
@@ -51,7 +52,7 @@ export default function ProductsIntro ({
                 <div className="col-span-9">
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                         {products.map((product: ProductType) => (
-                            <div key={product.id} className="hover:shadow-lg rounded-xl">
+                            <div key={product.id} className="hover:shadow-lg rounded-xl cursor-pointer">
                                 <div className="p-4">
                                     <div className="group relative overflow-hidden rounded-md">
                                         {/* Ảnh và hiệu ứng zoom */}
@@ -76,12 +77,17 @@ export default function ProductsIntro ({
                                         >
                                             <Heart className="w-5 h-5" />
                                         </Button>
-                                        <div 
-                                            title="Xem chi tiết"
-                                            className="absolute bottom-2 right-2 bg-white p-3 duration-150 rounded-md hover:bg-lime-600 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                        <Link 
+                                            href={`/san-pham/hoang-sanpah`} 
+                                            className="text-blue-500 hover:underline"
                                         >
-                                            <Eye className="w-4 h-4" />
-                                        </div>
+                                            <div 
+                                                title="Xem chi tiết"
+                                                className="absolute bottom-2 right-2 bg-white p-3 duration-150 rounded-md hover:bg-lime-600 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                <Eye className="w-4 h-4" />
+                                            </div>
+                                        </Link>
                                     </div>
 
                                     {/* Thông tin sản phẩm */}
