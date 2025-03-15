@@ -35,7 +35,7 @@ export function Header() {
   return (
     <header>
       {/* Main header content - always visible */}
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      <div className="flex h-16 items-center justify-between">
         <div className="flex justify-around space-x-16">
           {/* Logo app */}
           <Logo />

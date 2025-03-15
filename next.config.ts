@@ -9,6 +9,12 @@ const nextConfig: NextConfig = {
         port: '', // Nếu không có port, để trống
         pathname: '/wp-content/uploads/**', // Đường dẫn con của ảnh
       },
+      {
+        protocol: 'http', // Giao thức (http hoặc https)
+        hostname: '116.104.51.101', // Hostname của link ảnh
+        port: '8080', // Nếu không có port, để trống
+        pathname: '/**', // Đường dẫn con của ảnh
+      },
     ],
   },
 };

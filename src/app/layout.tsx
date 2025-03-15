@@ -26,12 +26,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased relative`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased relative min-h-screen flex flex-col`}>
         {/* Header */}
-        <div className='sticky top-0 bg-white z-50 mx-auto px-4'>
+        <div className='sticky top-0 bg-white z-50 container px-4'>
           <Header/>
         </div>
-        {children}
+        <div className="flex-grow">
+          {children}
+        </div>
         <div>
           <FooterSection/>
         </div>
