@@ -3,8 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Eye, Heart, ShoppingCart } from "lucide-react";
 import { ProductType } from "./type";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
+import AxiosInstance from "@/utils/axiosInstance";
 
 interface ProductsProps {
     image: string;
@@ -24,6 +25,18 @@ export default function ProductsIntro ({
    hasButton,
 }: ProductsProps) {
 
+    const [productList, setProductList] = React.useState<ProductType[]>();
+
+    useEffect(() => {
+        AxiosInstance.get('/api/v1/product/showInit')
+        .then((response) => {
+            console.log("Products fetched:", response.data);
+            setProductList(response.data);
+        })
+        .catch((error) => {
+            console.error("Error fetching products:", error);
+        });  
+    }, []);
 
     return (
         <div className="mt-20">
@@ -51,14 +64,14 @@ export default function ProductsIntro ({
                 </div>
                 <div className="col-span-9">
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                        {products.map((product: ProductType) => (
+                        {productList?.map((product: ProductType) => (
                             <div key={product.id} className="hover:shadow-lg rounded-xl cursor-pointer">
                                 <div className="p-4">
                                     <div className="group relative overflow-hidden rounded-md">
                                         {/* Ảnh và hiệu ứng zoom */}
                                         <div className="relative w-full h-48">
                                             <Image
-                                                src={product.image}
+                                                src={product.path}
                                                 alt={product.name}
                                                 layout="fill"
                                                 objectFit="cover"
