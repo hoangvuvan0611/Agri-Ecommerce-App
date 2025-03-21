@@ -4,4 +4,5 @@ export type ProductType = {
     originalPrice: number,
     path: string,
     uses: string,
+    slug: string,
 }

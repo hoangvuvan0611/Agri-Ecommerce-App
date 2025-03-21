@@ -11,6 +11,7 @@ interface ProductsProps {
     image: string;
     title: string;
     titleBgBanner?: string;
+    slug: string;
     styleTitleBg?: React.CSSProperties;
     hasButton: boolean;
     page: number;
@@ -105,7 +106,7 @@ export default function ProductsIntro ({
                                             <Heart className="w-5 h-5" />
                                         </Button>
                                         <Link 
-                                            href={`/san-pham/hoang-sanpah`} 
+                                            href={`/san-pham/${product?.slug}`} 
                                             className="text-blue-500 hover:underline"
                                         >
                                             <div 
