@@ -1,6 +1,6 @@
 'use client';
 import { useCart } from '@/contexts/CartContext';
-import { BaggageClaim, ShoppingBag, X } from 'lucide-react';
+import { BaggageClaim, X } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 
