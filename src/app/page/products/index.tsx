@@ -11,7 +11,6 @@ interface ProductsProps {
     image: string;
     title: string;
     titleBgBanner?: string;
-    slug: string;
     styleTitleBg?: React.CSSProperties;
     hasButton: boolean;
     page: number;

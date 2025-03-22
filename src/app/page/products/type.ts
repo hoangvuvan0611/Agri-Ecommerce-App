@@ -1,7 +1,8 @@
 export type ProductType = {
-    id: number,
+    id: string,
     name: string,
-    originalPrice: number,
+    originalPrice: number,    
+    salePrice: number,
     path: string,
     uses: string,
     slug: string,

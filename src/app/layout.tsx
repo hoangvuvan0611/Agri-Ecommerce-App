@@ -26,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased relative min-h-screen flex flex-col`}>
+      <body suppressHydrationWarning={true} className={`${geistSans.variable} ${geistMono.variable} antialiased relative min-h-screen flex flex-col`}>
         {/* Header */}
         <div className='sticky top-0 bg-white z-50 container px-4'>
           <Header/>
