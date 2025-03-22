@@ -82,10 +82,10 @@ export function Header() {
 
       {/* Navbar with animation: Thanh dieu huong cac page */}
       <div 
-        className={`transition-all duration-300 ease-in-out ${
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${
           isScrolled 
-            ? 'max-h-0 opacity-0' 
-            : 'max-h-16 opacity-100'
+            ? 'h-0 opacity-0 invisible' 
+            : 'h-16 opacity-100 visible'
         }`}
       >
         <Navbar/>

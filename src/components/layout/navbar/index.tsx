@@ -1,8 +1,10 @@
 'use client';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { List } from "lucide-react";
 import { PAGE_ABOUT, PAGE_CONTACT, PAGE_HOME, PAGE_NEWS, PAGE_PRODUCT, REF_ABOUT, REF_CONTACT, REF_HOME, REF_NEWS, REF_PRODUCT } from "@/lib/constants";
 import { NavigationType } from "./type";
+import Link from 'next/link';
 
 const navigation: NavigationType[] = [
     { id: 1, name: PAGE_HOME, href: REF_HOME},
@@ -27,11 +29,7 @@ const categories = [
 
 export function Navbar() {
     const [isHovered, setIsHovered] = useState(false);
-    const [path, setPath] = useState('');
-
-    useEffect(() => {
-        setPath(window.location.pathname);
-    }, []);
+    const pathname = usePathname();
 
     return (
         <div className="container mx-auto relative">
@@ -83,18 +81,18 @@ export function Navbar() {
                 {/* Navigation links */}
                 <nav className="flex space-x-4">
                     {navigation.map((item: NavigationType) => (
-                        <a
+                        <Link
                             href={item.href}
                             key={item.id}
                             className={`text-base font-bold text-gray-700 hover:text-lime-600 relative
-                                ${path === item.href 
+                                ${pathname === item.href || (pathname === '/' && item.href === '/') 
                                     ? "after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-black after:rounded-xl" 
                                     : "after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-1/2 after:h-0.5 after:bg-lime-600 after:transform after:scale-x-0 hover:after:scale-x-[2] after:transition-transform after:duration-300 after:ease-out after:origin-left after:rounded-xl"
                                 }`
                             }
                         >
                             {item.name}
-                        </a>
+                        </Link>
                     ))}
                 </nav>
             </div>

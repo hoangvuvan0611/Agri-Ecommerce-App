@@ -38,7 +38,6 @@ export default function ProductsIntro ({
                 }
             }
         ).then((response) => {
-            console.log(response.data);
             // Kiểm tra dữ liệu trả về có phải là mảng không
             if (Array.isArray(response.data.data)) {
                 setProductList(response.data.data);
@@ -81,7 +80,7 @@ export default function ProductsIntro ({
                         {productList && productList?.map((product: ProductType) => (
                             <div key={product.id} className="hover:shadow-lg rounded-xl cursor-pointer h-[340px]">
                                 <div className="p-4 h-full flex flex-col">
-                                    <div className="group relative overflow-hidden rounded-md h-48">
+                                    <Link href={`/san-pham/${product?.slug}`} className="group relative overflow-hidden rounded-md h-48">
                                         {/* Ảnh và hiệu ứng zoom */}
                                         <div className="relative w-full h-48">
                                             <Image
@@ -104,18 +103,15 @@ export default function ProductsIntro ({
                                         >
                                             <Heart className="w-5 h-5" />
                                         </Button>
-                                        <Link 
-                                            href={`/san-pham/${product?.slug}`} 
-                                            className="text-blue-500 hover:underline"
+                                        
+                                        {/* Thay thế Link bằng button hoặc div */}
+                                        <div 
+                                            title="Xem chi tiết"
+                                            className="absolute bottom-2 right-2 bg-white p-3 duration-150 rounded-md hover:bg-lime-600 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
                                         >
-                                            <div 
-                                                title="Xem chi tiết"
-                                                className="absolute bottom-2 right-2 bg-white p-3 duration-150 rounded-md hover:bg-lime-600 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
-                                            >
-                                                <Eye className="w-4 h-4" />
-                                            </div>
-                                        </Link>
-                                    </div>
+                                            <Eye className="w-4 h-4" />
+                                        </div>
+                                    </Link>
 
                                     {/* Thông tin sản phẩm */}
                                     <div className="flex flex-col flex-1 justify-between">

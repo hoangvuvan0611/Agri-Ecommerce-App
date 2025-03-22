@@ -10,16 +10,6 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import Link from 'next/link';
 
-// Hàm này chạy ở server-side
-async function getProduct(slug: string) {
-  // Gọi database hoặc API để lấy thông tin sản phẩm
-  const res = await fetch(`${process.env.API_URL}/api/products/${slug}`, { next: { revalidate: 60 } });
-  
-  if (!res.ok) return null;
-  
-  return res.json();
-}
-
 export default function ProductPage() {
 
   const { slug } = useParams();
@@ -159,20 +149,25 @@ export default function ProductPage() {
                 key={index}
                 className='p-2'
               >
-                <div className='group cursor-pointer bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200'>
-                  <div className='relative aspect-square'>
-                    <Image
-                      src={`http://116.104.51.101:8080/agri-shop/${item?.path}`}
-                      alt={`Related Product ${index}`}
-                      fill
-                      className='object-cover group-hover:scale-105 transition-transform duration-300'
-                    />
+                <Link href={`/san-pham/${item?.slug}`}>
+                  <div className='group cursor-pointer bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200'>
+                    <div className='relative aspect-square'>
+                      <Image
+                        src={`http://116.104.51.101:8080/agri-shop/${item?.path}`}
+                        alt={`Related Product ${index}`}
+                        fill
+                        className='object-cover group-hover:scale-105 transition-transform duration-300'
+                      />
+                    </div>
+                    <div className='p-3'>
+                      <h3 className='font-semibold text-gray-800 mb-2 text-sm truncate'>{item?.name}</h3>
+                      <div className='flex items-center justify-between'>
+                        <p className='text-green-600 font-bold text-sm'>{item?.originalPrice?.toLocaleString('vi-VN')}₫</p>
+                        <button className='text-lime-600 text-sm border-2 border-gray-300 rounded-lg px-3 py-1 hover:bg-lime-600 hover:text-white transition-colors duration-200'>Mua ngay</button>
+                      </div>
+                    </div>
                   </div>
-                  <div className='p-3'>
-                    <h3 className='font-semibold text-gray-800 mb-2 text-sm truncate'>{item?.name}</h3>
-                    <p className='text-green-600 font-bold text-sm'>{item?.originalPrice?.toLocaleString('vi-VN')}₫</p>
-                  </div>
-                </div>
+                </Link>
               </SwiperSlide>
             ))}
           </Swiper>
