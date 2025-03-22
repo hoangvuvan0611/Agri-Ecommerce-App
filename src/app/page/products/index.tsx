@@ -6,6 +6,8 @@ import Image from "next/image";
 import React, { useEffect } from "react";
 import Link from "next/link";
 import AxiosInstance from "@/utils/axiosInstance";
+import { useCart } from '@/contexts/CartContext';
+import { toast } from 'sonner';
 
 interface ProductsProps {
     image: string;
@@ -28,6 +30,7 @@ export default function ProductsIntro ({
 }: ProductsProps) {
 
     const [productList, setProductList] = React.useState<ProductType[]>([]);
+    const { addToCart } = useCart();
 
     useEffect(() => {
         AxiosInstance.get('/api/v1/product/showInit', 
@@ -50,6 +53,11 @@ export default function ProductsIntro ({
             setProductList([]); // Đặt về mảng rỗng khi có lỗi
         });  
     }, []);
+
+    const handleAddToCart = (product: ProductType) => {
+        addToCart(product);
+        toast.success('Đã thêm sản phẩm vào giỏ hàng');
+    };
 
     return (
         <div className="mt-20">
@@ -121,8 +129,17 @@ export default function ProductsIntro ({
                                             {product.name}
                                         </h3>
                                         <div className="flex items-center justify-between mt-0">
-                                            <span className="text-sm font-semibold">{product?.originalPrice?.toLocaleString()}đ</span>
-                                            <Button size="sm" className="bg-lime-600 hover:bg-lime-700">
+                                            <span className="text-sm font-semibold">
+                                                {product?.originalPrice?.toLocaleString()}đ
+                                            </span>
+                                            <Button 
+                                                size="sm" 
+                                                className="bg-lime-600 hover:bg-lime-700"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    handleAddToCart(product);
+                                                }}
+                                            >
                                                 <ShoppingCart className="w-4 h-4 mr-2" />
                                                 Thêm
                                             </Button>

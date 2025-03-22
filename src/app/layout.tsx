@@ -4,6 +4,8 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import FooterSection from "@/components/layout/footer/footer";
+import { CartProvider } from '@/contexts/CartContext';
+import { Toaster } from 'sonner';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,16 +36,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body suppressHydrationWarning={true} className={`${geistSans.variable} ${geistMono.variable} ${roboto.variable} antialiased relative min-h-screen flex flex-col`}>
-        {/* Header */}
-        <div className='sticky top-0 bg-white z-50 container px-4'>
-          <Header/>
-        </div>
-        <div className="flex-grow">
-          {children}
-        </div>
-        <div>
-          <FooterSection/>
-        </div>
+        <CartProvider>
+          <Toaster position="top-right" />
+          {/* Header */}
+          <div className='sticky top-0 bg-white z-50 container px-4'>
+            <Header/>
+          </div>
+          <div className="flex-grow">
+            {children}
+          </div>
+          <div>
+            <FooterSection/>
+          </div>
+        </CartProvider>
       </body>
     </html>
   );

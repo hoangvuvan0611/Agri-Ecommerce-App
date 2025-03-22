@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Logo } from "@/components/logo";
 import { Navbar } from "../navbar";
 import { useEffect, useState } from "react";
+import { CartDropdown } from '@/components/cart/CartDropdown';
 
 export function Header() {
   const [isLogin, setIsLogin] = useState(false);
@@ -56,9 +57,7 @@ export function Header() {
 
         {/* control place */}
         <div className="flex items-end space-x-8">
-          <Button variant="ghost" size="icon" className="w-10 h-10">
-            <ShoppingCart className="!h-10 !w-10 p-2" role="button" color="gray"/>
-          </Button>
+          <CartDropdown />
           <div className="relative">
             {isLogin ? (
               <div

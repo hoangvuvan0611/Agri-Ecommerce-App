@@ -9,10 +9,13 @@ import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import Link from 'next/link';
+import { useCart } from '@/contexts/CartContext';
+import { toast } from 'sonner';
 
 export default function ProductPage() {
 
   const { slug } = useParams();
+  const { addToCart } = useCart();
 
   const [product, setProduct] = useState<ProductType | null>(null);
   const [ productSuggest, setProductSuggest ] = useState<ProductType[]>([]);
@@ -40,6 +43,13 @@ export default function ProductPage() {
       console.error('Error fetching product:', error);
     });
   }, [slug]); // Chỉ phụ thuộc vào slug
+
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product);
+      toast.success('Đã thêm sản phẩm vào giỏ hàng');
+    }
+  };
 
   return (
     <div className='container mx-auto px-4 py-2'>
@@ -120,7 +130,10 @@ export default function ProductPage() {
                 <button className='w-full bg-lime-600 text-white px-8 py-4 rounded-xl hover:bg-green-700 transition-colors duration-200 font-semibold text-lg shadow-lg hover:shadow-xl'>
                   Mua ngay
                 </button>
-                <button className='w-full text-lime-600 px-8 py-4 rounded-xl border-2 hover:border-lime-600 transition-colors duration-200 font-semibold text-lg shadow-lg hover:shadow-xl'>
+                <button 
+                  onClick={handleAddToCart}
+                  className='w-full text-lime-600 px-8 py-4 rounded-xl border-2 hover:border-lime-600 transition-colors duration-200 font-semibold text-lg shadow-lg hover:shadow-xl'
+                >
                   Thêm vào giỏ hàng
                 </button>
               </div>
