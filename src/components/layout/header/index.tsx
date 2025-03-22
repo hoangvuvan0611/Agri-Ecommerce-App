@@ -1,5 +1,5 @@
 'use client';
-import { Search, ShoppingCart, User } from "lucide-react";
+import { Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Logo } from "@/components/logo";
@@ -11,27 +11,19 @@ export function Header() {
   const [isLogin, setIsLogin] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isClient, setIsClient] = useState(false);
 
   const toggleDropdown = () => setDropdownOpen(true);
 
-
   useEffect(() => {
-      setIsClient(true); // Đánh dấu đã chạy trên client
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 100);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
-
-  useEffect(() => {
-      if (!isClient) return; // Chỉ chạy trên client
-
-      const handleScroll = () => {
-          setIsScrolled(window.scrollY > 100);
-      };
-
-      window.addEventListener("scroll", handleScroll);
-      return () => {
-          window.removeEventListener("scroll", handleScroll);
-      };
-  }, [isClient]);
 
   return (
     <header>

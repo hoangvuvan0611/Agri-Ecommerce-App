@@ -5,6 +5,7 @@ import { FilterIcon } from "lucide-react";
 import { useEffect } from "react";
 import { ProductType } from "../page/products/type";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function ProductPage() {
     const [products, setProducts] = useState<ProductType[]>([]);
@@ -19,10 +20,30 @@ export default function ProductPage() {
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-4">
-            {/* Header */}
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold">Sản phẩm</h1>
-                <p className="text-sm text-gray-500">Trang chủ</p>
+            {/* Banner Section */}
+            <div className='relative w-full h-[100px] mb-4 rounded-2xl overflow-hidden'>
+                <Image
+                src={`/images/organic-breadcrumb.png`}
+                alt={"Organic Farm"}
+                fill
+                className='object-cover object-center rounded-2xl'
+                priority
+                quality={100}
+                />
+                {/* Overlay với breadcrumb */}
+                <div className='absolute inset-0 bg-black/40 flex items-center justify-center'>
+                <div className='text-white space-y-2 text-center'>
+                    <div className='flex items-center gap-2 text-sm'>
+                    <Link href="/" className='hover:text-green-400 transition-colors'>
+                        Trang chủ
+                    </Link>
+                    <span>›</span>
+                    <Link href="/product" className='hover:text-green-400 transition-colors'>
+                        Sản phẩm
+                    </Link>
+                    </div>
+                </div>
+                </div>
             </div>
 
             {/* Filter and View Options */}

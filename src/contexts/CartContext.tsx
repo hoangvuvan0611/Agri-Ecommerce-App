@@ -1,6 +1,11 @@
 'use client';
 import { ProductType } from '@/app/page/products/type';
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { 
+  createContext, // Tạo context cho giỏ hàng
+  useContext, // Sử dụng context (dùng để lấy context)
+  useState, // Sử dụng state (dùng để tạo state)
+  ReactNode // Sử dụng ReactNode (dùng để tạo component) - dùng khi component có children, bọc các component con
+} from 'react';
 
 interface CartItem extends ProductType {
   quantity: number;
