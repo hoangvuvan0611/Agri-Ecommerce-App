@@ -8,6 +8,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import Link from 'next/link';
 
 // Hàm này chạy ở server-side
 async function getProduct(slug: string) {
@@ -51,9 +52,9 @@ export default function ProductPage() {
   }, [slug]); // Chỉ phụ thuộc vào slug
 
   return (
-    <div className='container mx-auto px-4 py-8'>
+    <div className='container mx-auto px-4 py-2'>
       {/* Banner Section */}
-      <div className='relative w-full h-[150px] mb-2 rounded-2xl overflow-hidden'>
+      <div className='relative w-full h-[100px] mb-2 rounded-2xl overflow-hidden'>
         <Image
           src={`/images/organic-breadcrumb.png`}
           alt={"Organic Farm"}
@@ -62,13 +63,30 @@ export default function ProductPage() {
           priority
           quality={100}
         />
+        {/* Overlay với breadcrumb */}
+        <div className='absolute inset-0 bg-black/40 flex items-center justify-center'>
+          <div className='text-white space-y-2 text-center'>
+            <h1 className='text-2xl font-bold'>{product?.name}</h1>
+            <div className='flex items-center gap-2 text-sm'>
+              <Link href="/" className='hover:text-green-400 transition-colors'>
+                Trang chủ
+              </Link>
+              <span>›</span>
+              <Link href="/san-pham" className='hover:text-green-400 transition-colors'>
+                Sản phẩm
+              </Link>
+              <span>›</span>
+              <span className='text-lime-400'>{product?.name}</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div>
         {/* Product Detail Section */}
         <div className='grid grid-cols-12 gap-12 mb-12'>
           {/* Left Column - Images : 5 cột */}
-          <div className='col-span-5 space-y-6'>
+          <div className='col-span-4 space-y-6'>
             {/* Main Image */}
             <div className='relative aspect-square w-full overflow-hidden rounded-2xl shadow-lg'>
               <Image
@@ -83,7 +101,7 @@ export default function ProductPage() {
           </div>
 
           {/* Right Column - Product Info : 7 cột */}
-          <div className='col-span-7 space-y-8 p-6 bg-white rounded-2xl shadow-md'>
+          <div className='col-span-8 space-y-8 p-6 bg-white rounded-2xl shadow-md'>
             <div>
               <h1 className='text-3xl font-bold text-gray-800 mb-2'>{product?.name}</h1>
               <div className='flex items-center space-x-4 text-sm text-gray-500'>
@@ -108,27 +126,41 @@ export default function ProductPage() {
                 )}
               </div>
               
-              <button className='w-full bg-green-600 text-white px-8 py-4 rounded-xl hover:bg-green-700 transition-colors duration-200 font-semibold text-lg shadow-lg hover:shadow-xl'>
-                Thêm vào giỏ hàng
-              </button>
+              <div className='flex items-center space-x-4'>
+                <button className='w-full bg-lime-600 text-white px-8 py-4 rounded-xl hover:bg-green-700 transition-colors duration-200 font-semibold text-lg shadow-lg hover:shadow-xl'>
+                  Mua ngay
+                </button>
+                <button className='w-full text-lime-600 px-8 py-4 rounded-xl border-2 hover:border-lime-600 transition-colors duration-200 font-semibold text-lg shadow-lg hover:shadow-xl'>
+                  Thêm vào giỏ hàng
+                </button>
+              </div>
+
             </div>
           </div>
         </div>
 
         {/* Related Products Section */}
-        <div className='mt-16'>
-          <h2 className='text-2xl font-bold mb-8 text-gray-800'>Sản phẩm tương tự</h2>
+        <div className='mt-8 relative'>
+          <h2 className='text-2xl font-bold mb-4 text-gray-800'>Sản phẩm tương tự</h2>
           <Swiper
             modules={[Navigation]}
             spaceBetween={20}
-            slidesPerView={4}
-            navigation
-            className='mySwiper'
+            slidesPerView={5}
+            navigation={{
+              prevEl: '.swiper-button-prev-custom',
+              nextEl: '.swiper-button-next-custom',
+              enabled: true,
+              disabledClass: 'swiper-button-disabled'
+            }}
+            className='mySwiper px-10'
           >
             {productSuggest?.map((item, index) => (
-              <SwiperSlide key={index}>
+              <SwiperSlide 
+                key={index}
+                className='p-2'
+              >
                 <div className='group cursor-pointer bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200'>
-                  <div className='relative aspect-square w-48'>
+                  <div className='relative aspect-square'>
                     <Image
                       src={`http://116.104.51.101:8080/agri-shop/${item?.path}`}
                       alt={`Related Product ${index}`}
@@ -144,6 +176,20 @@ export default function ProductPage() {
               </SwiperSlide>
             ))}
           </Swiper>
+          
+          {/* Custom Navigation Buttons */}
+          <div className="swiper-button-prev-custom absolute top-1/2 left-0 z-10 -translate-y-1/2 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-lime-50 transition-colors group cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" 
+              className="w-5 h-5 text-lime-600 group-hover:text-lime-700">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+          </div>
+          <div className="swiper-button-next-custom absolute top-1/2 right-0 z-10 -translate-y-1/2 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-lime-50 transition-colors group cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" 
+              className="w-5 h-5 text-lime-600 group-hover:text-lime-700">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          </div>
         </div>
       </div>
     </div>
