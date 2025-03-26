@@ -26,21 +26,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en">
       <body suppressHydrationWarning={true} className={`${geistSans.variable} ${geistMono.variable} antialiased relative min-h-screen flex flex-col`}>
         <CartProvider>
           <Toaster position="top-right" />
-          {/* Header */}
-          <div className='sticky top-0 bg-white z-50 container px-4'>
-            <Header/>
-          </div>
-          <div className="flex-grow">
-            {children}
-          </div>
-          <div>
-            <FooterSection/>
-          </div>
+          {children}
         </CartProvider>
       </body>
     </html>

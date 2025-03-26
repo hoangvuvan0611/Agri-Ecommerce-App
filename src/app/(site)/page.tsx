@@ -1,9 +1,9 @@
 import React from 'react';
 import HeroSection from '@/components/layout/hero';
-import Features from './page/features';
-import ProductsIntro from './page/products';
 import BannerImage from '@/components/common/bannerImage';
 import BannerElement from '@/components/common/bannerElement';
+import Features from '../page/features';
+import ProductsIntro from '../page/products';
 
 export default function FruitStorePage () {
   return (
@@ -15,7 +15,7 @@ export default function FruitStorePage () {
         {/* Features */}
         <Features/>
 
-        <ProductsIntro 
+        <ProductsIntro
           image={'/images/organic-product-banner-intro-1.png'} 
           title={"Sản phẩm chất lượng"}
           titleBgBanner={"Trái cây tự nhiên mỗi này"}

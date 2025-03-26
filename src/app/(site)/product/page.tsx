@@ -3,7 +3,7 @@ import AxiosInstance from "@/utils/axiosInstance";
 import { useState } from "react";
 import { FilterIcon } from "lucide-react";
 import { useEffect } from "react";
-import { ProductType } from "../page/products/type";
+import { ProductType } from "../../page/products/type";
 import Image from "next/image";
 import Link from "next/link";
 
