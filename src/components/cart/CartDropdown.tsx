@@ -3,10 +3,22 @@ import { useCart } from '@/contexts/CartContext';
 import { BaggageClaim, X } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export function CartDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const { items, totalItems, totalPrice, removeFromCart, updateQuantity } = useCart();
+  const router = useRouter();
+
+  const handleCheckout = () => {
+    if (items.length === 0) {
+      toast.error('Giỏ hàng của bạn đang trống');
+      return;
+    }
+    setIsOpen(false);
+    router.push('/checkout');
+  };
 
   return (
     <div className="relative">
@@ -89,9 +101,20 @@ export function CartDropdown() {
                     <span className="font-semibold">Tổng tiền:</span>
                     <span className="font-bold text-lime-600">{totalPrice.toLocaleString('vi-VN')}₫</span>
                   </div>
-                  <button className="w-full bg-lime-600 text-white py-2 rounded-lg hover:bg-lime-700 transition-colors">
-                    Thanh toán
-                  </button>
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => setIsOpen(false)}
+                      className="flex-1 px-4 py-2 border border-lime-600 text-lime-600 rounded-lg hover:bg-lime-50 transition-colors"
+                    >
+                      Tiếp tục mua
+                    </button>
+                    <button 
+                      onClick={handleCheckout}
+                      className="flex-1 px-4 py-2 bg-lime-600 text-white rounded-lg hover:bg-lime-700 transition-colors"
+                    >
+                      Thanh toán
+                    </button>
+                  </div>
                 </div>
               </>
             )}

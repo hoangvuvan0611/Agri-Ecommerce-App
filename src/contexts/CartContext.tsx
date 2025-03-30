@@ -1,21 +1,22 @@
 'use client';
-import { ProductType } from '@/app/page/products/type';
-import { 
-  createContext, // Tạo context cho giỏ hàng
-  useContext, // Sử dụng context (dùng để lấy context)
-  useState, // Sử dụng state (dùng để tạo state)
-  ReactNode // Sử dụng ReactNode (dùng để tạo component) - dùng khi component có children, bọc các component con
-} from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 
-interface CartItem extends ProductType {
+export interface CartItem {
+  id: number;
+  name: string;
+  price: number;
   quantity: number;
+  path: string;
+  originalPrice: number;
+  salePrice?: number;
 }
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (product: ProductType) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addToCart: (item: CartItem) => void;
+  removeFromCart: (id: number) => void;
+  updateQuantity: (id: number, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
@@ -23,48 +24,58 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export function CartProvider({ children }: { children: ReactNode }) {
+export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
 
-  const addToCart = (product: ProductType) => {
-    setItems(currentItems => {
-      const existingItem = currentItems.find(item => item.id === product.id);
-      
+  // Load cart from localStorage on mount
+  useEffect(() => {
+    const savedCart = localStorage.getItem('cartItems');
+    if (savedCart) {
+      const parsedCart = JSON.parse(savedCart);
+      setItems(parsedCart);
+    }
+  }, []);
+
+  // Save cart to both localStorage and cookies whenever it changes
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(items));
+    // Lưu vào cookies với maxAge 7 ngày
+    Cookies.set('cartItems', JSON.stringify(items), { expires: 7 });
+  }, [items]);
+
+  const addToCart = (item: CartItem) => {
+    setItems(prevItems => {
+      const existingItem = prevItems.find(i => i.id === item.id);
       if (existingItem) {
-        return currentItems.map(item =>
-          item.id === product.id 
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
+        return prevItems.map(i =>
+          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
-      
-      return [...currentItems, { ...product, quantity: 1 }];
+      return [...prevItems, { ...item, quantity: 1 }];
     });
   };
 
-  const removeFromCart = (productId: string) => {
-    setItems(currentItems => currentItems.filter(item => item.id !== productId));
+  const removeFromCart = (id: number) => {
+    setItems(prevItems => prevItems.filter(item => item.id !== id));
   };
 
-  const updateQuantity = (productId: string, quantity: number) => {
-    if (quantity < 1) return;
-    
-    setItems(currentItems =>
-      currentItems.map(item =>
-        item.id === productId ? { ...item, quantity } : item
+  const updateQuantity = (id: number, quantity: number) => {
+    setItems(prevItems =>
+      prevItems.map(item =>
+        item.id === id ? { ...item, quantity } : item
       )
     );
   };
 
   const clearCart = () => {
     setItems([]);
+    localStorage.removeItem('cartItems');
+    Cookies.remove('cartItems');
   };
 
-  const totalItems = items.reduce((total, item) => total + item.quantity, 0);
-  
-  const totalPrice = items.reduce(
-    (total, item) => total + (item.salePrice || item.originalPrice) * item.quantity,
-    0
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+  const totalPrice = items.reduce((sum, item) => 
+    sum + (item.salePrice || item.originalPrice) * item.quantity, 0
   );
 
   return (

@@ -23,12 +23,12 @@ export default function ProductPage() {
             {/* Banner Section */}
             <div className='relative w-full h-[100px] mb-4 rounded-2xl overflow-hidden'>
                 <Image
-                src={`/images/organic-breadcrumb.png`}
-                alt={"Organic Farm"}
-                fill
-                className='object-cover object-center rounded-2xl'
-                priority
-                quality={100}
+                    src={`/images/organic-breadcrumb.png`}
+                    alt={"Organic Farm"}
+                    fill
+                    className='object-cover object-center rounded-2xl'
+                    priority
+                    quality={100}
                 />
                 {/* Overlay với breadcrumb */}
                 <div className='absolute inset-0 bg-black/40 flex items-center justify-center'>
@@ -38,7 +38,7 @@ export default function ProductPage() {
                         Trang chủ
                     </Link>
                     <span>›</span>
-                    <Link href="/product" className='hover:text-green-400 transition-colors'>
+                    <Link href="/product" className='text-lime-400 transition-colors'>
                         Sản phẩm
                     </Link>
                     </div>
