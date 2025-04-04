@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,182 +13,171 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Search, Eye, Check, X } from 'lucide-react';
-
-interface Order {
-  id: number;
-  customer: string;
-  total: number;
-  status: 'pending' | 'processing' | 'completed' | 'cancelled';
-  date: string;
-  items: number;
-}
-
-const mockOrders: Order[] = [
-  {
-    id: 1,
-    customer: 'Nguyễn Văn A',
-    total: 250000,
-    status: 'pending',
-    date: '12/04/2024',
-    items: 3,
-  },
-  {
-    id: 2,
-    customer: 'Trần Thị B',
-    total: 350000,
-    status: 'processing',
-    date: '11/04/2024',
-    items: 5,
-  },
-  {
-    id: 3,
-    customer: 'Lê Văn C',
-    total: 150000,
-    status: 'completed',
-    date: '10/04/2024',
-    items: 2,
-  },
-];
-
-const statusColors = {
-  pending: 'bg-yellow-100 text-yellow-800',
-  processing: 'bg-blue-100 text-blue-800',
-  completed: 'bg-green-100 text-green-800',
-  cancelled: 'bg-red-100 text-red-800',
-};
-
-const statusLabels = {
-  pending: 'Chờ xử lý',
-  processing: 'Đang xử lý',
-  completed: 'Đã hoàn thành',
-  cancelled: 'Đã hủy',
-};
+import { orderService } from '@/services/admin';
+import { Order } from '@/types/admin';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function OrdersPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [orders, setOrders] = useState<Order[]>(mockOrders);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-  const handleStatusChange = (id: number, newStatus: Order['status']) => {
-    setOrders(
-      orders.map((order) =>
-        order.id === id ? { ...order, status: newStatus } : order
-      )
-    );
+  useEffect(() => {
+    loadOrders();
+  }, []);
+
+  const loadOrders = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await orderService.getAll();
+      setOrders(data);
+    } catch (error) {
+      console.error('Error loading orders:', error);
+      setError('Không thể tải danh sách đơn hàng. Vui lòng thử lại sau.');
+      toast.error('Không thể tải danh sách đơn hàng');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const filteredOrders = orders.filter((order) =>
-    order.customer.toLowerCase().includes(searchTerm.toLowerCase())
+  const handleStatusChange = async (id: number, status: Order['status']) => {
+    try {
+      await orderService.updateStatus(id, status);
+      setOrders(orders.map(order => 
+        order.id === id ? { ...order, status } : order
+      ));
+      toast.success('Cập nhật trạng thái đơn hàng thành công');
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      toast.error('Không thể cập nhật trạng thái đơn hàng');
+    }
+  };
+
+  const filteredOrders = orders.filter(order =>
+    order.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order.id.toString().includes(searchTerm)
   );
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Quản lý đơn hàng</h1>
+        </div>
+        <Card className="p-4">
+          <div className="text-center text-red-500">{error}</div>
+          <div className="flex justify-center mt-4">
+            <Button onClick={loadOrders}>Thử lại</Button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-800">Quản lý đơn hàng</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Quản lý đơn hàng</h1>
+      </div>
 
-      <Card className="p-6">
-        <div className="flex items-center space-x-4 mb-6">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <Input
-              placeholder="Tìm kiếm đơn hàng..."
-              className="pl-10"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <Button variant="outline">Lọc</Button>
+      <Card className="p-4">
+        <div className="flex items-center space-x-2 mb-4">
+          <Search className="h-4 w-4 text-gray-500" />
+          <Input
+            placeholder="Tìm kiếm đơn hàng..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="max-w-sm"
+          />
         </div>
 
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Mã đơn hàng</TableHead>
+              <TableHead>Khách hàng</TableHead>
+              <TableHead>Tổng tiền</TableHead>
+              <TableHead>Trạng thái</TableHead>
+              <TableHead>Ngày đặt</TableHead>
+              <TableHead className="text-right">Thao tác</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredOrders.length === 0 ? (
               <TableRow>
-                <TableHead>Mã đơn hàng</TableHead>
-                <TableHead>Khách hàng</TableHead>
-                <TableHead>Số sản phẩm</TableHead>
-                <TableHead>Tổng tiền</TableHead>
-                <TableHead>Ngày đặt</TableHead>
-                <TableHead>Trạng thái</TableHead>
-                <TableHead>Thao tác</TableHead>
+                <TableCell colSpan={6} className="text-center">
+                  Không tìm thấy đơn hàng nào
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredOrders.map((order) => (
+            ) : (
+              filteredOrders.map((order) => (
                 <TableRow key={order.id}>
-                  <TableCell>#ORD-{order.id}</TableCell>
-                  <TableCell>{order.customer}</TableCell>
-                  <TableCell>{order.items}</TableCell>
-                  <TableCell>{order.total.toLocaleString('vi-VN')}₫</TableCell>
-                  <TableCell>{order.date}</TableCell>
+                  <TableCell>#{order.id}</TableCell>
+                  <TableCell>{order.customer.name}</TableCell>
+                  <TableCell>{order.total.toLocaleString('vi-VN')}đ</TableCell>
                   <TableCell>
-                    <span
-                      className={`px-2 py-1 rounded-full text-sm ${
-                        statusColors[order.status]
-                      }`}
-                    >
-                      {statusLabels[order.status]}
+                    <span className={`px-2 py-1 rounded-full text-xs ${
+                      order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                      order.status === 'processing' ? 'bg-blue-100 text-blue-800' :
+                      order.status === 'completed' ? 'bg-green-100 text-green-800' :
+                      'bg-red-100 text-red-800'
+                    }`}>
+                      {order.status === 'pending' ? 'Chờ xử lý' :
+                       order.status === 'processing' ? 'Đang xử lý' :
+                       order.status === 'completed' ? 'Hoàn thành' :
+                       'Đã hủy'}
                     </span>
                   </TableCell>
-                  <TableCell>
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="hover:bg-lime-100"
-                      >
-                        <Eye className="w-4 h-4 text-lime-600" />
-                      </Button>
-                      {order.status === 'pending' && (
-                        <>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="hover:bg-green-100"
-                            onClick={() => handleStatusChange(order.id, 'processing')}
-                          >
-                            <Check className="w-4 h-4 text-green-600" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="hover:bg-red-100"
-                            onClick={() => handleStatusChange(order.id, 'cancelled')}
-                          >
-                            <X className="w-4 h-4 text-red-600" />
-                          </Button>
-                        </>
-                      )}
-                      {order.status === 'processing' && (
+                  <TableCell>{new Date(order.createdAt).toLocaleDateString('vi-VN')}</TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => router.push(`/admin/orders/${order.id}`)}
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                    {order.status === 'pending' && (
+                      <>
                         <Button
                           variant="ghost"
-                          size="icon"
-                          className="hover:bg-green-100"
-                          onClick={() => handleStatusChange(order.id, 'completed')}
+                          size="sm"
+                          onClick={() => handleStatusChange(order.id, 'processing')}
                         >
-                          <Check className="w-4 h-4 text-green-600" />
+                          <Check className="h-4 w-4 text-green-600" />
                         </Button>
-                      )}
-                    </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleStatusChange(order.id, 'cancelled')}
+                        >
+                          <X className="h-4 w-4 text-red-600" />
+                        </Button>
+                      </>
+                    )}
+                    {order.status === 'processing' && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleStatusChange(order.id, 'completed')}
+                      >
+                        <Check className="h-4 w-4 text-green-600" />
+                      </Button>
+                    )}
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-
-        <div className="flex justify-between items-center mt-6">
-          <p className="text-sm text-gray-600">
-            Hiển thị {filteredOrders.length} trong tổng số {orders.length} đơn
-            hàng
-          </p>
-          <div className="flex space-x-2">
-            <Button variant="outline" size="sm">
-              Trước
-            </Button>
-            <Button variant="outline" size="sm">
-              Sau
-            </Button>
-          </div>
-        </div>
+              ))
+            )}
+          </TableBody>
+        </Table>
       </Card>
     </div>
   );

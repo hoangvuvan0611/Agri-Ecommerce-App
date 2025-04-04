@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,150 +13,152 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Plus, Search, Edit, Trash2 } from 'lucide-react';
-
-interface Product {
-  id: number;
-  name: string;
-  category: string;
-  price: number;
-  stock: number;
-  status: 'active' | 'inactive';
-}
-
-const mockProducts: Product[] = [
-  {
-    id: 1,
-    name: 'Rau cải xanh',
-    category: 'Rau xanh',
-    price: 25000,
-    stock: 100,
-    status: 'active',
-  },
-  {
-    id: 2,
-    name: 'Cà chua',
-    category: 'Rau củ',
-    price: 35000,
-    stock: 50,
-    status: 'active',
-  },
-  {
-    id: 3,
-    name: 'Dưa hấu',
-    category: 'Trái cây',
-    price: 15000,
-    stock: 0,
-    status: 'inactive',
-  },
-];
+import { productService } from '@/services/admin';
+import { Product } from '@/types/admin';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [products, setProducts] = useState<Product[]>(mockProducts);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
-  const handleDelete = (id: number) => {
-    setProducts(products.filter((product) => product.id !== id));
+  useEffect(() => {
+    loadProducts();
+  }, []);
+
+  const loadProducts = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await productService.getAll();
+      setProducts(data);
+    } catch (error) {
+      console.error('Error loading products:', error);
+      setError('Không thể tải danh sách sản phẩm. Vui lòng thử lại sau.');
+      toast.error('Không thể tải danh sách sản phẩm');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const filteredProducts = products.filter((product) =>
+  const handleDelete = async (id: number) => {
+    if (window.confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
+      try {
+        await productService.delete(id);
+        setProducts(products.filter(product => product.id !== id));
+        toast.success('Xóa sản phẩm thành công');
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        toast.error('Không thể xóa sản phẩm');
+      }
+    }
+  };
+
+  const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Quản lý sản phẩm</h1>
+          <Button onClick={() => router.push('/admin/products/new')}>
+            <Plus className="mr-2 h-4 w-4" />
+            Thêm sản phẩm
+          </Button>
+        </div>
+        <Card className="p-4">
+          <div className="text-center text-red-500">{error}</div>
+          <div className="flex justify-center mt-4">
+            <Button onClick={loadProducts}>Thử lại</Button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-800">Quản lý sản phẩm</h1>
-        <Button className="bg-lime-600 hover:bg-lime-700">
-          <Plus className="w-4 h-4 mr-2" />
+        <h1 className="text-2xl font-bold">Quản lý sản phẩm</h1>
+        <Button onClick={() => router.push('/admin/products/new')}>
+          <Plus className="mr-2 h-4 w-4" />
           Thêm sản phẩm
         </Button>
       </div>
 
-      <Card className="p-6">
-        <div className="flex items-center space-x-4 mb-6">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <Input
-              placeholder="Tìm kiếm sản phẩm..."
-              className="pl-10"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <Button variant="outline">Lọc</Button>
+      <Card className="p-4">
+        <div className="flex items-center space-x-2 mb-4">
+          <Search className="h-4 w-4 text-gray-500" />
+          <Input
+            placeholder="Tìm kiếm sản phẩm..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="max-w-sm"
+          />
         </div>
 
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Tên sản phẩm</TableHead>
+              <TableHead>Danh mục</TableHead>
+              <TableHead>Giá</TableHead>
+              <TableHead>Tồn kho</TableHead>
+              <TableHead>Trạng thái</TableHead>
+              <TableHead className="text-right">Thao tác</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredProducts.length === 0 ? (
               <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>Tên sản phẩm</TableHead>
-                <TableHead>Danh mục</TableHead>
-                <TableHead>Giá</TableHead>
-                <TableHead>Tồn kho</TableHead>
-                <TableHead>Trạng thái</TableHead>
-                <TableHead>Thao tác</TableHead>
+                <TableCell colSpan={6} className="text-center">
+                  Không tìm thấy sản phẩm nào
+                </TableCell>
               </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredProducts.map((product) => (
+            ) : (
+              filteredProducts.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell>{product.id}</TableCell>
                   <TableCell>{product.name}</TableCell>
                   <TableCell>{product.category}</TableCell>
-                  <TableCell>{product.price.toLocaleString('vi-VN')}₫</TableCell>
+                  <TableCell>{product.price.toLocaleString('vi-VN')}đ</TableCell>
                   <TableCell>{product.stock}</TableCell>
                   <TableCell>
-                    <span
-                      className={`px-2 py-1 rounded-full text-sm ${
-                        product.status === 'active'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'
-                      }`}
-                    >
+                    <span className={`px-2 py-1 rounded-full text-xs ${
+                      product.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
                       {product.status === 'active' ? 'Đang bán' : 'Ngừng bán'}
                     </span>
                   </TableCell>
-                  <TableCell>
-                    <div className="flex space-x-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="hover:bg-lime-100"
-                      >
-                        <Edit className="w-4 h-4 text-lime-600" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="hover:bg-red-100"
-                        onClick={() => handleDelete(product.id)}
-                      >
-                        <Trash2 className="w-4 h-4 text-red-600" />
-                      </Button>
-                    </div>
+                  <TableCell className="text-right">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => router.push(`/admin/products/${product.id}`)}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDelete(product.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-
-        <div className="flex justify-between items-center mt-6">
-          <p className="text-sm text-gray-600">
-            Hiển thị {filteredProducts.length} trong tổng số {products.length} sản
-            phẩm
-          </p>
-          <div className="flex space-x-2">
-            <Button variant="outline" size="sm">
-              Trước
-            </Button>
-            <Button variant="outline" size="sm">
-              Sau
-            </Button>
-          </div>
-        </div>
+              ))
+            )}
+          </TableBody>
+        </Table>
       </Card>
     </div>
   );
