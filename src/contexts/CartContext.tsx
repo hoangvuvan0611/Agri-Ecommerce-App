@@ -44,13 +44,19 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [items]);
 
   const addToCart = (item: CartItem) => {
+    console.log(item);
     setItems(prevItems => {
-      const existingItem = prevItems.find(i => i.id === item.id);
-      if (existingItem) {
-        return prevItems.map(i =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-        );
+      const existingItemIndex = prevItems.findIndex(i => i.id === item.id);
+      if (existingItemIndex >= 0) {
+        // Nếu sản phẩm đã tồn tại, tăng số lượng lên 1
+        const updatedItems = [...prevItems];
+        updatedItems[existingItemIndex] = {
+          ...updatedItems[existingItemIndex],
+          quantity: updatedItems[existingItemIndex].quantity + 1
+        };
+        return updatedItems;
       }
+      // Nếu sản phẩm chưa tồn tại, thêm mới với số lượng là 1
       return [...prevItems, { ...item, quantity: 1 }];
     });
   };

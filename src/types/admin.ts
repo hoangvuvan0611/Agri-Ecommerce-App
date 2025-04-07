@@ -2,18 +2,31 @@ export interface Product {
   id: number;
   name: string;
   description: string;
-  price: number;
+  originalPrice: number;
   salePrice?: number;
-  stock: number;
+  quantity: number;
   category: string;
   images: string[];
-  status: 'active' | 'inactive';
+  status: 'ACTIVE' | 'INACTIVE';
   createdAt: string;
   updatedAt: string;
 }
 
 export interface Order {
   id: number;
+  customer_id: number;
+  status: 'pending' | 'processing' | 'completed' | 'cancelled';
+  shipping_fee: number;
+  delivery_info_id: number;
+  total_fee: number;
+  payment_id: number | null;
+  coupon_id: number | null;
+  affiliate_id: number | null;
+  created_at: string;
+  canceled_at: string | null;
+  completed_at: string | null;
+  delivery_at: string | null;
+  updated_at: string;
   customer: {
     name: string;
     email: string;
@@ -28,12 +41,8 @@ export interface Order {
     images: string[];
     category: string;
   }[];
-  total: number;
-  status: 'pending' | 'processing' | 'completed' | 'cancelled';
   shippingAddress: string;
   paymentMethod: string;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface User {

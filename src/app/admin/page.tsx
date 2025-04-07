@@ -1,39 +1,56 @@
 'use client';
 import { Card } from '@/components/ui/card';
 import { Package, ShoppingCart, Users, TrendingUp } from 'lucide-react';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import products from '../page/products';
+import { productService } from '@/services/admin';
 
-const stats = [
-  {
-    title: 'Tổng sản phẩm',
-    value: '1,234',
-    icon: Package,
-    change: '+12%',
-    changeType: 'positive',
-  },
-  {
-    title: 'Đơn hàng mới',
-    value: '56',
-    icon: ShoppingCart,
-    change: '+5%',
-    changeType: 'positive',
-  },
-  {
-    title: 'Người dùng mới',
-    value: '89',
-    icon: Users,
-    change: '+8%',
-    changeType: 'positive',
-  },
-  {
-    title: 'Doanh thu',
-    value: '45.2M',
-    icon: TrendingUp,
-    change: '+15%',
-    changeType: 'positive',
-  },
-];
 
 export default function AdminDashboard() {
+
+  const [ stats, setStats ] = useState([]);
+
+  useEffect(() => {
+    const getStats = async () => {
+      const numProducts = await productService.getTotalProducts();
+      const statsTemp = [
+        {
+          title: 'Tổng sản phẩm',
+          value: `${numProducts || 0}`,
+          icon: Package,
+          change: '+12%',
+          changeType: 'positive',
+        },
+        {
+          title: 'Đơn hàng mới',
+          value: '56',
+          icon: ShoppingCart,
+          change: '+5%',
+          changeType: 'positive',
+        },
+        {
+          title: 'Người dùng mới',
+          value: '89',
+          icon: Users,
+          change: '+8%',
+          changeType: 'positive',
+        },
+        {
+          title: 'Doanh thu',
+          value: '45.2M',
+          icon: TrendingUp,
+          change: '+15%',
+          changeType: 'positive',
+        },
+      ];
+
+      setStats(statsTemp);
+    }
+
+    getStats();
+  }, [products]);
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-gray-800">Tổng quan</h1>

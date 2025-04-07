@@ -271,34 +271,6 @@ export default function CheckoutPage() {
                     rows={3}
                   />
                 </div>
-
-                <div>
-                  <h3 className="text-lg font-semibold mb-4">Phương thức thanh toán</h3>
-                  <div className="space-y-2">
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="radio"
-                        name="paymentMethod"
-                        value="cod"
-                        checked={paymentMethod === 'cod'}
-                        onChange={(e) => setPaymentMethod(e.target.value)}
-                        className="form-radio text-lime-600"
-                      />
-                      <span>Thanh toán khi nhận hàng (COD)</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="radio"
-                        name="paymentMethod"
-                        value="banking"
-                        checked={paymentMethod === 'banking'}
-                        onChange={(e) => setPaymentMethod(e.target.value)}
-                        className="form-radio text-lime-600"
-                      />
-                      <span>Chuyển khoản ngân hàng</span>
-                    </label>
-                  </div>
-                </div>
               </form>
             </div>
           </div>

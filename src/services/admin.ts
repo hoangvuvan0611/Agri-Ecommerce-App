@@ -1,38 +1,208 @@
 import axiosInstance from '@/utils/axiosInstance';
 import { Product, Order, User, StatisticsOverview, SalesData, CategoryData, TopProduct } from '@/types/admin';
+import { mockOrders } from '@/mocks/orders';
 
 // Product APIs
 export const productService = {
   getAll: async (): Promise<Product[]> => {
-    const response = await axiosInstance.get('/api/v1/admin/products');
+    const response = await axiosInstance.get('/api/v1/product/all');
     return response.data;
   },
   create: async (data: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>): Promise<Product> => {
-    const response = await axiosInstance.post('/api/v1/admin/products', data);
+    const response = await axiosInstance.post('/api/v1/products', data);
     return response.data;
   },
   update: async (id: number, data: Partial<Product>): Promise<Product> => {
-    const response = await axiosInstance.put(`/api/v1/admin/products/${id}`, data);
+    const response = await axiosInstance.put(`/api/v1/product/${id}`, data);
     return response.data;
   },
   delete: async (id: number): Promise<void> => {
-    await axiosInstance.delete(`/api/v1/admin/products/${id}`);
+    await axiosInstance.delete(`/api/v1/product/${id}`);
+  },
+  getTotalProducts: async (): Promise<number> => {
+    const response = await axiosInstance.get('/api/v1/product/total');
+    return response.data.data;
+  },
+  getManageProducts: async (): Promise<Product[]> => {
+    const response = await axiosInstance.get('/api/v1/product/showManagement');
+    return response.data.data;
+  },
+  updateStatus: async (id: number, status: 'ACTIVE' | 'INACTIVE'): Promise<Product> => {
+    const response = await axiosInstance.put(`/api/v1/product/${id}/status`, { status });
+    return response.data;
   },
 };
 
 // Order APIs
 export const orderService = {
   getAll: async (): Promise<Order[]> => {
-    const response = await axiosInstance.get('/api/v1/admin/orders');
-    return response.data;
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return mockOrders;
   },
   getById: async (id: number): Promise<Order> => {
-    const response = await axiosInstance.get(`/api/v1/admin/orders/${id}`);
-    return response.data;
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const order = mockOrders.find(order => order.id === id);
+    if (!order) {
+      throw new Error('Order not found');
+    }
+    return order;
   },
   updateStatus: async (id: number, status: Order['status']): Promise<Order> => {
-    const response = await axiosInstance.put(`/api/v1/admin/orders/${id}/status`, { status });
-    return response.data;
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const orderIndex = mockOrders.findIndex(order => order.id === id);
+    if (orderIndex === -1) {
+      throw new Error('Order not found');
+    }
+    const updatedOrder = {
+      ...mockOrders[orderIndex],
+      status,
+      updated_at: new Date().toISOString()
+    };
+    mockOrders[orderIndex] = updatedOrder;
+    return updatedOrder;
+  },
+  create: async (data: {
+    customer_id: number;
+    shipping_fee: number;
+    delivery_info_id: number;
+    total_fee: number;
+    payment_id?: number;
+    coupon_id?: number;
+    affiliate_id?: number;
+    items: { product_id: number; quantity: number; }[];
+  }): Promise<Order> => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const newOrder: Order = {
+      id: Math.max(...mockOrders.map(order => order.id)) + 1,
+      customer_id: data.customer_id,
+      status: 'pending',
+      shipping_fee: data.shipping_fee,
+      delivery_info_id: data.delivery_info_id,
+      total_fee: data.total_fee,
+      payment_id: data.payment_id || null,
+      coupon_id: data.coupon_id || null,
+      affiliate_id: data.affiliate_id || null,
+      created_at: new Date().toISOString(),
+      canceled_at: null,
+      completed_at: null,
+      delivery_at: null,
+      updated_at: new Date().toISOString(),
+      customer: {
+        name: "Khách hàng mới",
+        email: "new@example.com",
+        phone: "0123456789"
+      },
+      items: data.items.map(item => ({
+        id: Math.floor(Math.random() * 1000),
+        productId: item.product_id,
+        name: "Sản phẩm mới",
+        price: 0,
+        quantity: item.quantity,
+        images: [],
+        category: "Chưa phân loại"
+      })),
+      shippingAddress: "Địa chỉ mới",
+      paymentMethod: "COD"
+    };
+    mockOrders.push(newOrder);
+    return newOrder;
+  },
+  cancelOrder: async (id: number): Promise<Order> => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const orderIndex = mockOrders.findIndex(order => order.id === id);
+    if (orderIndex === -1) {
+      throw new Error('Order not found');
+    }
+    const updatedOrder: Order = {
+      ...mockOrders[orderIndex],
+      status: 'cancelled' as const,
+      canceled_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+    mockOrders[orderIndex] = updatedOrder;
+    return updatedOrder;
+  },
+  completeOrder: async (id: number): Promise<Order> => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const orderIndex = mockOrders.findIndex(order => order.id === id);
+    if (orderIndex === -1) {
+      throw new Error('Order not found');
+    }
+    const updatedOrder: Order = {
+      ...mockOrders[orderIndex],
+      status: 'completed' as const,
+      completed_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+    mockOrders[orderIndex] = updatedOrder;
+    return updatedOrder;
+  },
+  updateDeliveryInfo: async (id: number, deliveryInfo: {
+    delivery_at: string;
+    shipping_fee: number;
+    delivery_info_id: number;
+  }): Promise<Order> => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const orderIndex = mockOrders.findIndex(order => order.id === id);
+    if (orderIndex === -1) {
+      throw new Error('Order not found');
+    }
+    const updatedOrder = {
+      ...mockOrders[orderIndex],
+      delivery_at: deliveryInfo.delivery_at,
+      shipping_fee: deliveryInfo.shipping_fee,
+      delivery_info_id: deliveryInfo.delivery_info_id,
+      updated_at: new Date().toISOString()
+    };
+    mockOrders[orderIndex] = updatedOrder;
+    return updatedOrder;
+  },
+  getOrderStatistics: async (params: {
+    startDate?: string;
+    endDate?: string;
+    status?: Order['status'];
+  }): Promise<{
+    total_orders: number;
+    total_revenue: number;
+    average_order_value: number;
+    orders_by_status: { status: Order['status']; count: number; }[];
+  }> => {
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    const filteredOrders = mockOrders.filter(order => {
+      if (params.status && order.status !== params.status) return false;
+      if (params.startDate && new Date(order.created_at) < new Date(params.startDate)) return false;
+      if (params.endDate && new Date(order.created_at) > new Date(params.endDate)) return false;
+      return true;
+    });
+
+    const total_orders = filteredOrders.length;
+    const total_revenue = filteredOrders.reduce((sum, order) => sum + order.total_fee, 0);
+    const average_order_value = total_orders > 0 ? total_revenue / total_orders : 0;
+
+    const statusCounts = mockOrders.reduce((acc, order) => {
+      acc[order.status] = (acc[order.status] || 0) + 1;
+      return acc;
+    }, {} as Record<Order['status'], number>);
+
+    const orders_by_status = Object.entries(statusCounts).map(([status, count]) => ({
+      status: status as Order['status'],
+      count
+    }));
+
+    return {
+      total_orders,
+      total_revenue,
+      average_order_value,
+      orders_by_status
+    };
   },
 };
 

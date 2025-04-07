@@ -122,7 +122,7 @@ export default function OrdersPage() {
                 <TableRow key={order.id}>
                   <TableCell>#{order.id}</TableCell>
                   <TableCell>{order.customer.name}</TableCell>
-                  <TableCell>{order.total.toLocaleString('vi-VN')}đ</TableCell>
+                  <TableCell>{order.total_fee.toLocaleString('vi-VN')}đ</TableCell>
                   <TableCell>
                     <span className={`px-2 py-1 rounded-full text-xs ${
                       order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :

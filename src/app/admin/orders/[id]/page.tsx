@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { orderService } from '@/services/admin';
 import { Order } from '@/types/admin';
 import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
 
 interface OrderDetailPageProps {
   params: {
@@ -43,12 +45,36 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
     if (!order) return;
 
     try {
-      await orderService.updateStatus(order.id, status);
-      setOrder({ ...order, status });
+      let updatedOrder;
+      if (status === 'cancelled') {
+        updatedOrder = await orderService.cancelOrder(order.id);
+      } else if (status === 'completed') {
+        updatedOrder = await orderService.completeOrder(order.id);
+      } else {
+        updatedOrder = await orderService.updateStatus(order.id, status);
+      }
+      setOrder(updatedOrder);
       toast.success('Cập nhật trạng thái đơn hàng thành công');
     } catch (error) {
       console.error('Error updating order status:', error);
       toast.error('Không thể cập nhật trạng thái đơn hàng');
+    }
+  };
+
+  const handleUpdateDelivery = async (deliveryInfo: {
+    delivery_at: string;
+    shipping_fee: number;
+    delivery_info_id: number;
+  }) => {
+    if (!order) return;
+
+    try {
+      const updatedOrder = await orderService.updateDeliveryInfo(order.id, deliveryInfo);
+      setOrder(updatedOrder);
+      toast.success('Cập nhật thông tin giao hàng thành công');
+    } catch (error) {
+      console.error('Error updating delivery info:', error);
+      toast.error('Không thể cập nhật thông tin giao hàng');
     }
   };
 
@@ -108,33 +134,59 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
             <div>
               <div className="text-sm text-gray-500">Trạng thái</div>
               <div className="mt-1">
-                <span className={`px-2 py-1 rounded-full text-xs ${
-                  order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                  order.status === 'processing' ? 'bg-blue-100 text-blue-800' :
-                  order.status === 'completed' ? 'bg-green-100 text-green-800' :
-                  'bg-red-100 text-red-800'
-                }`}>
+                <Badge variant={
+                  order.status === 'pending' ? 'warning' :
+                  order.status === 'processing' ? 'info' :
+                  order.status === 'completed' ? 'success' :
+                  'destructive'
+                }>
                   {order.status === 'pending' ? 'Chờ xử lý' :
                    order.status === 'processing' ? 'Đang xử lý' :
                    order.status === 'completed' ? 'Hoàn thành' :
                    'Đã hủy'}
-                </span>
+                </Badge>
               </div>
             </div>
             <div>
               <div className="text-sm text-gray-500">Ngày đặt</div>
               <div className="mt-1">
-                {new Date(order.createdAt).toLocaleDateString('vi-VN')}
+                {new Date(order.created_at).toLocaleDateString('vi-VN')}
               </div>
             </div>
+            {order.delivery_at && (
+              <div>
+                <div className="text-sm text-gray-500">Ngày giao hàng</div>
+                <div className="mt-1">
+                  {new Date(order.delivery_at).toLocaleDateString('vi-VN')}
+                </div>
+              </div>
+            )}
+            {order.canceled_at && (
+              <div>
+                <div className="text-sm text-gray-500">Ngày hủy</div>
+                <div className="mt-1">
+                  {new Date(order.canceled_at).toLocaleDateString('vi-VN')}
+                </div>
+              </div>
+            )}
+            {order.completed_at && (
+              <div>
+                <div className="text-sm text-gray-500">Ngày hoàn thành</div>
+                <div className="mt-1">
+                  {new Date(order.completed_at).toLocaleDateString('vi-VN')}
+                </div>
+              </div>
+            )}
             <div>
-              <div className="text-sm text-gray-500">Phương thức thanh toán</div>
-              <div className="mt-1">{order.paymentMethod}</div>
+              <div className="text-sm text-gray-500">Phí giao hàng</div>
+              <div className="mt-1">
+                {order.shipping_fee.toLocaleString('vi-VN')}đ
+              </div>
             </div>
             <div>
               <div className="text-sm text-gray-500">Tổng tiền</div>
               <div className="mt-1 font-semibold">
-                {order.total.toLocaleString('vi-VN')}đ
+                {order.total_fee.toLocaleString('vi-VN')}đ
               </div>
             </div>
           </div>
@@ -208,10 +260,26 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
             <tfoot>
               <tr>
                 <td colSpan={3} className="text-right font-semibold py-4">
+                  Tạm tính
+                </td>
+                <td className="text-right font-semibold py-4">
+                  {(order.total_fee - order.shipping_fee).toLocaleString('vi-VN')}đ
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={3} className="text-right font-semibold py-4">
+                  Phí giao hàng
+                </td>
+                <td className="text-right font-semibold py-4">
+                  {order.shipping_fee.toLocaleString('vi-VN')}đ
+                </td>
+              </tr>
+              <tr>
+                <td colSpan={3} className="text-right font-semibold py-4">
                   Tổng cộng
                 </td>
                 <td className="text-right font-semibold py-4">
-                  {order.total.toLocaleString('vi-VN')}đ
+                  {order.total_fee.toLocaleString('vi-VN')}đ
                 </td>
               </tr>
             </tfoot>
