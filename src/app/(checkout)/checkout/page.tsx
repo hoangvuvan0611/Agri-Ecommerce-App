@@ -74,6 +74,8 @@ export default function CheckoutPage() {
         totalAmount: totalPrice,
       };
 
+      debugger
+
       const response = await axiosInstance.post('/api/v1/orders', orderData);
 
       if (response.data) {

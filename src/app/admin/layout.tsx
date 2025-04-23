@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { LayoutDashboard, Package, ShoppingCart, Users, BarChart, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, Users, BarChart, LogOut, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Toaster } from 'sonner';
@@ -10,6 +10,7 @@ const menuItems = [
   { name: 'Sản phẩm', href: '/admin/products', icon: Package },
   { name: 'Đơn hàng', href: '/admin/orders', icon: ShoppingCart },
   { name: 'Người dùng', href: '/admin/users', icon: Users },
+  { name: 'Shipping', href: '/admin/addresses', icon: MapPin },
   { name: 'Thống kê', href: '/admin/statistics', icon: BarChart },
 ];
 
@@ -65,7 +66,7 @@ export default function AdminLayout({
         </nav>
 
         <div className="absolute bottom-0 left-0 right-0 p-4">
-          <button className="flex items-center w-full p-4 text-gray-600 hover:bg-gray-50 rounded-lg">
+          <button className="flex items-center p-4 text-gray-600 hover:bg-gray-50 rounded-lg">
             <LogOut className="w-5 h-5" />
             {isSidebarOpen && <span className="ml-3">Đăng xuất</span>}
           </button>

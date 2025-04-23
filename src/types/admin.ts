@@ -82,4 +82,33 @@ export interface TopProduct {
   image: string;
   sales: number;
   revenue: number;
+}
+
+export interface Province {
+  id: number;
+  name: string;
+  code: string;
+  status: 'ACTIVE' | 'INACTIVE';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface District {
+  id: number;
+  name: string;
+  code: string;
+  provinceId: number;
+  status: 'ACTIVE' | 'INACTIVE';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Ward {
+  id: number;
+  name: string;
+  code: string;
+  districtId: number;
+  status: 'ACTIVE' | 'INACTIVE';
+  createdAt: string;
+  updatedAt: string;
 } 

@@ -1,5 +1,5 @@
 import axiosInstance from '@/utils/axiosInstance';
-import { Product, Order, User, StatisticsOverview, SalesData, CategoryData, TopProduct } from '@/types/admin';
+import { Product, Order, User, StatisticsOverview, SalesData, CategoryData, TopProduct, Province, District, Ward } from '@/types/admin';
 import { mockOrders } from '@/mocks/orders';
 
 // Product APIs
@@ -246,5 +246,114 @@ export const statisticsService = {
   getTopProducts: async (): Promise<TopProduct[]> => {
     const response = await axiosInstance.get('/api/v1/admin/statistics/top-products');
     return response.data;
+  },
+};
+
+// Province Services
+export const provinceService = {
+  getAll: async () => {
+    const response = await axiosInstance.get('/api/v1/city/showManagement');
+    console.log(response)
+    return response.data;
+  },
+  getById: async (id: number) => {
+    const response = await fetch(`/api/admin/provinces/${id}`);
+    return response.json();
+  },
+  create: async (data: Omit<Province, 'id' | 'createdAt' | 'updatedAt'>) => {
+    const response = await fetch('/api/admin/provinces', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return response.json();
+  },
+  update: async (id: number, data: Partial<Province>) => {
+    const response = await fetch(`/api/admin/provinces/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return response.json();
+  },
+  delete: async (id: number) => {
+    const response = await fetch(`/api/admin/provinces/${id}`, {
+      method: 'DELETE',
+    });
+    return response.json();
+  },
+};
+
+// District Services
+export const districtService = {
+  getAll: async (provinceId?: number) => {
+    const url = provinceId 
+      ? `/api/admin/districts?provinceId=${provinceId}`
+      : '/api/v1/district/showManagement';
+    const response = await axiosInstance.get(url);
+    return response.data;
+  },
+  getById: async (id: number) => {
+    const response = await fetch(`/api/admin/districts/${id}`);
+    return response.json();
+  },
+  create: async (data: Omit<District, 'id' | 'createdAt' | 'updatedAt'>) => {
+    const response = await fetch('/api/admin/districts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return response.json();
+  },
+  update: async (id: number, data: Partial<District>) => {
+    const response = await fetch(`/api/admin/districts/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return response.json();
+  },
+  delete: async (id: number) => {
+    const response = await fetch(`/api/admin/districts/${id}`, {
+      method: 'DELETE',
+    });
+    return response.json();
+  },
+};
+
+// Ward Services
+export const wardService = {
+  getAll: async (districtId?: number) => {
+    const url = districtId 
+      ? `/api/admin/wards?districtId=${districtId}`
+      : '/api/admin/wards';
+    const response = await fetch(url);
+    return response.json();
+  },
+  getById: async (id: number) => {
+    const response = await fetch(`/api/admin/wards/${id}`);
+    return response.json();
+  },
+  create: async (data: Omit<Ward, 'id' | 'createdAt' | 'updatedAt'>) => {
+    const response = await fetch('/api/admin/wards', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return response.json();
+  },
+  update: async (id: number, data: Partial<Ward>) => {
+    const response = await fetch(`/api/admin/wards/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    return response.json();
+  },
+  delete: async (id: number) => {
+    const response = await fetch(`/api/admin/wards/${id}`, {
+      method: 'DELETE',
+    });
+    return response.json();
   },
 }; 
