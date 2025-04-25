@@ -16,7 +16,7 @@ export default function AddressForm({ initialData, onSubmit, type }: AddressForm
     name: initialData?.name || '',
     code: initialData?.code || '',
     status: initialData?.status || 'ACTIVE',
-    provinceId: initialData?.provinceId,
+    cityId: initialData?.cityId,
     districtId: initialData?.districtId,
   });
 
@@ -31,8 +31,8 @@ export default function AddressForm({ initialData, onSubmit, type }: AddressForm
           const provincesData = await provinceService.getAll();
           setProvinces(provincesData.data || []);
         }
-        if (type === 'wards' && formData.provinceId) {
-          const districtsData = await districtService.getAll(formData.provinceId);
+        if (type === 'wards' && formData.cityId) {
+          const districtsData = await districtService.getAll(formData.cityId);
           setDistricts(districtsData.data || []);
         }
       } catch (error) {
@@ -45,7 +45,7 @@ export default function AddressForm({ initialData, onSubmit, type }: AddressForm
     };
 
     loadData();
-  }, [type, formData.provinceId]);
+  }, [type, formData.cityId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -102,9 +102,9 @@ export default function AddressForm({ initialData, onSubmit, type }: AddressForm
             Tỉnh/Thành phố
           </label>
           <select
-            id="provinceId"
-            name="provinceId"
-            value={formData.provinceId}
+            id="cityId"
+            name="cityId"
+            value={formData.cityId}
             onChange={handleChange}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-2"
             required
@@ -126,9 +126,9 @@ export default function AddressForm({ initialData, onSubmit, type }: AddressForm
               Tỉnh/Thành phố
             </label>
             <select
-              id="provinceId"
-              name="provinceId"
-              value={formData.provinceId}
+              id="cityId"
+              name="cityId"
+              value={formData.cityId}
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-2"
               required
@@ -153,7 +153,7 @@ export default function AddressForm({ initialData, onSubmit, type }: AddressForm
               onChange={handleChange}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-2"
               required
-              disabled={!formData.provinceId}
+              disabled={!formData.cityId}
             >
               <option value="">Chọn quận/huyện</option>
               {districts.map(district => (

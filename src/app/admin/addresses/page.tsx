@@ -14,14 +14,14 @@ import {
 } from '@/components/ui/table';
 import { Search, Plus, Edit, Trash2 } from 'lucide-react';
 import { provinceService, districtService, wardService } from '@/services/admin';
-import { Province, District, Ward } from '@/types/admin';
+import { City, District, Ward } from '@/types/admin';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
 export default function AddressesPage() {
   const [activeTab, setActiveTab] = useState<'provinces' | 'districts' | 'wards'>('provinces');
   const [searchTerm, setSearchTerm] = useState('');
-  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [provinces, setProvinces] = useState<City[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
   const [wards, setWards] = useState<Ward[]>([]);
   const [loading, setLoading] = useState(true);
@@ -56,7 +56,7 @@ export default function AddressesPage() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     try {
       switch (activeTab) {
         case 'provinces':
@@ -184,7 +184,7 @@ export default function AddressesPage() {
                     <TableCell>{item.name}</TableCell>
                     {activeTab === 'districts' && (
                       <TableCell>
-                        {provinces.find(p => p.id === (item as District).provinceId)?.name}
+                        {(item as District).city}
                       </TableCell>
                     )}
                     {activeTab === 'wards' && (

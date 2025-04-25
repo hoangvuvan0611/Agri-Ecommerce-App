@@ -1,5 +1,5 @@
 import axiosInstance from '@/utils/axiosInstance';
-import { Product, Order, User, StatisticsOverview, SalesData, CategoryData, TopProduct, Province, District, Ward } from '@/types/admin';
+import { Product, Order, User, StatisticsOverview, SalesData, CategoryData, TopProduct, City, District, Ward } from '@/types/admin';
 import { mockOrders } from '@/mocks/orders';
 
 // Product APIs
@@ -216,11 +216,11 @@ export const userService = {
     const response = await axiosInstance.post('/api/v1/admin/users', data);
     return response.data;
   },
-  update: async (id: number, data: Partial<User>): Promise<User> => {
+  update: async (id: string, data: Partial<User>): Promise<User> => {
     const response = await axiosInstance.put(`/api/v1/admin/users/${id}`, data);
     return response.data;
   },
-  delete: async (id: number): Promise<void> => {
+  delete: async (id: string): Promise<void> => {
     await axiosInstance.delete(`/api/v1/admin/users/${id}`);
   },
 };
@@ -256,11 +256,11 @@ export const provinceService = {
     console.log(response)
     return response.data;
   },
-  getById: async (id: number) => {
+  getById: async (id: string) => {
     const response = await fetch(`/api/admin/provinces/${id}`);
     return response.json();
   },
-  create: async (data: Omit<Province, 'id' | 'createdAt' | 'updatedAt'>) => {
+  create: async (data: Omit<City, 'id' | 'createdAt' | 'updatedAt'>) => {
     const response = await fetch('/api/admin/provinces', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -268,7 +268,7 @@ export const provinceService = {
     });
     return response.json();
   },
-  update: async (id: number, data: Partial<Province>) => {
+  update: async (id: string, data: Partial<City>) => {
     const response = await fetch(`/api/admin/provinces/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -276,7 +276,7 @@ export const provinceService = {
     });
     return response.json();
   },
-  delete: async (id: number) => {
+  delete: async (id: string) => {
     const response = await fetch(`/api/admin/provinces/${id}`, {
       method: 'DELETE',
     });
@@ -286,14 +286,14 @@ export const provinceService = {
 
 // District Services
 export const districtService = {
-  getAll: async (provinceId?: number) => {
+  getAll: async (provinceId?: string) => {
     const url = provinceId 
       ? `/api/admin/districts?provinceId=${provinceId}`
       : '/api/v1/district/showManagement';
     const response = await axiosInstance.get(url);
     return response.data;
   },
-  getById: async (id: number) => {
+  getById: async (id: string) => {
     const response = await fetch(`/api/admin/districts/${id}`);
     return response.json();
   },
@@ -305,7 +305,7 @@ export const districtService = {
     });
     return response.json();
   },
-  update: async (id: number, data: Partial<District>) => {
+  update: async (id: string, data: Partial<District>) => {
     const response = await fetch(`/api/admin/districts/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -313,7 +313,7 @@ export const districtService = {
     });
     return response.json();
   },
-  delete: async (id: number) => {
+  delete: async (id: string) => {
     const response = await fetch(`/api/admin/districts/${id}`, {
       method: 'DELETE',
     });
@@ -323,14 +323,14 @@ export const districtService = {
 
 // Ward Services
 export const wardService = {
-  getAll: async (districtId?: number) => {
+  getAll: async (districtId?: string) => {
     const url = districtId 
       ? `/api/admin/wards?districtId=${districtId}`
       : '/api/admin/wards';
     const response = await fetch(url);
     return response.json();
   },
-  getById: async (id: number) => {
+  getById: async (id: string) => {
     const response = await fetch(`/api/admin/wards/${id}`);
     return response.json();
   },
@@ -342,7 +342,7 @@ export const wardService = {
     });
     return response.json();
   },
-  update: async (id: number, data: Partial<Ward>) => {
+  update: async (id: string, data: Partial<Ward>) => {
     const response = await fetch(`/api/admin/wards/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -350,7 +350,7 @@ export const wardService = {
     });
     return response.json();
   },
-  delete: async (id: number) => {
+  delete: async (id: string) => {
     const response = await fetch(`/api/admin/wards/${id}`, {
       method: 'DELETE',
     });

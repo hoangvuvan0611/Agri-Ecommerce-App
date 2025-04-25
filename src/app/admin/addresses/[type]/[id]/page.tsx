@@ -29,6 +29,7 @@ export default function AddressPage({ params }: AddressPageProps) {
           throw new Error('Failed to fetch address');
         }
         const data = await response.json();
+        console.log(data)
         setAddress(data);
       } catch (error) {
         console.error('Error fetching address:', error);
@@ -47,7 +48,6 @@ export default function AddressPage({ params }: AddressPageProps) {
 
   const handleSubmit = async (data: Address, addressType: string) => {
     try {
-      const method = id === 'new' ? 'POST' : 'PUT';
       let url = undefined;
       if (addressType === 'provinces') {
         url = id === 'new'
@@ -62,8 +62,10 @@ export default function AddressPage({ params }: AddressPageProps) {
         ? `/api/addresses/${addressType}`
         : `/api/addresses/${addressType}/${id}`;
       }
-
-      const response = await axiosInstance.post(url, data);
+      debugger
+      const response = id === 'new' 
+        ? await axiosInstance.post(url, data)
+        : await axiosInstance.put(url, data);
 
       if (!response) {
         throw new Error('Failed to save address');

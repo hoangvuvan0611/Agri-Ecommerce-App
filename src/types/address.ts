@@ -1,10 +1,10 @@
 export interface Address {
-  id?: number;
+  id?: string;
   name: string;
   code: string;
   status: 'ACTIVE' | 'INACTIVE';
-  provinceId?: number;
-  districtId?: number;
+  cityId?: string;
+  districtId?: string;
   createdAt?: string;
   updatedAt?: string;
 } 
