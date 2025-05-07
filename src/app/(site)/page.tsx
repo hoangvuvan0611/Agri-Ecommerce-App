@@ -4,6 +4,7 @@ import BannerImage from '@/components/common/bannerImage';
 import BannerElement from '@/components/common/bannerElement';
 import Features from '../page/features';
 import ProductsIntro from '../page/products';
+import RecommendedProducts from '@/components/product/RecommendedProducts';
 
 export default function FruitStorePage () {
   return (
@@ -57,6 +58,7 @@ export default function FruitStorePage () {
             size={10}
         />
       </section>
+      <RecommendedProducts />
     </div>
   );
 };

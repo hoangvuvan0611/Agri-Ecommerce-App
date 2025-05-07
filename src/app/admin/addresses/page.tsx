@@ -45,7 +45,7 @@ export default function AddressesPage() {
           break;
         case 'wards':
           const wardsData = await wardService.getAll();
-          setWards(wardsData);
+          setWards(wardsData.data);
           break;
       }
     } catch (error) {

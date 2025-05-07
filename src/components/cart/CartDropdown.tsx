@@ -2,7 +2,7 @@
 import { useCart } from '@/contexts/CartContext';
 import { BaggageClaim, X } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
@@ -19,6 +19,10 @@ export function CartDropdown() {
     setIsOpen(false);
     router.push('/checkout');
   };
+
+  useEffect(() => {
+    console.log(items)
+  }, [])
 
   return (
     <div className="relative">

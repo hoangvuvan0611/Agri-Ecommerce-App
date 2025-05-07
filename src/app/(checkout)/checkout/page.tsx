@@ -1,13 +1,16 @@
 'use client';
 import { useCart } from '@/contexts/CartContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import axiosInstance from '@/utils/axiosInstance';
-import { Minus, Plus, X } from 'lucide-react';
+import { CheckCircle, Minus, Plus, X } from 'lucide-react';
 import Link from 'next/link';
+import { City, District, Ward } from '@/types/admin';
+import { userInteractionService } from '@/services/userInteraction';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface ShippingInfo {
   fullName: string;
@@ -22,6 +25,7 @@ interface ShippingInfo {
 
 export default function CheckoutPage() {
   const { items, totalPrice, updateQuantity, removeFromCart, clearCart } = useCart();
+  const { user } = useAuth();
   const [shippingInfo, setShippingInfo] = useState<ShippingInfo>({
     fullName: '',
     phone: '',
@@ -34,8 +38,12 @@ export default function CheckoutPage() {
   });
   const [paymentMethod, setPaymentMethod] = useState('cod');
   const [isLoading, setIsLoading] = useState(false);
+  const [cities, setCities] = useState<City[]>([]);
+  const [districts, setDistricts] = useState<District[]>([]); 
+  const [wards, setWards] = useState<Ward[]>([]);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setShippingInfo(prev => ({
       ...prev,
@@ -67,21 +75,39 @@ export default function CheckoutPage() {
         return;
       }
 
+      const orderItemList = items;
+
       const orderData = {
         shippingInfo,
         paymentMethod,
-        items,
+        orderItemList,
         totalAmount: totalPrice,
       };
 
-      debugger
-
-      const response = await axiosInstance.post('/api/v1/orders', orderData);
+      const response = await axiosInstance.post('/api/v1/order/create', orderData);
 
       if (response.data) {
+        // Ghi lại hành vi mua hàng cho từng sản phẩm
+        if (user?.id) {
+          for (const item of items) {
+            await userInteractionService.recordPurchase(user.id, item.id);
+          }
+        } else {
+          // Lưu tương tác vào localStorage nếu chưa đăng nhập
+          const interactions = JSON.parse(localStorage.getItem('userInteractions') || '[]');
+          for (const item of items) {
+            interactions.push({
+              type: 'purchase',
+              productId: item.id,
+              timestamp: new Date().toISOString()
+            });
+          }
+          localStorage.setItem('userInteractions', JSON.stringify(interactions));
+        }
+        
         toast.success('Đặt hàng thành công!');
         clearCart();
-        window.location.href = '/thank-you';
+        setShowSuccessPopup(true);
       }
     } catch (error) {
       console.log(error)
@@ -91,8 +117,72 @@ export default function CheckoutPage() {
     }
   };
 
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {   
+        const response = await axiosInstance.get('/api/v1/city/getToSelect');
+        setCities(response.data.data);
+      }
+      catch (error) {
+        console.error('Error fetching cities:', error);
+      }
+    };    
+
+    fetchCities();
+  }, []);
+
+  useEffect(() => {
+    const fetchDistricts = async () => {
+      try {   
+        const response = await axiosInstance.get(`/api/v1/district/cityId=${shippingInfo.city}`);
+        setDistricts(response.data.data);
+      }
+      catch (error) {
+        console.error('Error fetching cities:', error);
+      }
+    };    
+
+    fetchDistricts();
+  }, [shippingInfo.city]);
+
+  useEffect(() => {
+    const fetchWards = async () => {
+      try {   
+        const response = await axiosInstance.get(`/api/v1/ward/districtId=${shippingInfo.district}`);
+        setWards(response.data.data);
+      }
+      catch (error) {
+        console.error('Error fetching cities:', error);
+      }
+    };    
+
+    fetchWards();
+  }, [shippingInfo.district]);
+
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-8 w-full">
+      {/* Success Popup */}
+      {showSuccessPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div className="text-center">
+              <CheckCircle className="w-16 h-16 text-lime-600 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Đặt hàng thành công!</h3>
+              <p className="text-gray-600 mb-6">Cảm ơn bạn đã đặt hàng. Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.</p>
+              <button
+                onClick={() => {
+                  setShowSuccessPopup(false);
+                  window.location.href = '/';
+                }}
+                className="w-full bg-lime-600 text-white py-3 rounded-lg hover:bg-lime-700 transition-colors"
+              >
+                Tiếp tục mua sắm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Banner Section */}
       <div className='relative w-full h-[100px] mb-4 rounded-2xl overflow-hidden'>
         <Image
@@ -239,27 +329,57 @@ export default function CheckoutPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">Tỉnh/Thành phố</label>
-                    <Input
+                    <select
+                      id="city"
                       name="city"
                       value={shippingInfo.city}
                       onChange={handleInputChange}
-                    />
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-2"
+                      required
+                    >
+                      <option value="">Chọn tỉnh/thành phố</option>
+                      {cities?.map(city => (
+                        <option key={city.id} value={city.id}>
+                          {city.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">Quận/Huyện</label>
-                    <Input
+                    <select
+                      id="district"
                       name="district"
                       value={shippingInfo.district}
                       onChange={handleInputChange}
-                    />
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-2"
+                      required
+                    >
+                      <option value="">Chọn quận/huyện</option>
+                      {districts?.map(district => (
+                        <option key={district.id} value={district.id}>
+                          {district.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">Phường/Xã</label>
-                    <Input
+                    <select
+                      id="ward"
                       name="ward"
                       value={shippingInfo.ward}
                       onChange={handleInputChange}
-                    />
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-2"
+                      required
+                    >
+                      <option value="">Chọn phường/xã</option>
+                      {wards?.map(ward => (
+                        <option key={ward.id} value={ward.id}>
+                          {ward.name}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 

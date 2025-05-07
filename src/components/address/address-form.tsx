@@ -3,7 +3,7 @@
 import { Address } from '@/types/address';
 import { useState, useEffect } from 'react';
 import { provinceService, districtService } from '@/services/admin';
-import { Province, District } from '@/types/admin';
+import { City, District } from '@/types/admin';
 
 interface AddressFormProps {
   initialData?: Address;
@@ -14,13 +14,13 @@ interface AddressFormProps {
 export default function AddressForm({ initialData, onSubmit, type }: AddressFormProps) {
   const [formData, setFormData] = useState<Address>({
     name: initialData?.name || '',
-    code: initialData?.code || '',
+    postalCode: initialData?.postalCode || '',
     status: initialData?.status || 'ACTIVE',
     cityId: initialData?.cityId,
     districtId: initialData?.districtId,
   });
 
-  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [cities, setCities] = useState<City[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,7 +29,7 @@ export default function AddressForm({ initialData, onSubmit, type }: AddressForm
       try {
         if (type === 'districts' || type === 'wards') {
           const provincesData = await provinceService.getAll();
-          setProvinces(provincesData.data || []);
+          setCities(provincesData.data || []);
         }
         if (type === 'wards' && formData.cityId) {
           const districtsData = await districtService.getAll(formData.cityId);
@@ -37,7 +37,7 @@ export default function AddressForm({ initialData, onSubmit, type }: AddressForm
         }
       } catch (error) {
         console.error('Error loading data:', error);
-        setProvinces([]);
+        setCities([]);
         setDistricts([]);
       } finally {
         setLoading(false);
@@ -87,9 +87,9 @@ export default function AddressForm({ initialData, onSubmit, type }: AddressForm
         </label>
         <input
           type="text"
-          id="code"
-          name="code"
-          value={formData.code}
+          id="postalCode"
+          name="postalCode"
+          value={formData.postalCode}
           onChange={handleChange}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 px-2"
           required
@@ -110,9 +110,9 @@ export default function AddressForm({ initialData, onSubmit, type }: AddressForm
             required
           >
             <option value="">Chọn tỉnh/thành phố</option>
-            {provinces.map(province => (
-              <option key={province.id} value={province.id}>
-                {province.name}
+            {cities.map(city => (
+              <option key={city.id} value={city.id}>
+                {city.name}
               </option>
             ))}
           </select>
@@ -134,9 +134,9 @@ export default function AddressForm({ initialData, onSubmit, type }: AddressForm
               required
             >
               <option value="">Chọn tỉnh/thành phố</option>
-              {provinces.map(province => (
-                <option key={province.id} value={province.id}>
-                  {province.name}
+              {cities.map(city => (
+                <option key={city.id} value={city.id}>
+                  {city.name}
                 </option>
               ))}
             </select>

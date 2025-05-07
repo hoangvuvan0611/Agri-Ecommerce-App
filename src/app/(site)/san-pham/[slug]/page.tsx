@@ -11,11 +11,15 @@ import 'swiper/css/navigation';
 import Link from 'next/link';
 import { useCart } from '@/contexts/CartContext';
 import { toast } from 'sonner';
+import { userInteractionService } from '@/services/userInteraction';
+import { useAuth } from '@/contexts/AuthContext';
+import { CartItem } from '@/contexts/CartContext';
 
 export default function ProductPage() {
 
   const { slug } = useParams();
   const { addToCart } = useCart();
+  const { user } = useAuth();
 
   const [product, setProduct] = useState<ProductType | null>(null);
   const [ productSuggest, setProductSuggest ] = useState<ProductType[]>([]);
@@ -26,6 +30,20 @@ export default function ProductPage() {
     .then((response) => {
       const productData = response?.data?.data;
       setProduct(productData);
+      
+      // Ghi lại hành vi xem sản phẩm
+      if (user?.id && productData?.id) {
+        userInteractionService.recordView(user.id, productData.id);
+      } else {
+        // Lưu tương tác vào localStorage nếu chưa đăng nhập
+        const interactions = JSON.parse(localStorage.getItem('userInteractions') || '[]');
+        interactions.push({
+          type: 'view',
+          productId: productData.id,
+          timestamp: new Date().toISOString()
+        });
+        localStorage.setItem('userInteractions', JSON.stringify(interactions));
+      }
       
       if (productData?.id) {
         console.log('Calling recommend API with ID:', productData.id);
@@ -42,11 +60,37 @@ export default function ProductPage() {
     .catch((error) => {
       console.error('Error fetching product:', error);
     });
-  }, [slug]); // Chỉ phụ thuộc vào slug
+  }, [slug, user?.id]); // Chỉ phụ thuộc vào slug và user.id
 
   const handleAddToCart = () => {
     if (product) {
-      addToCart(product);
+      // Chuyển đổi ProductType sang CartItem
+      const cartItem: CartItem = {
+        id: product.id,
+        name: product.name,
+        price: product.salePrice || product.originalPrice,
+        quantity: 1,
+        path: product.path,
+        originalPrice: product.originalPrice,
+        salePrice: product.salePrice
+      };
+      
+      addToCart(cartItem);
+      
+      // Ghi lại hành vi thêm vào giỏ hàng
+      if (user?.id) {
+        userInteractionService.recordCart(user.id, product.id);
+      } else {
+        // Lưu tương tác vào localStorage nếu chưa đăng nhập
+        const interactions = JSON.parse(localStorage.getItem('userInteractions') || '[]');
+        interactions.push({
+          type: 'cart',
+          productId: product.id,
+          timestamp: new Date().toISOString()
+        });
+        localStorage.setItem('userInteractions', JSON.stringify(interactions));
+      }
+      
       toast.success('Đã thêm sản phẩm vào giỏ hàng');
     }
   };

@@ -59,7 +59,7 @@ export default function AddressPage({ params }: AddressPageProps) {
         : `/api/v1/district/update/${id}`;
       } else {
         url = id === 'new'
-        ? `/api/addresses/${addressType}`
+        ? `/api/v1/ward/create`
         : `/api/addresses/${addressType}/${id}`;
       }
       debugger

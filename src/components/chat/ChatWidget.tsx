@@ -53,19 +53,21 @@ export default function ChatWidget() {
             extractedText += data.response;
           }
         } catch (_error) {
+          console.warn('Error parsing JSON:', _error, jsonStr);
           console.warn('Error parsing JSON in stream chunk:', jsonStr);
         }
       }
       
       return extractedText;
     } catch (_error) {
+      console.error('Error parsing stream chunk:', _error);
       console.error('Error processing stream chunk:', chunk);
       return chunk; // Trả về nguyên chunk nếu xử lý lỗi
     }
   };
 
   const callChatAPI = async (prompt: string) => {
-    const apiUrl = 'https://unilife.io.vn/llama/api/generate';
+    const apiUrl = 'http://localhost:11434/api/generate';
     
     try {
       setIsLoading(true);
@@ -103,7 +105,7 @@ export default function ChatWidget() {
 
       // Gọi API với stream=true
       const response = await fetch(apiUrl, {
-        method: 'POST',
+        method: 'POST', 
         headers: {
           'Content-Type': 'application/json',
         },
@@ -201,11 +203,11 @@ export default function ChatWidget() {
 
       {/* Chat Popup */}
       {isOpen && (
-        <div className="fixed bottom-4 right-4 w-96 bg-white rounded-lg shadow-xl z-50">
-          <div className="bg-lime-600 text-white p-4 rounded-t-lg flex justify-between items-center">
+        <div className="fixed bottom-4 right-4 w-96 rounded-lg shadow-xl z-50">
+          <div className="bg-gray-400/50 text-white p-4 rounded-t-lg flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Bot className="w-5 h-5" />
-              <span className="font-semibold">Hỗ trợ khách hàng AI</span>
+              <span className="font-semibold te">AI Hỗ trợ khách hàng</span>
             </div>
             <button
               onClick={() => setIsOpen(false)}
@@ -215,7 +217,7 @@ export default function ChatWidget() {
             </button>
           </div>
 
-          <div className="h-96 overflow-y-auto p-4 space-y-4">
+          <div className="h-96 overflow-y-auto p-4 space-y-4 bg-white ">
             {messages.length === 0 ? (
               <div className="text-center text-gray-500 mt-8">
                 <Bot className="w-12 h-12 mx-auto mb-2 text-lime-600" />
@@ -257,13 +259,13 @@ export default function ChatWidget() {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="p-4 border-t">
+          <div className="p-4 border-t bg-white">
             <div className="flex gap-2">
               <Input
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Nhập tin nhắn..."
+                placeholder="Nhập câu hỏi..."
                 className="flex-1"
                 disabled={isLoading}
               />

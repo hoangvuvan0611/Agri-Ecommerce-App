@@ -286,9 +286,10 @@ export const provinceService = {
 
 // District Services
 export const districtService = {
-  getAll: async (provinceId?: string) => {
-    const url = provinceId 
-      ? `/api/admin/districts?provinceId=${provinceId}`
+  // Thực hiện lấy thông tin danh sách quận huyện theo thành phố
+  getAll: async (cityId?: string) => {
+    const url = cityId 
+      ? `/api/v1/district/cityId=${cityId}`
       : '/api/v1/district/showManagement';
     const response = await axiosInstance.get(url);
     return response.data;
@@ -325,10 +326,10 @@ export const districtService = {
 export const wardService = {
   getAll: async (districtId?: string) => {
     const url = districtId 
-      ? `/api/admin/wards?districtId=${districtId}`
-      : '/api/admin/wards';
-    const response = await fetch(url);
-    return response.json();
+      ? `/api/v1/ward?districtId=${districtId}`
+      : '/api/v1/ward/showManagement';
+    const response = await axiosInstance.get(url);
+    return response.data;
   },
   getById: async (id: string) => {
     const response = await fetch(`/api/admin/wards/${id}`);
