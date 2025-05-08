@@ -25,6 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import Image from 'next/image';
 
 export default function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -206,6 +207,7 @@ export default function ProductsPage() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Ảnh</TableHead>
               <TableHead 
                 className="cursor-pointer" 
                 onClick={() => handleSort('name')}
@@ -248,6 +250,16 @@ export default function ProductsPage() {
             ) : (
               paginatedProducts.map((product) => (
                 <TableRow key={product.id}>
+                  <TableCell>
+                    <div className="w-16 h-16 relative">
+                      <Image
+                        src={`http://116.104.51.101:8080/agri-shop/${product?.path}`}
+                        alt={product.name}
+                        fill
+                        className="object-cover rounded-t-lg"
+                      />
+                    </div>
+                  </TableCell>
                   <TableCell>{product.name}</TableCell>
                   <TableCell>{product.category}</TableCell>
                   <TableCell>{product.originalPrice.toLocaleString('vi-VN')}đ</TableCell>

@@ -27,6 +27,10 @@ export const productService = {
     const response = await axiosInstance.get('/api/v1/product/showManagement');
     return response.data.data;
   },
+  getById: async (id: number): Promise<Product> => {
+    const response = await axiosInstance.get(`/api/v1/product/${id}`);
+    return response.data.data;
+  },
   updateStatus: async (id: number, status: 'ACTIVE' | 'INACTIVE'): Promise<Product> => {
     const response = await axiosInstance.put(`/api/v1/product/${id}/status`, { status });
     return response.data;
@@ -37,17 +41,13 @@ export const productService = {
 export const orderService = {
   getAll: async (): Promise<Order[]> => {
     // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return mockOrders;
+    const response = await axiosInstance.get('/api/v1/order/all');
+    return response.data.data;
   },
-  getById: async (id: number): Promise<Order> => {
+  getById: async (id: string): Promise<Order> => {
     // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    const order = mockOrders.find(order => order.id === id);
-    if (!order) {
-      throw new Error('Order not found');
-    }
-    return order;
+    const response = await axiosInstance.get(`/api/v1/order/${id}`);
+    return response.data.data;
   },
   updateStatus: async (id: number, status: Order['status']): Promise<Order> => {
     // Simulate API delay

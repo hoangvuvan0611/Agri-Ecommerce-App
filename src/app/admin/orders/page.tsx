@@ -58,7 +58,7 @@ export default function OrdersPage() {
   };
 
   const filteredOrders = orders.filter(order =>
-    order.customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order?.customer?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     order.id.toString().includes(searchTerm)
   );
 
@@ -121,18 +121,18 @@ export default function OrdersPage() {
               filteredOrders.map((order) => (
                 <TableRow key={order.id}>
                   <TableCell>#{order.id}</TableCell>
-                  <TableCell>{order.customer.name}</TableCell>
-                  <TableCell>{order.total_fee.toLocaleString('vi-VN')}đ</TableCell>
+                  <TableCell>{order?.customer?.name}</TableCell>
+                  <TableCell>{order?.totalFee.toLocaleString('vi-VN')}đ</TableCell>
                   <TableCell>
                     <span className={`px-2 py-1 rounded-full text-xs ${
-                      order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                      order.status === 'processing' ? 'bg-blue-100 text-blue-800' :
-                      order.status === 'completed' ? 'bg-green-100 text-green-800' :
+                      order.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                      order.status === 'PROCESSING' ? 'bg-blue-100 text-blue-800' :
+                      order.status === 'COMPLETED' ? 'bg-green-100 text-green-800' :
                       'bg-red-100 text-red-800'
                     }`}>
-                      {order.status === 'pending' ? 'Chờ xử lý' :
-                       order.status === 'processing' ? 'Đang xử lý' :
-                       order.status === 'completed' ? 'Hoàn thành' :
+                      {order.status === 'PENDING' ? 'Chờ xử lý' :
+                       order.status === 'PROCESSING' ? 'Đang xử lý' :
+                       order.status === 'COMPLETED' ? 'Hoàn thành' :
                        'Đã hủy'}
                     </span>
                   </TableCell>
@@ -145,29 +145,31 @@ export default function OrdersPage() {
                     >
                       <Eye className="h-4 w-4" />
                     </Button>
-                    {order.status === 'pending' && (
+                    {order.status === 'PENDING' && (
                       <>
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleStatusChange(order.id, 'processing')}
+                          title='Xác nhận'
+                          onClick={() => handleStatusChange(order.id, 'PROCESSING')}
                         >
                           <Check className="h-4 w-4 text-green-600" />
                         </Button>
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleStatusChange(order.id, 'cancelled')}
+                          title='Từ chối'
+                          onClick={() => handleStatusChange(order.id, 'CANCELLED')}
                         >
                           <X className="h-4 w-4 text-red-600" />
                         </Button>
                       </>
                     )}
-                    {order.status === 'processing' && (
+                    {order.status === 'PROCESSING' && (
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleStatusChange(order.id, 'completed')}
+                        onClick={() => handleStatusChange(order.id, 'COMPLETED')}
                       >
                         <Check className="h-4 w-4 text-green-600" />
                       </Button>

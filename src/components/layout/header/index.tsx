@@ -1,11 +1,10 @@
 'use client';
-import { Search, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { User } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { Navbar } from "../navbar";
 import { useEffect, useState } from "react";
 import { CartDropdown } from '@/components/cart/CartDropdown';
+import { SearchBar } from '@/components/search/SearchBar';
 
 export function Header() {
   const [isLogin, setIsLogin] = useState(false);
@@ -34,17 +33,7 @@ export function Header() {
           <Logo />
 
           {/* Search place */}
-          <div className="relative">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Tìm kiếm..."
-              type="text"
-              className="pl-8 w-52 md:w-[700px] border focus:outline-none focus:ring-0 focus:border-none"
-            />
-            <Button className="absolute right-0 top-0 bg-lime-600 hover:bg-lime-700">
-              Tìm kiếm
-            </Button>
-          </div>
+          <SearchBar />
         </div>
 
         {/* control place */}

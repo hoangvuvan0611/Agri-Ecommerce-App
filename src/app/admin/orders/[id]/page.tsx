@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { orderService } from '@/services/admin';
 import { Order } from '@/types/admin';
 import { toast } from 'sonner';
@@ -30,7 +29,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
     try {
       setLoading(true);
       setError(null);
-      const data = await orderService.getById(Number(params.id));
+      const data = await orderService.getById(params.id);
       setOrder(data);
     } catch (error) {
       console.error('Error loading order:', error);
@@ -46,9 +45,9 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
 
     try {
       let updatedOrder;
-      if (status === 'cancelled') {
+      if (status === 'CANCELLED') {
         updatedOrder = await orderService.cancelOrder(order.id);
-      } else if (status === 'completed') {
+      } else if (status === 'COMPLETED') {
         updatedOrder = await orderService.completeOrder(order.id);
       } else {
         updatedOrder = await orderService.updateStatus(order.id, status);
@@ -135,14 +134,14 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
               <div className="text-sm text-gray-500">Trạng thái</div>
               <div className="mt-1">
                 <Badge variant={
-                  order.status === 'pending' ? 'warning' :
-                  order.status === 'processing' ? 'info' :
-                  order.status === 'completed' ? 'success' :
+                  order.status === 'PENDING' ? 'warning' :
+                  order.status === 'PROCESSING' ? 'info' :
+                  order.status === 'COMPLETED' ? 'success' :
                   'destructive'
                 }>
-                  {order.status === 'pending' ? 'Chờ xử lý' :
-                   order.status === 'processing' ? 'Đang xử lý' :
-                   order.status === 'completed' ? 'Hoàn thành' :
+                  {order.status === 'PENDING' ? 'Chờ xử lý' :
+                   order.status === 'PROCESSING' ? 'Đang xử lý' :
+                   order.status === 'COMPLETED' ? 'Hoàn thành' :
                    'Đã hủy'}
                 </Badge>
               </div>
@@ -150,43 +149,43 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
             <div>
               <div className="text-sm text-gray-500">Ngày đặt</div>
               <div className="mt-1">
-                {new Date(order.created_at).toLocaleDateString('vi-VN')}
+                {new Date(order.createdAt).toLocaleDateString('vi-VN')}
               </div>
             </div>
-            {order.delivery_at && (
+            {order.deliveryAt && (
               <div>
                 <div className="text-sm text-gray-500">Ngày giao hàng</div>
                 <div className="mt-1">
-                  {new Date(order.delivery_at).toLocaleDateString('vi-VN')}
+                  {new Date(order.deliveryAt).toLocaleDateString('vi-VN')}
                 </div>
               </div>
             )}
-            {order.canceled_at && (
+            {order.canceledAt && (
               <div>
                 <div className="text-sm text-gray-500">Ngày hủy</div>
                 <div className="mt-1">
-                  {new Date(order.canceled_at).toLocaleDateString('vi-VN')}
+                  {new Date(order.canceledAt).toLocaleDateString('vi-VN')}
                 </div>
               </div>
             )}
-            {order.completed_at && (
+            {order.completedAt && (
               <div>
                 <div className="text-sm text-gray-500">Ngày hoàn thành</div>
                 <div className="mt-1">
-                  {new Date(order.completed_at).toLocaleDateString('vi-VN')}
+                  {new Date(order.completedAt).toLocaleDateString('vi-VN')}
                 </div>
               </div>
             )}
             <div>
               <div className="text-sm text-gray-500">Phí giao hàng</div>
               <div className="mt-1">
-                {order.shipping_fee.toLocaleString('vi-VN')}đ
+                {order?.shippingFee?.toLocaleString('vi-VN')}đ
               </div>
             </div>
             <div>
               <div className="text-sm text-gray-500">Tổng tiền</div>
               <div className="mt-1 font-semibold">
-                {order.total_fee.toLocaleString('vi-VN')}đ
+                {order.totalFee.toLocaleString('vi-VN')}đ
               </div>
             </div>
           </div>
@@ -198,19 +197,19 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
           <div className="space-y-4">
             <div>
               <div className="text-sm text-gray-500">Họ tên</div>
-              <div className="mt-1">{order.customer.name}</div>
+              <div className="mt-1">{order?.customer?.name}</div>
             </div>
             <div>
               <div className="text-sm text-gray-500">Email</div>
-              <div className="mt-1">{order.customer.email}</div>
+              <div className="mt-1">{order?.customer?.email}</div>
             </div>
             <div>
               <div className="text-sm text-gray-500">Số điện thoại</div>
-              <div className="mt-1">{order.customer.phone}</div>
+              <div className="mt-1">{order?.customer?.phone}</div>
             </div>
             <div>
               <div className="text-sm text-gray-500">Địa chỉ giao hàng</div>
-              <div className="mt-1">{order.shippingAddress}</div>
+              <div className="mt-1">{order?.shippingAddress}</div>
             </div>
           </div>
         </Card>
@@ -230,7 +229,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
               </tr>
             </thead>
             <tbody>
-              {order.items.map((item) => (
+              {order?.items?.map((item) => (
                 <tr key={item.id} className="border-b">
                   <td className="py-4">
                     <div className="flex items-center">
@@ -263,7 +262,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
                   Tạm tính
                 </td>
                 <td className="text-right font-semibold py-4">
-                  {(order.total_fee - order.shipping_fee).toLocaleString('vi-VN')}đ
+                  {(order?.totalFee - order.shippingFee).toLocaleString('vi-VN')}đ
                 </td>
               </tr>
               <tr>
@@ -271,7 +270,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
                   Phí giao hàng
                 </td>
                 <td className="text-right font-semibold py-4">
-                  {order.shipping_fee.toLocaleString('vi-VN')}đ
+                  {order?.shippingFee?.toLocaleString('vi-VN') || 0}đ
                 </td>
               </tr>
               <tr>
@@ -279,7 +278,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
                   Tổng cộng
                 </td>
                 <td className="text-right font-semibold py-4">
-                  {order.total_fee.toLocaleString('vi-VN')}đ
+                  {order?.totalFee?.toLocaleString('vi-VN')}đ
                 </td>
               </tr>
             </tfoot>
@@ -288,25 +287,25 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
       </Card>
 
       {/* Cập nhật trạng thái */}
-      {order.status !== 'completed' && order.status !== 'cancelled' && (
+      {order.status !== 'COMPLETED' && order.status !== 'CANCELLED' && (
         <Card className="p-6">
           <h2 className="text-lg font-semibold mb-4">Cập nhật trạng thái</h2>
           <div className="flex space-x-4">
-            {order.status === 'pending' && (
+            {order.status === 'PENDING' && (
               <>
-                <Button onClick={() => handleStatusChange('processing')}>
+                <Button onClick={() => handleStatusChange('PROCESSING')}>
                   Xác nhận đơn hàng
                 </Button>
                 <Button
                   variant="destructive"
-                  onClick={() => handleStatusChange('cancelled')}
+                  onClick={() => handleStatusChange('CANCELLED')}
                 >
                   Hủy đơn hàng
                 </Button>
               </>
             )}
-            {order.status === 'processing' && (
-              <Button onClick={() => handleStatusChange('completed')}>
+            {order.status === 'PROCESSING' && (
+              <Button onClick={() => handleStatusChange('COMPLETED')}>
                 Hoàn thành đơn hàng
               </Button>
             )}

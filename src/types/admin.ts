@@ -7,6 +7,7 @@ export interface Product {
   quantity: number;
   category: string;
   images: string[];
+  path: string;
   status: 'ACTIVE' | 'INACTIVE';
   createdAt: string;
   updatedAt: string;
@@ -14,19 +15,19 @@ export interface Product {
 
 export interface Order {
   id: number;
-  customer_id: number;
-  status: 'pending' | 'processing' | 'completed' | 'cancelled';
-  shipping_fee: number;
-  delivery_info_id: number;
-  total_fee: number;
-  payment_id: number | null;
-  coupon_id: number | null;
-  affiliate_id: number | null;
-  created_at: string;
-  canceled_at: string | null;
-  completed_at: string | null;
-  delivery_at: string | null;
-  updated_at: string;
+  customerId: number;
+  status: 'PENDING' | 'PROCESSING'  | 'SHIPPED' | 'DELIVERED' | 'CANCELLED' | 'RETURNED' | 'REFUNDED' | 'ON_HOLD' | 'COMPLETED' | 'FAILED';
+  shippingFee: number;
+  deliveryInfoId: number;
+  totalFee: number;
+  paymentId: number | null;
+  couponId: number | null;
+  affiliateId: number | null;
+  createdAt: string;
+  canceledAt: string | null;
+  completedAt: string | null;
+  deliveryAt: string | null;
+  updatedAt: string;
   customer: {
     name: string;
     email: string;
