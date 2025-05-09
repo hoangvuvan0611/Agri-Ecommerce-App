@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import { userInteractionService } from '@/services/userInteraction';
 import { useAuth } from '@/contexts/AuthContext';
 import { CartItem } from '@/contexts/CartContext';
+import { activityLogService } from '@/services/activityLogService';
 
 export default function ProductPage() {
 
@@ -93,6 +94,11 @@ export default function ProductPage() {
       
       toast.success('Đã thêm sản phẩm vào giỏ hàng');
     }
+  };
+
+  const handleProductClick = async (productId: string) => {
+    // Lưu log khi người dùng click vào sản phẩm
+    await activityLogService.logView(productId);
   };
 
   return (
@@ -207,7 +213,9 @@ export default function ProductPage() {
                 className='p-2'
               >
                 <Link href={`/san-pham/${item?.slug}`}>
-                  <div className='group cursor-pointer bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200'>
+                  <div className='group cursor-pointer bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200'
+                    onClick={() => handleProductClick(item.id)}
+                  >
                     <div className='relative aspect-square'>
                       <Image
                         src={`http://116.104.51.101:8080/agri-shop/${item?.path}`}

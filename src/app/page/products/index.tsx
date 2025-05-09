@@ -8,6 +8,7 @@ import Link from "next/link";
 import AxiosInstance from "@/utils/axiosInstance";
 import { useCart } from '@/contexts/CartContext';
 import { toast } from 'sonner';
+import { activityLogService } from "@/services/activityLogService";
 
 interface ProductsProps {
     image: string;
@@ -59,6 +60,16 @@ export default function ProductsIntro ({
         toast.success('Đã thêm sản phẩm vào giỏ hàng');
     };
 
+    const handleProductClick = async (productId: string) => {
+        // Lưu log khi người dùng click vào sản phẩm
+        await activityLogService.logView(productId);
+    };
+
+    const handleAddProductToCartClick = async (productId: string) => {
+        // Lưu log khi người dùng click vào sản phẩm
+        await activityLogService.logCartAction( 'add_to_cart',productId);
+    };
+
     return (
         <div className="mt-20">
             <h2 className="text-2xl font-bold text-gray-600">{title}</h2>
@@ -86,7 +97,10 @@ export default function ProductsIntro ({
                 <div className="col-span-9">
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                         {productList && productList?.map((product: ProductType) => (
-                            <div key={product.id} className="hover:shadow-lg rounded-xl cursor-pointer h-[340px]">
+                            <div key={product.id} 
+                                className="hover:shadow-lg rounded-xl cursor-pointer h-[340px]"
+                                onClick={() => handleProductClick(product.id)}
+                            >
                                 <div className="p-4 h-full flex flex-col">
                                     <Link href={`/san-pham/${product?.slug}`} className="group relative overflow-hidden rounded-md h-48">
                                         {/* Ảnh và hiệu ứng zoom */}
@@ -138,6 +152,7 @@ export default function ProductsIntro ({
                                                 onClick={(e) => {
                                                     e.preventDefault();
                                                     handleAddToCart(product);
+                                                    handleAddProductToCartClick(product.id);
                                                 }}
                                             >
                                                 <ShoppingCart className="w-4 h-4 mr-2" />

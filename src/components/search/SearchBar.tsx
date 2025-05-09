@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import axiosInstance from "@/utils/axiosInstance";
 import debounce from "lodash/debounce";
+import { activityLogService } from "@/services/activityLogService";
 
 interface SearchResult {
   id: string;
@@ -38,6 +39,9 @@ export function SearchBar() {
         const data = response.data.data;
         setResults(data);
         setShowResults(true);
+
+        // Lưu log tìm kiếm
+        await activityLogService.logSearch(term);
       } catch (error) {
         console.error("Lỗi khi tìm kiếm:", error);
       } finally {
@@ -76,6 +80,11 @@ export function SearchBar() {
     debouncedSearch(value);
   };
 
+  const handleProductClick = async (productId: string) => {
+    // Lưu log khi người dùng click vào sản phẩm
+    await activityLogService.logView(productId);
+  };
+
   return (
     <div className="relative" ref={searchRef}>
       <div className="relative">
@@ -107,6 +116,7 @@ export function SearchBar() {
                 <Link
                   key={result.id}
                   href={`/san-pham/${result.slug}`}
+                  onClick={() => handleProductClick(result.id)}
                   className="flex items-center p-3 hover:bg-gray-50 border-b last:border-b-0"
                 >
                   <div className="relative w-12 h-12 mr-3">

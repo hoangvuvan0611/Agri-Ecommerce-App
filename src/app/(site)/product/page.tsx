@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { ProductType } from "../../page/products/type";
 import Image from "next/image";
 import Link from "next/link";
+import { activityLogService } from "@/services/activityLogService";
 
 export default function ProductPage() {
     const [products, setProducts] = useState<ProductType[]>([]);
@@ -17,6 +18,11 @@ export default function ProductPage() {
             setProducts(recommendResponse?.data?.data);
         })
     }, []);
+
+    const handleProductClick = async (productId: string) => {
+        // Lưu log khi người dùng click vào sản phẩm
+        await activityLogService.logView(productId);
+    };
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-4">
@@ -78,7 +84,10 @@ export default function ProductPage() {
             {/* Product Grid */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                 {products.map((product) => (
-                    <div key={product.id} className="bg-white rounded-lg shadow hover:shadow-md transition-shadow duration-200">
+                    <div key={product.id} 
+                        className="bg-white rounded-lg shadow hover:shadow-md transition-shadow duration-200"
+                        onClick={() => handleProductClick(product.id)}
+                    >
                         <div className="relative aspect-square">
                             <Image
                                 src={`http://116.104.51.101:8080/agri-shop/${product?.path}`}
