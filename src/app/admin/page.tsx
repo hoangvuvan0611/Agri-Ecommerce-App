@@ -4,14 +4,20 @@ import { Package, ShoppingCart, Users, TrendingUp } from 'lucide-react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import products from '../page/products';
-import { productService } from '@/services/admin';
+import { orderService, productService } from '@/services/admin';
+import { Order } from '@/types/admin';
 
 
 export default function AdminDashboard() {
 
   const [ stats, setStats ] = useState([]);
+  // Danh sach don hang gan day
+  const [ orders, setOrders ] = useState<Order[]>([]);
+  // Danh sach san sam ban chay nhat
+  const [ products, setProducts ] = useState([]);
 
   useEffect(() => {
+    // Goi lay thong tin san pham
     const getStats = async () => {
       const numProducts = await productService.getTotalProducts();
       const statsTemp = [
@@ -46,9 +52,18 @@ export default function AdminDashboard() {
       ];
 
       setStats(statsTemp);
+    };
+
+    // Goi lay thong tin danh sach cac don hang gan day
+    const getOrders = async () => {
+      const dataOrder = await orderService.getAll();
+      setOrders(dataOrder || []);
     }
 
+    // Goi lay thong tin tong quan
     getStats();
+    // Goi lay thong tin don hang gan day
+    getOrders();
   }, [products]);
 
   return (
@@ -94,24 +109,24 @@ export default function AdminDashboard() {
             <thead>
               <tr className="text-left text-sm text-gray-600">
                 <th className="pb-4">Mã đơn hàng</th>
-                <th className="pb-4">Khách hàng</th>
+                <th className="pb-4">Tên khách hàng</th>
                 <th className="pb-4">Tổng tiền</th>
                 <th className="pb-4">Trạng thái</th>
-                <th className="pb-4">Ngày đặt</th>
+                <th className="pb-4">Thời gian đặt hàng</th>
               </tr>
             </thead>
             <tbody>
-              {[1, 2, 3, 4, 5].map((order) => (
-                <tr key={order} className="border-t">
-                  <td className="py-4">#ORD-{order}</td>
-                  <td className="py-4">Nguyễn Văn A</td>
-                  <td className="py-4">1,234,000₫</td>
+              {orders?.map((order) => (
+                <tr key={order.id} className="border-t">
+                  <td className="py-4">{order.id}</td>
+                  <td className="py-4">{order.customerId}</td>
+                  <td className="py-4">{order.totalFee.toLocaleString("vi-VN")}đ</td>
                   <td className="py-4">
                     <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm">
-                      Đã giao
+                      {order.status}
                     </span>
                   </td>
-                  <td className="py-4">12/04/2024</td>
+                  <td className="py-4">{new Date(order.createdAt).toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>
