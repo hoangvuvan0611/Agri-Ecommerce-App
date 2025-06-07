@@ -1,12 +1,16 @@
 'use client';
 import AxiosInstance from "@/utils/axiosInstance";
 import { useState } from "react";
-import { FilterIcon } from "lucide-react";
+import { FilterIcon, ShoppingCart } from "lucide-react";
 import { useEffect } from "react";
 import { ProductType } from "../../page/products/type";
 import Image from "next/image";
 import Link from "next/link";
 import { activityLogService } from "@/services/activityLogService";
+import { Button } from "@/components/ui/button";
+import { useCart } from "@/contexts/CartContext";
+import { toast } from "sonner";
+import { MESSAGE_ADD_TO_CART_SUCCESS } from "@/lib/constants";
 
 export default function ProductPage() {
     const [products, setProducts] = useState<ProductType[]>([]);
@@ -22,6 +26,25 @@ export default function ProductPage() {
     const handleProductClick = async (productId: string) => {
         // Lưu log khi người dùng click vào sản phẩm
         await activityLogService.logView(productId);
+    };
+
+    const { addToCart } = useCart();
+    const handleAddToCart = (product: ProductType) => {
+        addToCart({
+            id: product.id,
+            name: product.name,
+            price: product.originalPrice,
+            quantity: 1,    
+            path: product.path,
+            salePrice: product.salePrice,   
+            originalPrice: product.originalPrice
+        });
+        toast.success(MESSAGE_ADD_TO_CART_SUCCESS);
+    };
+
+    const handleAddProductToCartClick = async (productId: string) => {
+        // Lưu log khi người dùng click vào sản phẩm
+        await activityLogService.logCartAction( 'add_to_cart',productId);
     };
 
     return (
@@ -83,33 +106,50 @@ export default function ProductPage() {
                 </div>
 
                 {/* Product Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 cursor-pointer">
                     {products.map((product) => (
                         <div key={product.id} 
                             className="bg-white rounded-lg shadow hover:shadow-md transition-shadow duration-200"
                             onClick={() => handleProductClick(product.id)}
                         >
-                            <div className="relative aspect-square">
-                                <Image
-                                    src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${product?.path}`}
-                                    alt={product.name}
-                                    fill
-                                    className="object-cover rounded-t-lg"
-                                />
-                                {product.salePrice && (
-                                    <span className="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 text-xs rounded">
-                                        -{Math.round(((product.originalPrice - product.salePrice) / product.originalPrice) * 100)}%
-                                    </span>
-                                )}
-                            </div>
-                            <div className="p-4">
-                                <h3 className="text-sm font-medium text-gray-900 mb-2 truncate">{product.name}</h3>
-                                <div className="flex justify-between items-center">
-                                    <div className="text-green-600 font-semibold">
-                                        {product?.originalPrice?.toLocaleString('vi-VN')}₫
+                            <Link href={`/san-pham/${product.slug}`} className="group relative overflow-hidden rounded-lg">
+                                <div className="group overflow-hidden relative aspect-square">
+                                    <Image
+                                        src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${product?.path}`}
+                                        alt={product.name}
+                                        layout="fill"
+                                        objectFit="cover"
+                                        objectPosition="center"
+                                        quality={100}
+                                        className="transition-transform duration-1000 ease-in-out group-hover:scale-110"
+                                    />
+                                    {product.salePrice && (
+                                        <span className="absolute top-2 left-2 bg-lime-500 text-white px-2 py-1 text-xs rounded">
+                                            -{Math.round(((product.originalPrice - product.salePrice) / product.originalPrice) * 100)}%
+                                        </span>
+                                    )}
+                                </div>
+                                <div className="p-4">
+                                    <h3 className="text-sm font-medium text-gray-900 mb-2 truncate">{product.name}</h3>
+                                    <div className="flex justify-between items-center">
+                                        <div className="text-lime-600 font-semibold">
+                                            {product?.originalPrice?.toLocaleString('vi-VN')}₫
+                                        </div>
+                                        <Button 
+                                            size="sm" 
+                                            className="bg-lime-600 hover:bg-lime-700"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                handleAddToCart(product);
+                                                handleAddProductToCartClick(product.id);
+                                            }}
+                                        >
+                                            <ShoppingCart className="w-4 h-4 mr-2" />
+                                            Thêm
+                                        </Button>
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         </div>
                     ))}
                 </div>

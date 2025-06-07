@@ -15,6 +15,7 @@ import { userInteractionService } from '@/services/userInteraction';
 import { useAuth } from '@/contexts/AuthContext';
 import { CartItem } from '@/contexts/CartContext';
 import { activityLogService } from '@/services/activityLogService';
+import { MESSAGE_ADD_TO_CART_SUCCESS } from '@/lib/constants';
 
 export default function ProductPage() {
 
@@ -102,7 +103,7 @@ export default function ProductPage() {
         localStorage.setItem('userInteractions', JSON.stringify(interactions));
       }
       
-      toast.success('Đã thêm sản phẩm vào giỏ hàng');
+      toast.success(MESSAGE_ADD_TO_CART_SUCCESS);
     }
   };
 
@@ -150,7 +151,7 @@ export default function ProductPage() {
             {/* Main Image */}
             <div className='relative aspect-square w-full overflow-hidden rounded-2xl shadow-lg'>
               <Image
-                src={`http://116.104.51.101:8080/agri-shop/${product?.path}`}
+                src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${product?.path}`}
                 alt={product?.name || "Organic Farm"}
                 fill
                 className='object-cover hover:scale-105 transition-transform duration-300'

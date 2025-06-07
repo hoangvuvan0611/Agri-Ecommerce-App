@@ -1,6 +1,6 @@
 export default function FooterSection() {
     return (
-        <footer className="bg-gray-100 mt-6 mx-20">
+        <footer className="bg-gray-100 mt-6 mx-20 rounded-lg">
             <div className="mx-28"> 
                 <div className="container mx-auto flex flex-col md:flex-row justify-between py-10">
                     <div>

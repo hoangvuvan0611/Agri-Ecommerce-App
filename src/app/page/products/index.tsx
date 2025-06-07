@@ -9,6 +9,7 @@ import AxiosInstance from "@/utils/axiosInstance";
 import { useCart } from '@/contexts/CartContext';
 import { toast } from 'sonner';
 import { activityLogService } from "@/services/activityLogService";
+import { MESSAGE_ADD_TO_CART_SUCCESS } from "@/lib/constants";
 
 interface ProductsProps {
     image: string;
@@ -56,8 +57,16 @@ export default function ProductsIntro ({
     }, []);
 
     const handleAddToCart = (product: ProductType) => {
-        addToCart(product);
-        toast.success('Đã thêm sản phẩm vào giỏ hàng');
+        addToCart({
+            id: product.id,
+            name: product.name,
+            price: product.originalPrice,
+            quantity: 1,    
+            path: product.path,
+            salePrice: product.salePrice,   
+            originalPrice: product.originalPrice
+        });
+        toast.success(MESSAGE_ADD_TO_CART_SUCCESS);
     };
 
     const handleProductClick = async (productId: string) => {
