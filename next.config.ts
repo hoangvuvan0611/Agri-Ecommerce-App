@@ -1,21 +1,31 @@
+// next.config.js hoặc next.config.ts (nếu dùng TypeScript)
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https', // Giao thức (http hoặc https)
-        hostname: 'fruitio.monamedia.net', // Hostname của link ảnh
-        port: '', // Nếu không có port, để trống
-        pathname: '/wp-content/uploads/**', // Đường dẫn con của ảnh
+        protocol: 'https',
+        hostname: 'fruitio.monamedia.net',
+        port: '',
+        pathname: '/wp-content/uploads/**',
       },
       {
-        protocol: 'http', // Giao thức (http hoặc https)
-        hostname: '116.104.51.101', // Hostname của link ảnh
-        port: '8080', // Nếu không có port, để trống
-        pathname: '/**', // Đường dẫn con của ảnh
+        protocol: 'http',
+        hostname: '116.104.51.101',
+        port: '8080',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 's3minio.unilife.io.vn', // <-- bỏ https://
+        port: '',
+        pathname: '/agri-shop/**',
       },
     ],
+  },
+  env: {
+    NEXT_PUBLIC_API_MINIO_URL: process.env.NEXT_PUBLIC_API_MINIO_URL,
   },
 };
 

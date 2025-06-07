@@ -35,6 +35,10 @@ export const productService = {
     const response = await axiosInstance.put(`/api/v1/product/${id}/status`, { status });
     return response.data;
   },
+  getListBestSeller: async (): Promise<Product[]> => {
+    const response = await axiosInstance.get('/api/v1/product/bestSellerInMonth=8');
+    return response.data.data;
+  },
 };
 
 // Order APIs
@@ -42,6 +46,11 @@ export const orderService = {
   getAll: async (): Promise<Order[]> => {
     // Simulate API delay
     const response = await axiosInstance.get('/api/v1/order/all');
+    return response.data.data;
+  },
+  getListShow: async (): Promise<Order[]> => {
+    // Simulate API delay
+    const response = await axiosInstance.get('/api/v1/order/showList');
     return response.data.data;
   },
   getById: async (id: string): Promise<Order> => {

@@ -253,7 +253,7 @@ export default function ProductsPage() {
                   <TableCell>
                     <div className="w-16 h-16 relative">
                       <Image
-                        src={`http://116.104.51.101:8080/agri-shop/${product?.path}`}
+                        src={`${process.env.NEXT_PUBLIC_API_UR + product?.path}`}
                         alt={product.name}
                         fill
                         className="object-cover rounded-t-lg"

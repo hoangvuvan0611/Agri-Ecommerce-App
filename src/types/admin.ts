@@ -28,11 +28,7 @@ export interface Order {
   completedAt: string | null;
   deliveryAt: string | null;
   updatedAt: string;
-  customer: {
-    name: string;
-    email: string;
-    phone: string;
-  };
+  customer: string
   items: {
     id: number;
     productId: number;
