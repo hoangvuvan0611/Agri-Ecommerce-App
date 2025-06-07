@@ -22,7 +22,7 @@ export default function AboutPage() {
                 Trang chủ
               </Link>
               <span>›</span>
-              <Link href="/about" className='hover:text-green-400 transition-colors'>
+              <Link href="/about" className='text-lime-400 transition-colors'>
                 Giới thiệu
               </Link>
             </div>

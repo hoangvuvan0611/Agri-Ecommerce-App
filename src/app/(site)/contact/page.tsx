@@ -43,7 +43,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-4">
       {/* Banner Section */}
       <div className='relative w-full h-[100px] mb-4 rounded-2xl overflow-hidden'>
         <Image
