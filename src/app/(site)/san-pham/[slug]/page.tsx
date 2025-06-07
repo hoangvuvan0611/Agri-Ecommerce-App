@@ -24,6 +24,7 @@ export default function ProductPage() {
 
   const [product, setProduct] = useState<ProductType | null>(null);
   const [ productSuggest, setProductSuggest ] = useState<ProductType[]>([]);
+  const [ productSuggestLike, setProductSuggestLike ] = useState<ProductType[]>([]);
 
   // Lay thong tin san pham
   useEffect(() => {
@@ -57,6 +58,15 @@ export default function ProductPage() {
           console.error('Error fetching recommendations:', error);
         });
       }
+
+      axiosInstance.get(`/api/v1/product/bestSellerInMonth=20`)
+      .then((recommendResponse) => {
+        console.log('Recommend Response:', recommendResponse?.data);
+        setProductSuggestLike(recommendResponse?.data?.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching recommendations:', error);
+      });
     })
     .catch((error) => {
       console.error('Error fetching product:', error);
@@ -245,6 +255,66 @@ export default function ProductPage() {
             </svg>
           </div>
           <div className="swiper-button-next-custom absolute top-1/2 right-0 z-10 -translate-y-1/2 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-lime-50 transition-colors group cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" 
+              className="w-5 h-5 text-lime-600 group-hover:text-lime-700">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Related Products Section */}
+        <div className='mt-8 relative'>
+          <h2 className='text-2xl font-bold mb-4 text-gray-800'>Sản phẩm dành cho bạn</h2>
+          <Swiper
+            modules={[Navigation]}
+            spaceBetween={20}
+            slidesPerView={5}
+            navigation={{
+              prevEl: '.swiper-button-prev-custom-1',
+              nextEl: '.swiper-button-next-custom-1',
+              enabled: true,
+              disabledClass: 'swiper-button-disabled-1'
+            }}
+            className='mySwiper px-10'
+          >
+            {productSuggestLike?.map((item, index) => (
+              <SwiperSlide 
+                key={index}
+                className='p-2'
+              >
+                <Link href={`/san-pham/${item?.slug}`}>
+                  <div className='group cursor-pointer bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200'
+                    onClick={() => handleProductClick(item.id)}
+                  >
+                    <div className='relative aspect-square'>
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${item?.path}`}
+                        alt={`Related Product ${index}`}
+                        fill
+                        className='object-cover group-hover:scale-105 transition-transform duration-300'
+                      />
+                    </div>
+                    <div className='p-3'>
+                      <h3 className='font-semibold text-gray-800 mb-2 text-sm truncate'>{item?.name}</h3>
+                      <div className='flex items-center justify-between'>
+                        <p className='text-green-600 font-bold text-sm'>{item?.originalPrice?.toLocaleString('vi-VN')}₫</p>
+                        <button className='text-lime-600 text-sm border-2 border-gray-300 rounded-lg px-3 py-1 hover:bg-lime-600 hover:text-white transition-colors duration-200'>Mua ngay</button>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+          
+          {/* Custom Navigation Buttons */}
+          <div className="swiper-button-prev-custom-1 absolute top-1/2 left-0 z-10 -translate-y-1/2 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-lime-50 transition-colors group cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" 
+              className="w-5 h-5 text-lime-600 group-hover:text-lime-700">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+          </div>
+          <div className="swiper-button-next-custom-1 absolute top-1/2 right-0 z-10 -translate-y-1/2 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center hover:bg-lime-50 transition-colors group cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" 
               className="w-5 h-5 text-lime-600 group-hover:text-lime-700">
               <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />

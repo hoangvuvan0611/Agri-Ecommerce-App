@@ -17,7 +17,7 @@ interface User {
   id: number;
   name: string;
   email: string;
-  role: 'admin' | 'user';
+  role: 'admin' | 'user' | 'manager';
   status: 'active' | 'inactive';
   joinDate: string;
 }
@@ -25,24 +25,40 @@ interface User {
 const mockUsers: User[] = [
   {
     id: 1,
-    name: 'Nguyễn Văn A',
-    email: 'nguyenvana@example.com',
+    name: 'Vũ Văn Hoàng',
+    email: 'hoangvuvan677@gmail.com',
     role: 'admin',
     status: 'active',
-    joinDate: '01/01/2024',
+    joinDate: '04/05/2025',
   },
   {
     id: 2,
-    name: 'Trần Thị B',
-    email: 'tranthib@example.com',
+    name: 'Đỗ Ngọc Minh',
+    email: 'minhdo543@gmail.com',
     role: 'user',
     status: 'active',
-    joinDate: '15/02/2024',
+    joinDate: '01/06/2024',
   },
   {
     id: 3,
-    name: 'Lê Văn C',
-    email: 'levanc@example.com',
+    name: 'Minh Anh',
+    email: 'anhMing@gmail.com',
+    role: 'user',
+    status: 'inactive',
+    joinDate: '27/05/2025',
+  },
+  {
+    id: 4,
+    name: 'Dương Văn Minh',
+    email: 'minhdv@gmail.com',
+    role: 'manager',
+    status: 'active',
+    joinDate: '01/06/2024',
+  },
+  {
+    id: 5,
+    name: 'Lê Văn An',
+    email: 'levanan@gmail.com',
     role: 'user',
     status: 'inactive',
     joinDate: '20/03/2024',

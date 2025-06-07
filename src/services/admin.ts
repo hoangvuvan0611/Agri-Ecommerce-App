@@ -1,6 +1,14 @@
 import axiosInstance from '@/utils/axiosInstance';
-import { Product, Order, User, StatisticsOverview, SalesData, CategoryData, TopProduct, City, District, Ward } from '@/types/admin';
+import { Product, Order, User, StatisticsOverview, SalesData, TopProduct, City, District, Ward, Category } from '@/types/admin';
 import { mockOrders } from '@/mocks/orders';
+
+
+export const categoryService = {
+  getAll: async (): Promise<Category[]> => {
+    const response = await axiosInstance.get('/api/v1/category/all');
+    return response.data.data;       
+  }
+};
 
 // Product APIs
 export const productService = {

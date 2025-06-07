@@ -13,8 +13,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Plus, Search, Edit, Trash2, ArrowUpDown, Loader2 } from 'lucide-react';
-import { productService } from '@/services/admin';
-import { Product } from '@/types/admin';
+import { categoryService, productService } from '@/services/admin';
+import { Category, Product } from '@/types/admin';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import {
@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import Image from 'next/image';
+import { u } from 'framer-motion/client';
 
 export default function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -36,16 +37,33 @@ export default function ProductsPage() {
   const [itemsPerPage] = useState(10);
   const [sortField, setSortField] = useState<keyof Product>('name');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [categories, setCategories] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('0');
+  const [categories, setCategories] = useState<Category[]>([]);
   const [isDeleting, setIsDeleting] = useState<number | null>(null);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState<number | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     loadProducts();
+    loadCategories();
   }, []);
 
+  useEffect(() => {
+    console.log('Selected category:', selectedCategory);
+  }, [selectedCategory]);
+
+  const loadCategories = async () => {
+    try {
+      const data = await categoryService.getAll();
+      setCategories(data);
+    } catch (error) {
+      console.error('Error loading categories:', error);
+      setError('Không thể tải danh mục sản phẩm. Vui lòng thử lại sau.');
+      toast.error('Không thể tải danh mục sản phẩm');
+    }
+  };  
+
+  // Tai danh sach san pham
   const loadProducts = async () => {
     try {
       setLoading(true);
@@ -106,31 +124,6 @@ export default function ProductsPage() {
     }
   };
 
-  const filteredProducts = products
-    .filter(product => {
-      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
-      return matchesSearch && matchesCategory;
-    })
-    .sort((a, b) => {
-      const aValue = a[sortField];
-      const bValue = b[sortField];
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return sortDirection === 'asc' 
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue);
-      }
-      return sortDirection === 'asc' 
-        ? Number(aValue) - Number(bValue)
-        : Number(bValue) - Number(aValue);
-    });
-
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-  const paginatedProducts = filteredProducts.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
   if (loading) {
     return (
       <div className="space-y-6">
@@ -189,19 +182,25 @@ export default function ProductsPage() {
               className="max-w-sm"
             />
           </div>
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Chọn danh mục" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Tất cả danh mục</SelectItem>
-              {categories.map(category => (
-                <SelectItem key={category} value={category}>
-                  {category}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Chọn danh mục">
+                  {
+                    selectedCategory === '0'
+                      ? 'Tất cả danh mục'
+                      : categories?.find(c => c.id === selectedCategory)?.name ?? ''
+                  }
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">Tất cả danh mục {categories.length}</SelectItem>
+                {categories?.map((category, index) => (
+                  <SelectItem key={index} value={category.id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
         </div>
 
         <Table>
@@ -241,19 +240,19 @@ export default function ProductsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginatedProducts.length === 0 ? (
+            {products?.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center">
                   Không tìm thấy sản phẩm nào
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedProducts.map((product) => (
+              products?.map((product) => (
                 <TableRow key={product.id}>
                   <TableCell>
-                    <div className="w-16 h-16 relative">
+                    <div className="w-24 h-24 relative">
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_API_UR + product?.path}`}
+                        src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${product?.path}`}
                         alt={product.name}
                         fill
                         className="object-cover rounded-t-lg"
@@ -311,7 +310,7 @@ export default function ProductsPage() {
           </TableBody>
         </Table>
 
-        {totalPages > 1 && (
+        {/* {totalPages > 1 && (
           <div className="flex justify-center mt-4">
             <div className="flex gap-2">
               <Button
@@ -335,7 +334,7 @@ export default function ProductsPage() {
               </Button>
             </div>
           </div>
-        )}
+        )} */}
       </Card>
     </div>
   );

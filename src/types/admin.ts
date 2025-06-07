@@ -68,9 +68,9 @@ export interface SalesData {
   value: number;
 }
 
-export interface CategoryData {
+export interface Category {
+  id: string;
   name: string;
-  value: number;
 }
 
 export interface TopProduct {

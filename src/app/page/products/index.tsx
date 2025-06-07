@@ -106,7 +106,7 @@ export default function ProductsIntro ({
                                         {/* Ảnh và hiệu ứng zoom */}
                                         <div className="relative w-full h-48">
                                             <Image
-                                                src={`http://116.104.51.101:8080/agri-shop/${product.path}`}
+                                                src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${product?.path}`}
                                                 alt={product.name}
                                                 layout="fill"
                                                 objectFit="cover"

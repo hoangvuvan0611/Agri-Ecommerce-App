@@ -12,7 +12,7 @@ export default function ProductPage() {
     const [products, setProducts] = useState<ProductType[]>([]);
 
     useEffect(() => {
-        AxiosInstance.get('/api/v1/product/showInit'
+        AxiosInstance.get('/api/v1/product/showInit', {params: { page: 1, size: 40 } }
         ).then((recommendResponse) => {
             console.log('Recommend Response:', recommendResponse?.data);
             setProducts(recommendResponse?.data?.data);
@@ -90,7 +90,7 @@ export default function ProductPage() {
                     >
                         <div className="relative aspect-square">
                             <Image
-                                src={`http://116.104.51.101:8080/agri-shop/${product?.path}`}
+                                src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${product?.path}`}
                                 alt={product.name}
                                 fill
                                 className="object-cover rounded-t-lg"
