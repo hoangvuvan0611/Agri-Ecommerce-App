@@ -8,7 +8,7 @@ import RecommendedProducts from '@/components/product/RecommendedProducts';
 
 export default function FruitStorePage () {
   return (
-    <div className="mx-10">
+    <div className="mx-20">
       {/* Hero Section */}
       <HeroSection/>
 

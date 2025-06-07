@@ -8,7 +8,7 @@ export default function SiteLayout({
 }) {
   return (
     <>
-        <div className='sticky top-0 bg-white z-50 container px-4'>
+        <div className='sticky top-0 z-50 mx-20'>
             <Header/>
         </div>
         <div className="flex-grow">

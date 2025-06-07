@@ -25,7 +25,7 @@ export function Header() {
   }, []);
 
   return (
-    <header>
+    <header className="container rounded-xl bg-white px-4">
       {/* Main header content - always visible */}
       <div className="flex h-16 items-center justify-between">
         <div className="flex justify-around space-x-16">

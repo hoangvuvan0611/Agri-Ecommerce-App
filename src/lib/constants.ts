@@ -7,10 +7,10 @@ export const PAGE_CONTACT = "Liên hệ";
 
 // Path cua cac trang
 export const REF_HOME = "/";
-export const REF_ABOUT = "/about";
-export const REF_PRODUCT = "/product";
-export const REF_NEWS = "/news";
-export const REF_CONTACT = "/contact";
+export const REF_ABOUT = "/gioi_thieu";
+export const REF_PRODUCT = "/san_pham";
+export const REF_NEWS = "/tin_tuc";
+export const REF_CONTACT = "/lien_he";
 
 // Meta data
 export const TITLE = "Dora Agri";

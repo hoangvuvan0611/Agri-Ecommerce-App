@@ -1,7 +1,7 @@
 export default function FooterSection() {
     return (
-        <footer className="bg-gray-100 mt-6">
-            <div className="mx-10"> 
+        <footer className="bg-gray-100 mt-6 mx-20">
+            <div className="mx-28"> 
                 <div className="container mx-auto flex flex-col md:flex-row justify-between py-10">
                     <div>
                         <h4 className="font-bold mb-2">MonaFruit</h4>
@@ -19,7 +19,7 @@ export default function FooterSection() {
                     </div>
                 </div>
             </div>
-            <div className="flex justify-between items-center bg-white border-t border-gray-200 py-4 px-10">
+            <div className="flex justify-between items-center bg-white border-t border-gray-200 py-4">
                 <div className="container mx-auto flex justify-between items-center text-sm"> 
                     <div className="">
                         @ Phát triển bởi 🐐 VVHOANG
