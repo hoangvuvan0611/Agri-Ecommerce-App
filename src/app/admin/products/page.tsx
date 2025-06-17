@@ -249,7 +249,7 @@ export default function ProductsPage() {
             ) : (
               products?.map((product) => (
                 <TableRow key={product.id}>
-                  <TableCell>
+                  <TableCell className='p-0'>
                     <div className="w-24 h-24 relative">
                       <Image
                         src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${product?.path}`}

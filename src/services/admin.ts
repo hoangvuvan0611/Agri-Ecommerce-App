@@ -47,6 +47,10 @@ export const productService = {
     const response = await axiosInstance.get('/api/v1/product/bestSellerInMonth=8');
     return response.data.data;
   },
+  findProductsByListId: async (listProductId: string[]): Promise<Product[]> => {
+    const response = await axiosInstance.post('/api/v1/product/findProductsByListId', { listProductId });
+    return response.data.data;
+  },
 };
 
 // Order APIs

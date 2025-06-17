@@ -3,7 +3,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { MessageSquare, X, Send, Bot, User } from 'lucide-react';
+import { MessageSquare, X, Send, Bot, User, ShoppingCart, Star } from 'lucide-react';
+import { productService } from '@/services/admin';
+import Image from 'next/image';
+import { Product } from '@/types/admin';
 
 interface Message {
   id: number;
@@ -11,6 +14,7 @@ interface Message {
   sender: 'user' | 'bot';
   timestamp: Date;
   isStreaming?: boolean;
+  productIds?: string[]; // Thêm field để lưu product IDs
 }
 
 // Interface cho response từ API Llama
@@ -19,7 +23,114 @@ interface LlamaResponse {
   created_at: string;
   response: string;
   done: boolean;
+  productIdsHeader?: string[];
 }
+
+// Component hiển thị sản phẩm
+const ProductCard = ({ product }: { product: Product }) => (
+  <div className="border rounded-lg p-3 bg-white shadow-sm hover:shadow-md transition-shadow">
+    <div className="flex gap-3">
+      <Image 
+        src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${product?.path}`}
+        alt={product.name}
+        width={64}
+        height={64}
+        className="w-16 h-16 object-cover rounded"
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = '/placeholder-product.jpg';
+        }}
+      />
+      <div className="flex-1 min-w-0">
+        <h4 className="font-medium text-sm text-gray-800 line-clamp-2 mb-1">
+          {product.name}
+        </h4>
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-lime-600 font-semibold text-sm">
+            {product.originalPrice.toLocaleString('vi-VN')}đ
+          </span>
+          {/* {product.rating && (
+            <div className="flex items-center gap-1">
+              <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+              <span className="text-xs text-gray-600">{product.rating}</span>
+            </div>
+          )} */}
+        </div>
+        <Button size="sm" className="w-full bg-lime-600 hover:bg-lime-700 text-xs">
+          <ShoppingCart className="w-3 h-3 mr-1" />
+          Xem chi tiết
+        </Button>
+      </div>
+    </div>
+  </div>
+);
+
+// Component hiển thị danh sách sản phẩm
+const ProductList = ({ productIds }: { productIds: string[] }) => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        // Gọi API để lấy thông tin sản phẩm dựa trên IDs
+        const response = await productService.findProductsByListId(productIds);
+        setProducts(response || []);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (productIds.length > 0) {
+      fetchProducts();
+    }
+  }, [productIds]);
+
+  if (loading) {
+    return (
+      <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+        <div className="flex items-center gap-2 mb-2">
+          <ShoppingCart className="w-4 h-4 text-lime-600" />
+          <span className="text-sm font-medium text-gray-700">Sản phẩm gợi ý</span>
+        </div>
+        <div className="space-y-2">
+          {[1, 2].map((i) => (
+            <div key={i} className="border rounded-lg p-3 bg-white">
+              <div className="flex gap-3">
+                <div className="w-16 h-16 bg-gray-200 rounded animate-pulse"></div>
+                <div className="flex-1">
+                  <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+                  <div className="h-3 bg-gray-200 rounded animate-pulse mb-2 w-20"></div>
+                  <div className="h-6 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (products.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+      <div className="flex items-center gap-2 mb-3">
+        <ShoppingCart className="w-4 h-4 text-lime-600" />
+        <span className="text-sm font-medium text-gray-700">Sản phẩm gợi ý</span>
+      </div>
+      <div className="space-y-2 max-h-64 overflow-y-auto">
+        {products.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,38 +147,27 @@ export default function ChatWidget() {
     scrollToBottom();
   }, [messages]);
 
-  const parseStreamChunk = (chunk: string): string => {
+  const parseStreamChunk = (chunk: string): { text: string; productIds: string[] } => {
     try {
-      // Tách các JSON objects trong chunk (có thể có nhiều JSON trong một chunk)
       const jsonObjects = chunk.split(/\n/).filter(line => line.trim() !== '');
-      
       let extractedText = '';
-      
-      // Xử lý từng JSON object
+      let productIds: string[] = [];
+
       for (const jsonStr of jsonObjects) {
-        try {
-          const data = JSON.parse(jsonStr) as LlamaResponse;
-          
-          // Trích xuất phần response từ mỗi JSON object
-          if (data && data.response) {
-            extractedText += data.response;
-          }
-        } catch (_error) {
-          console.warn('Error parsing JSON:', _error, jsonStr);
-          console.warn('Error parsing JSON in stream chunk:', jsonStr);
-        }
+        const data = JSON.parse(jsonStr) as LlamaResponse;
+        if (data.response) extractedText += data.response;
+        if (data.productIdsHeader) productIds = data.productIdsHeader;
       }
-      
-      return extractedText;
-    } catch (_error) {
-      console.error('Error parsing stream chunk:', _error);
-      console.error('Error processing stream chunk:', chunk);
-      return chunk; // Trả về nguyên chunk nếu xử lý lỗi
+
+      return { text: extractedText, productIds };
+    } catch (error) {
+      console.error('Parse error:', error);
+      return { text: chunk, productIds: [] };
     }
   };
 
   const callChatAPI = async (prompt: string) => {
-    const apiUrl = 'http://localhost:11434/api/generate';
+    const apiUrl = 'http://localhost:8000/chat';
     
     try {
       setIsLoading(true);
@@ -83,25 +183,9 @@ export default function ChatWidget() {
           text: '', 
           sender: 'bot', 
           timestamp: new Date(),
-          isStreaming: true 
+          isStreaming: true,
         }
       ]);
-
-      const promptToBot = 
-      `
-      Bạn là một trợ lý bán hàng thông minh cho một trang web bán nông sản hữu cơ, chuyên cung cấp các sản phẩm nông sản hữu cơ hoặc tươi sạch như rau, củ, quả, trái cây, và các sản phẩm chế biến từ nông sản. Nhiệm vụ của bạn là trả lời các câu hỏi của khách hàng một cách chính xác, thân thiện và ngắn gọn, đồng thời cung cấp thông tin hữu ích liên quan đến sản phẩm, giá cả, cách đặt hàng, vận chuyển, hoặc các chính sách của cửa hàng.
-        Hướng dẫn:
-        1. Trả lời bằng tiếng Việt, sử dụng ngôn ngữ dễ hiểu, phù hợp với khách hàng mua nông sản.
-        2. Nếu câu hỏi liên quan đến sản phẩm, cung cấp thông tin ngắn gọn về giá, nguồn gốc, chất lượng, hoặc cách sử dụng (nếu phù hợp).
-        3. Nếu câu hỏi không rõ ràng, hãy đặt câu hỏi ngược lại để làm rõ yêu cầu của khách hàng.
-        4. Nếu phù hợp, gợi ý thêm sản phẩm hoặc dịch vụ liên quan (ví dụ: combo rau củ, cách bảo quản nông sản).
-        5. Nếu câu hỏi nằm ngoài phạm vi thông tin bạn có, trả lời rằng bạn sẽ chuyển câu hỏi đến bộ phận hỗ trợ và cung cấp cách liên hệ (ví dụ: email, hotline).
-        6. Tránh sử dụng thuật ngữ kỹ thuật phức tạp, ưu tiên từ ngữ gần gũi với người tiêu dùng.
-
-        Câu hỏi của khách hàng: "${prompt}"
-
-        Hãy trả lời theo hướng dẫn trên.
-      `;
 
       // Gọi API với stream=true
       const response = await fetch(apiUrl, {
@@ -110,43 +194,66 @@ export default function ChatWidget() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: "llama3.2",
-          prompt: promptToBot,
-          stream: true
+          question: prompt,
         }),
+      });
+
+      console.log('Response headers:', response.headers); // Debug log
+      
+      // Lấy thông tin từ headers
+      const responseSessionId = response.headers.get('X-Session-ID');
+      const productIdsHeader = response.headers.get('x-product-ids');
+      console.log('Response Session ID:', productIdsHeader); // Debug log      
+      // Parse product IDs từ header
+      let productIds: string[] = [];
+      if (productIdsHeader) {
+        try {
+          // Thử parse JSON nếu header là array JSON
+          productIds = JSON.parse(productIdsHeader);
+        } catch {
+          // Nếu không phải JSON, thử split bằng dấu phẩy
+          productIds = productIdsHeader.split(',').map(id => id.trim()).filter(id => id !== '');
+        }
+      }
+      
+      console.log('Parsed Product IDs:', productIds); // Debug log
+
+      response.headers.forEach((v, k) => {
+        console.log(`Header [${k}]: ${v}`);
       });
 
       // Xử lý response dạng stream
       const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
+      const decoder = new TextDecoder("utf-8");
       let botResponse = '';
 
       if (reader) {
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
-          
-          // Decode phần dữ liệu mới nhận được
+
           const chunk = decoder.decode(value, { stream: true });
-          
-          // Phân tích và trích xuất text từ chunk JSON
-          const extractedText = parseStreamChunk(chunk);
-          botResponse += extractedText;
-          
-          // Cập nhật tin nhắn đang streaming
-          setMessages(prev => prev.map(msg => 
-            msg.id === botMessageId 
-              ? { ...msg, text: botResponse, isStreaming: true } 
+          botResponse += chunk;
+
+          setMessages(prev => prev.map(msg =>
+            msg.id === botMessageId
+              ? { ...msg, text: botResponse, isStreaming: true }
               : msg
           ));
         }
-        
-        // Hoàn thành streaming
-        setMessages(prev => prev.map(msg => 
-          msg.id === botMessageId 
-            ? { ...msg, isStreaming: false } 
+
+        // Cập nhật message cuối cùng với product IDs
+        setMessages(prev => prev.map(msg =>
+          msg.id === botMessageId
+            ? { 
+                ...msg, 
+                isStreaming: false,
+                productIds: productIds.length > 0 ? productIds : undefined
+              }
             : msg
         ));
+        
+        console.log('Final message with product IDs:', { botResponse, productIds }); // Debug log
       }
     } catch (error) {
       console.error('Error calling chat API:', error);
@@ -207,7 +314,7 @@ export default function ChatWidget() {
           <div className="bg-gray-400/50 text-white p-4 rounded-t-lg flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Bot className="w-5 h-5" />
-              <span className="font-semibold te">AI Hỗ trợ khách hàng</span>
+              <span className="font-semibold">AI Hỗ trợ khách hàng</span>
             </div>
             <button
               onClick={() => setIsOpen(false)}
@@ -217,7 +324,7 @@ export default function ChatWidget() {
             </button>
           </div>
 
-          <div className="h-96 overflow-y-auto p-4 space-y-4 bg-white ">
+          <div className="h-96 overflow-y-auto p-4 space-y-4 bg-white">
             {messages.length === 0 ? (
               <div className="text-center text-gray-500 mt-8">
                 <Bot className="w-12 h-12 mx-auto mb-2 text-lime-600" />
@@ -225,34 +332,44 @@ export default function ChatWidget() {
               </div>
             ) : (
               messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${
-                    message.sender === 'user' ? 'justify-end' : 'justify-start'
-                  }`}
-                >
+                <div key={message.id}>
                   <div
-                    className={`max-w-[80%] rounded-lg p-3 ${
-                      message.sender === 'user'
-                        ? 'bg-lime-600 text-white'
-                        : 'bg-gray-100 text-gray-800'
+                    className={`flex ${
+                      message.sender === 'user' ? 'justify-end' : 'justify-start'
                     }`}
                   >
-                    <div className="flex items-center gap-2 mb-1">
-                      {message.sender === 'user' ? (
-                        <User className="w-4 h-4" />
-                      ) : (
-                        <Bot className="w-4 h-4" />
-                      )}
-                      <span className="text-xs">
-                        {message.timestamp.toLocaleTimeString()}
-                      </span>
-                      {message.isStreaming && (
-                        <span className="ml-1 text-xs">đang trả lời...</span>
-                      )}
+                    <div
+                      className={`max-w-[80%] rounded-lg p-3 ${
+                        message.sender === 'user'
+                          ? 'bg-lime-600 text-white'
+                          : 'bg-gray-100 text-gray-800'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 mb-1">
+                        {message.sender === 'user' ? (
+                          <User className="w-4 h-4" />
+                        ) : (
+                          <Bot className="w-4 h-4" />
+                        )}
+                        <span className="text-xs">
+                          {message.timestamp.toLocaleTimeString()}
+                        </span>
+                        {message.isStreaming && (
+                          <span className="ml-1 text-xs">đang trả lời...</span>
+                        )}
+                      </div>
+                      <p className="whitespace-pre-wrap">{message.text}</p>
                     </div>
-                    <p className="whitespace-pre-wrap">{message.text}</p>
                   </div>
+                  
+                  {/* Hiển thị component sản phẩm nếu có productIds */}
+                  {message.sender === 'bot' && message.productIds && message.productIds.length > 0 && (
+                    <div className="flex justify-start mt-2">
+                      <div className="max-w-[80%]">
+                        <ProductList productIds={message.productIds} />
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))
             )}
@@ -282,4 +399,4 @@ export default function ChatWidget() {
       )}
     </>
   );
-} 
+}
