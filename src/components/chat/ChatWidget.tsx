@@ -3,10 +3,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { MessageSquare, X, Send, Bot, User, ShoppingCart, Star } from 'lucide-react';
+import { MessageSquare, X, Send, Bot, User, ShoppingCart } from 'lucide-react';
 import { productService } from '@/services/admin';
 import Image from 'next/image';
 import { Product } from '@/types/admin';
+import { useCart } from '@/contexts/CartContext';
+import { toast } from 'sonner';
+import { MESSAGE_ADD_TO_CART_SUCCESS } from '@/lib/constants';
 
 interface Message {
   id: number;
@@ -17,120 +20,131 @@ interface Message {
   productIds?: string[]; // Thêm field để lưu product IDs
 }
 
-// Interface cho response từ API Llama
-interface LlamaResponse {
-  model: string;
-  created_at: string;
-  response: string;
-  done: boolean;
-  productIdsHeader?: string[];
-}
+  // Component hiển thị danh sách sản phẩm
+  const ProductList = ({ productIds }: { productIds: string[] }) => {
+    const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
 
-// Component hiển thị sản phẩm
-const ProductCard = ({ product }: { product: Product }) => (
-  <div className="border rounded-lg p-3 bg-white shadow-sm hover:shadow-md transition-shadow">
-    <div className="flex gap-3">
-      <Image 
-        src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${product?.path}`}
-        alt={product.name}
-        width={64}
-        height={64}
-        className="w-16 h-16 object-cover rounded"
-        onError={(e) => {
-          (e.target as HTMLImageElement).src = '/placeholder-product.jpg';
-        }}
-      />
-      <div className="flex-1 min-w-0">
-        <h4 className="font-medium text-sm text-gray-800 line-clamp-2 mb-1">
-          {product.name}
-        </h4>
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-lime-600 font-semibold text-sm">
-            {product.originalPrice.toLocaleString('vi-VN')}đ
-          </span>
-          {/* {product.rating && (
-            <div className="flex items-center gap-1">
-              <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-              <span className="text-xs text-gray-600">{product.rating}</span>
-            </div>
-          )} */}
-        </div>
-        <Button size="sm" className="w-full bg-lime-600 hover:bg-lime-700 text-xs">
-          <ShoppingCart className="w-3 h-3 mr-1" />
-          Xem chi tiết
-        </Button>
-      </div>
-    </div>
-  </div>
-);
+    useEffect(() => {
+      const fetchProducts = async () => {
+        try {
+          setLoading(true);
+          // Gọi API để lấy thông tin sản phẩm dựa trên IDs
+          const response = await productService.findProductsByListId(productIds);
+          setProducts(response || []);
+        } catch (error) {
+          console.error('Error fetching products:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-// Component hiển thị danh sách sản phẩm
-const ProductList = ({ productIds }: { productIds: string[] }) => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        // Gọi API để lấy thông tin sản phẩm dựa trên IDs
-        const response = await productService.findProductsByListId(productIds);
-        setProducts(response || []);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      } finally {
-        setLoading(false);
+      if (productIds.length > 0) {
+        fetchProducts();
       }
-    };
+    }, [productIds]);
 
-    if (productIds.length > 0) {
-      fetchProducts();
+    if (loading) {
+      return (
+        <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+          <div className="flex items-center gap-2 mb-2">
+            <ShoppingCart className="w-4 h-4 text-lime-600" />
+            <span className="text-sm font-medium text-gray-700">Sản phẩm gợi ý</span>
+          </div>
+          <div className="space-y-2">
+            {[1, 2].map((i) => (
+              <div key={i} className="border rounded-lg p-3 bg-white">
+                <div className="flex gap-3">
+                  <div className="w-16 h-16 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="flex-1">
+                    <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+                    <div className="h-3 bg-gray-200 rounded animate-pulse mb-2 w-20"></div>
+                    <div className="h-6 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
     }
-  }, [productIds]);
 
-  if (loading) {
+    if (products.length === 0) {
+      return null;
+    }
+
     return (
       <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-        <div className="flex items-center gap-2 mb-2">
+        <div className="flex items-center gap-2 mb-3">
           <ShoppingCart className="w-4 h-4 text-lime-600" />
           <span className="text-sm font-medium text-gray-700">Sản phẩm gợi ý</span>
         </div>
-        <div className="space-y-2">
-          {[1, 2].map((i) => (
-            <div key={i} className="border rounded-lg p-3 bg-white">
-              <div className="flex gap-3">
-                <div className="w-16 h-16 bg-gray-200 rounded animate-pulse"></div>
-                <div className="flex-1">
-                  <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
-                  <div className="h-3 bg-gray-200 rounded animate-pulse mb-2 w-20"></div>
-                  <div className="h-6 bg-gray-200 rounded animate-pulse"></div>
-                </div>
-              </div>
-            </div>
+        <div className="space-y-2 max-h-96">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </div>
     );
-  }
+  };
 
-  if (products.length === 0) {
-    return null;
-  }
+  // Component hiển thị sản phẩm
+  const ProductCard = ({ product }: { product: Product }) => {
+    const { addToCart } = useCart();
 
-  return (
-    <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-      <div className="flex items-center gap-2 mb-3">
-        <ShoppingCart className="w-4 h-4 text-lime-600" />
-        <span className="text-sm font-medium text-gray-700">Sản phẩm gợi ý</span>
+    const handleAddToCart = (product: Product) => {
+      addToCart({
+          id: product.id,
+          name: product.name,
+          price: product.originalPrice,
+          quantity: 1,    
+          path: product.path,
+          salePrice: product.salePrice,   
+          originalPrice: product.originalPrice
+      });
+      toast.success(MESSAGE_ADD_TO_CART_SUCCESS);
+    };
+    return (
+    <div className="border rounded-lg p-3 bg-white shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex gap-3">
+        <Image 
+          src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${product?.path}`}
+          alt={product.name}
+          width={64}
+          height={64}
+          className="w-16 h-16 object-cover rounded"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = '/placeholder-product.jpg';
+          }}
+        />
+        <div className="flex-1 min-w-0">
+          <h4 className="font-semibold text-sm text-gray-800 line-clamp-2 mb-1">
+            {product.name}
+          </h4>
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-lime-600 font-medium text-sm">
+              {product.originalPrice.toLocaleString('vi-VN')}đ
+            </span>
+            {/* {product.rating && (
+              <div className="flex items-center gap-1">
+                <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                <span className="text-xs text-gray-600">{product.rating}</span>
+              </div>
+            )} */}
+          </div>
+          <Button size="sm" className="w-full bg-lime-600 hover:bg-lime-700 text-xs"
+            onClick={(e) => {
+              e.preventDefault();
+              handleAddToCart(product);
+            }}
+          >
+            <ShoppingCart className="w-3 h-3 mr-1" />
+            Thêm vào giỏ hàng
+          </Button>
+        </div>
       </div>
-      <div className="space-y-2 max-h-64 overflow-y-auto">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
-    </div>
-  );
-};
+    </div>)
+  };
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -146,25 +160,6 @@ export default function ChatWidget() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  const parseStreamChunk = (chunk: string): { text: string; productIds: string[] } => {
-    try {
-      const jsonObjects = chunk.split(/\n/).filter(line => line.trim() !== '');
-      let extractedText = '';
-      let productIds: string[] = [];
-
-      for (const jsonStr of jsonObjects) {
-        const data = JSON.parse(jsonStr) as LlamaResponse;
-        if (data.response) extractedText += data.response;
-        if (data.productIdsHeader) productIds = data.productIdsHeader;
-      }
-
-      return { text: extractedText, productIds };
-    } catch (error) {
-      console.error('Parse error:', error);
-      return { text: chunk, productIds: [] };
-    }
-  };
 
   const callChatAPI = async (prompt: string) => {
     const apiUrl = 'http://localhost:8000/chat';
@@ -201,7 +196,7 @@ export default function ChatWidget() {
       console.log('Response headers:', response.headers); // Debug log
       
       // Lấy thông tin từ headers
-      const responseSessionId = response.headers.get('X-Session-ID');
+      // const responseSessionId = response.headers.get('X-Session-ID');
       const productIdsHeader = response.headers.get('x-product-ids');
       console.log('Response Session ID:', productIdsHeader); // Debug log      
       // Parse product IDs từ header
@@ -311,10 +306,10 @@ export default function ChatWidget() {
       {/* Chat Popup */}
       {isOpen && (
         <div className="fixed bottom-4 right-4 w-96 rounded-lg shadow-xl z-50">
-          <div className="bg-gray-400/50 text-white p-4 rounded-t-lg flex justify-between items-center">
+          <div className="bg-lime-700 text-white p-4 rounded-t-lg flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Bot className="w-5 h-5" />
-              <span className="font-semibold">AI Hỗ trợ khách hàng</span>
+              <span className="font-semibold">AI Hỗ trợ hỏi đáp sản phẩm</span>
             </div>
             <button
               onClick={() => setIsOpen(false)}
@@ -332,7 +327,7 @@ export default function ChatWidget() {
               </div>
             ) : (
               messages.map((message) => (
-                <div key={message.id}>
+                <div key={message.id} className='mb-4 pb-4'>
                   <div
                     className={`flex ${
                       message.sender === 'user' ? 'justify-end' : 'justify-start'
@@ -364,7 +359,7 @@ export default function ChatWidget() {
                   
                   {/* Hiển thị component sản phẩm nếu có productIds */}
                   {message.sender === 'bot' && message.productIds && message.productIds.length > 0 && (
-                    <div className="flex justify-start mt-2">
+                    <div className="flex justify-start mt-1 mb-2">
                       <div className="max-w-[80%]">
                         <ProductList productIds={message.productIds} />
                       </div>
