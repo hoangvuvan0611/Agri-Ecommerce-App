@@ -21,7 +21,7 @@ interface Message {
 }
 
   // Component hiển thị danh sách sản phẩm
-  const ProductList = ({ productIds }: { productIds: string[] }) => {
+  const ProductList = ({ productIds, onAddToCart }: { productIds: string[]; onAddToCart: (product: Product) => void  }) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -81,7 +81,7 @@ interface Message {
         </div>
         <div className="space-y-2 max-h-96">
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} />
           ))}
         </div>
       </div>
@@ -89,21 +89,7 @@ interface Message {
   };
 
   // Component hiển thị sản phẩm
-  const ProductCard = ({ product }: { product: Product }) => {
-    const { addToCart } = useCart();
-
-    const handleAddToCart = (product: Product) => {
-      addToCart({
-          id: product.id,
-          name: product.name,
-          price: product.originalPrice,
-          quantity: 1,    
-          path: product.path,
-          salePrice: product.salePrice,   
-          originalPrice: product.originalPrice
-      });
-      toast.success(MESSAGE_ADD_TO_CART_SUCCESS);
-    };
+  const ProductCard = ({ product, onAddToCart }: { product: Product; onAddToCart: (product: Product) => void }) => {
     return (
     <div className="border rounded-lg p-3 bg-white shadow-sm hover:shadow-md transition-shadow">
       <div className="flex gap-3">
@@ -135,7 +121,7 @@ interface Message {
           <Button size="sm" className="w-full bg-lime-600 hover:bg-lime-700 text-xs"
             onClick={(e) => {
               e.preventDefault();
-              handleAddToCart(product);
+              onAddToCart(product);
             }}
           >
             <ShoppingCart className="w-3 h-3 mr-1" />
@@ -155,6 +141,21 @@ export default function ChatWidget() {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const { addToCart } = useCart();
+
+  const handleAddToCart = (product: Product) => {
+    addToCart({
+        id: product.id,
+        name: product.name,
+        price: product.originalPrice,
+        quantity: 1,    
+        path: product.path,
+        salePrice: product.salePrice,   
+        originalPrice: product.originalPrice
+    });
+    toast.success(MESSAGE_ADD_TO_CART_SUCCESS);
   };
 
   useEffect(() => {
@@ -361,7 +362,7 @@ export default function ChatWidget() {
                   {message.sender === 'bot' && message.productIds && message.productIds.length > 0 && (
                     <div className="flex justify-start mt-1 mb-2">
                       <div className="max-w-[80%]">
-                        <ProductList productIds={message.productIds} />
+                        <ProductList productIds={message.productIds} onAddToCart={handleAddToCart}/>
                       </div>
                     </div>
                   )}

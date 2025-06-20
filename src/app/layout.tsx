@@ -5,6 +5,7 @@ import { CartProvider } from '@/contexts/CartContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { Toaster } from 'sonner';
 import ChatWidget from "@/components/chat/ChatWidget";
+import { ChatProvider } from "@/contexts/ChatContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,9 +33,11 @@ export default function RootLayout({
       <body suppressHydrationWarning={true} className={`${geistSans.variable} ${geistMono.variable} antialiased relative min-h-screen flex flex-col`}>
         <AuthProvider>
           <CartProvider>
-            <Toaster position="top-right" />
-            {children}
-            <ChatWidget />
+            <ChatProvider>
+              <Toaster position="top-right" />
+              {children}
+              <ChatWidget />
+            </ChatProvider>
           </CartProvider>
         </AuthProvider>
       </body>
