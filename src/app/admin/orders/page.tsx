@@ -121,7 +121,7 @@ export default function OrdersPage() {
               filteredOrders.map((order) => (
                 <TableRow key={order.id}>
                   <TableCell>#{order.id}</TableCell>
-                  <TableCell>{order?.customer?.name}</TableCell>
+                  <TableCell>{order?.customer}</TableCell>
                   <TableCell>{order?.totalFee.toLocaleString('vi-VN')}đ</TableCell>
                   <TableCell>
                     <span className={`px-2 py-1 rounded-full text-xs ${

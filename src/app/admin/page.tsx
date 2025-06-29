@@ -130,7 +130,10 @@ export default function AdminDashboard() {
                   <td className="py-4">{order.totalFee.toLocaleString("vi-VN")}đ</td>
                   <td className="py-4">
                     <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm">
-                      {order.status}
+                      {order.status === 'PENDING' ? 'Chờ xử lý' :
+                       order.status === 'PROCESSING' ? 'Đang xử lý' :
+                       order.status === 'COMPLETED' ? 'Hoàn thành' :
+                       'Đã hủy'}
                     </span>
                   </td>
                   <td className="py-4">{new Date(order.createdAt).toLocaleString()}</td>
