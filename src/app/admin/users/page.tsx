@@ -12,6 +12,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Search, Edit, Trash2, UserPlus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface User {
   id: number;
@@ -68,6 +69,7 @@ const mockUsers: User[] = [
 export default function UsersPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [users, setUsers] = useState<User[]>(mockUsers);
+  const router = useRouter();
 
   const handleDelete = (id: number) => {
     setUsers(users.filter((user) => user.id !== id));
@@ -151,6 +153,7 @@ export default function UsersPage() {
                         variant="ghost"
                         size="icon"
                         className="hover:bg-lime-100"
+                        onClick={() => router.push(`/admin/users/${user.id}`)}
                       >
                         <Edit className="w-4 h-4 text-lime-600" />
                       </Button>
