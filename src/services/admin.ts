@@ -70,6 +70,11 @@ export const orderService = {
     const response = await axiosInstance.get(`/api/v1/order/${id}`);
     return response.data.data;
   },
+  getDetailById: async (id: string): Promise<Order> => {
+    // Simulate API delay
+    const response = await axiosInstance.get(`/api/v1/order/detail=${id}`);
+    return response.data.data;
+  },
   updateStatus: async (id: number, status: Order['status']): Promise<Order> => {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1000));

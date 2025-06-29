@@ -4,6 +4,7 @@ import { LayoutDashboard, Package, ShoppingCart, Users, BarChart, LogOut, MapPin
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Toaster } from 'sonner';
+import Image from 'next/image';
 
 const menuItems = [
   { name: 'Tổng quan', href: '/admin', icon: LayoutDashboard },
@@ -84,11 +85,6 @@ export default function AdminLayout({
             </h1>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <img
-                  src="https://via.placeholder.com/32"
-                  alt="Admin"
-                  className="w-8 h-8 rounded-full"
-                />
                 <span className="text-sm font-medium">Admin</span>
               </div>
             </div>

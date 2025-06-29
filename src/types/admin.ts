@@ -28,15 +28,23 @@ export interface Order {
   completedAt: string | null;
   deliveryAt: string | null;
   updatedAt: string;
-  customer: string
-  items: {
+  customer: {
+    id: string;
+    username: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+    city: string;
+    district: string;
+    ward: string;
+  },
+  orderItemList: {
     id: number;
     productId: number;
-    name: string;
+    productName: string;
     price: number;
     quantity: number;
-    images: string[];
-    category: string;
+    path: string;
   }[];
   shippingAddress: string;
   paymentMethod: string;

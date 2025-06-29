@@ -8,6 +8,7 @@ import { orderService } from '@/services/admin';
 import { Order } from '@/types/admin';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
+import Image from 'next/image';
 
 interface OrderDetailPageProps {
   params: {
@@ -29,7 +30,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
     try {
       setLoading(true);
       setError(null);
-      const data = await orderService.getById(params.id);
+      const data = await orderService.getDetailById(params.id);
       setOrder(data);
     } catch (error) {
       console.error('Error loading order:', error);
@@ -179,7 +180,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
             <div>
               <div className="text-sm text-gray-500">Phí giao hàng</div>
               <div className="mt-1">
-                {order?.shippingFee?.toLocaleString('vi-VN')}đ
+                {order?.shippingFee?.toLocaleString('vi-VN') || 0}đ
               </div>
             </div>
             <div>
@@ -197,7 +198,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
           <div className="space-y-4">
             <div>
               <div className="text-sm text-gray-500">Họ tên</div>
-              <div className="mt-1">{order?.customer?.name}</div>
+              <div className="mt-1">{order?.customer?.username}</div>
             </div>
             <div>
               <div className="text-sm text-gray-500">Email</div>
@@ -205,11 +206,11 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
             </div>
             <div>
               <div className="text-sm text-gray-500">Số điện thoại</div>
-              <div className="mt-1">{order?.customer?.phone}</div>
+              <div className="mt-1">{order?.customer?.phoneNumber}</div>
             </div>
             <div>
               <div className="text-sm text-gray-500">Địa chỉ giao hàng</div>
-              <div className="mt-1">{order?.shippingAddress}</div>
+              <div className="mt-1">{order?.customer?.address}</div>
             </div>
           </div>
         </Card>
@@ -222,35 +223,35 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
           <table className="w-full">
             <thead>
               <tr className="border-b">
-                <th className="text-left py-2">Sản phẩm</th>
-                <th className="text-right py-2">Đơn giá</th>
-                <th className="text-right py-2">Số lượng</th>
-                <th className="text-right py-2">Thành tiền</th>
+                <th className="text-left py-2">Ảnh</th>
+                <th className="text-left py-2">Tên sản phẩm</th>
+                <th className="text-left py-2">Đơn giá</th>
+                <th className="text-left py-2">Số lượng</th>
+                <th className="text-left py-2">Thành tiền</th>
               </tr>
             </thead>
             <tbody>
-              {order?.items?.map((item) => (
+              {order?.orderItemList?.map((item) => (
                 <tr key={item.id} className="border-b">
                   <td className="py-4">
                     <div className="flex items-center">
-                      <img
-                        src={item.images[0]}
-                        alt={item.name}
-                        className="w-16 h-16 object-cover rounded"
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${item?.path}`}
+                        alt={item.productName}
+                        width={84}
+                        height={84}
+                        className="w-20 h-20 object-cover rounded"
                       />
-                      <div className="ml-4">
-                        <div className="font-medium">{item.name}</div>
-                        <div className="text-sm text-gray-500">
-                          {item.category}
-                        </div>
-                      </div>
                     </div>
                   </td>
-                  <td className="text-right">
+                  <td className="text-left text-base font-bold">
+                    {item.productName}
+                  </td>
+                  <td className="text-left">
                     {item.price.toLocaleString('vi-VN')}đ
                   </td>
-                  <td className="text-right">{item.quantity}</td>
-                  <td className="text-right">
+                  <td className="text-left">{item.quantity}</td>
+                  <td className="text-left">
                     {(item.price * item.quantity).toLocaleString('vi-VN')}đ
                   </td>
                 </tr>
