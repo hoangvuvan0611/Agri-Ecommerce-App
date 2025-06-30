@@ -4,7 +4,6 @@ import { LayoutDashboard, Package, ShoppingCart, Users, BarChart, LogOut, MapPin
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Toaster } from 'sonner';
-import Image from 'next/image';
 
 const menuItems = [
   { name: 'Tổng quan', href: '/admin', icon: LayoutDashboard },
@@ -66,7 +65,7 @@ export default function AdminLayout({
           })}
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4">
+        <div className="absolute bottom-0 left-0 right-0 p-4 max-w-32">
           <button className="flex items-center p-4 text-gray-600 hover:bg-gray-50 rounded-lg">
             <LogOut className="w-5 h-5" />
             {isSidebarOpen && <span className="ml-3">Đăng xuất</span>}

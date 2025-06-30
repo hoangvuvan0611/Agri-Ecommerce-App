@@ -125,9 +125,9 @@ export default function AdminDashboard() {
             <tbody>
               {orders?.map((order) => (
                 <tr key={order.id} className="border-t">
-                  <td className="py-4">{order.id}</td>
-                  <td className="py-4">{order.customer}</td>
-                  <td className="py-4">{order.totalFee.toLocaleString("vi-VN")}đ</td>
+                  <td className="py-4">{order?.id}</td>
+                  <td className="py-4">{order?.customerName}</td>
+                  <td className="py-4">{order?.totalFee.toLocaleString("vi-VN")}đ</td>
                   <td className="py-4">
                     <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm">
                       {order.status === 'PENDING' ? 'Chờ xử lý' :

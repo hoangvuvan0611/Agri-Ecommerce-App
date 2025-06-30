@@ -2,7 +2,6 @@ import axiosInstance from '@/utils/axiosInstance';
 import { Product, Order, User, StatisticsOverview, SalesData, TopProduct, City, District, Ward, Category } from '@/types/admin';
 import { mockOrders } from '@/mocks/orders';
 
-
 export const categoryService = {
   getAll: async (): Promise<Category[]> => {
     const response = await axiosInstance.get('/api/v1/category/all');
@@ -75,20 +74,15 @@ export const orderService = {
     const response = await axiosInstance.get(`/api/v1/order/detail=${id}`);
     return response.data.data;
   },
-  updateStatus: async (id: number, status: Order['status']): Promise<Order> => {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    const orderIndex = mockOrders.findIndex(order => order.id === id);
-    if (orderIndex === -1) {
-      throw new Error('Order not found');
-    }
-    const updatedOrder = {
-      ...mockOrders[orderIndex],
-      status,
-      updated_at: new Date().toISOString()
-    };
-    mockOrders[orderIndex] = updatedOrder;
-    return updatedOrder;
+  updateStatus: async (id: string, status: Order['status']): Promise<Order> => {
+    console.log(`Updating order ${id} status to ${status}`);
+    const response = await axiosInstance.get(`/api/v1/order/updateStatus`, {
+      params: {
+        id: id,
+        status: status,
+      },
+    });
+    return response.data.data;
   },
   create: async (data: {
     customer_id: number;
@@ -103,9 +97,9 @@ export const orderService = {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     const newOrder: Order = {
-      id: Math.max(...mockOrders.map(order => order.id)) + 1,
+      id: '',
       customer_id: data.customer_id,
-      status: 'pending',
+      status: 'PENDING',
       shipping_fee: data.shipping_fee,
       delivery_info_id: data.delivery_info_id,
       total_fee: data.total_fee,
@@ -118,9 +112,9 @@ export const orderService = {
       delivery_at: null,
       updated_at: new Date().toISOString(),
       customer: {
-        name: "Khách hàng mới",
+        username: "Khách hàng mới",
         email: "new@example.com",
-        phone: "0123456789"
+        phoneNumber: "0123456789"
       },
       items: data.items.map(item => ({
         id: Math.floor(Math.random() * 1000),
@@ -137,39 +131,26 @@ export const orderService = {
     mockOrders.push(newOrder);
     return newOrder;
   },
-  cancelOrder: async (id: number): Promise<Order> => {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    const orderIndex = mockOrders.findIndex(order => order.id === id);
-    if (orderIndex === -1) {
-      throw new Error('Order not found');
-    }
-    const updatedOrder: Order = {
-      ...mockOrders[orderIndex],
-      status: 'cancelled' as const,
-      canceled_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
-    mockOrders[orderIndex] = updatedOrder;
-    return updatedOrder;
+  cancelOrder: async (id: string): Promise<Order> => {
+    const response = await axiosInstance.get(`/api/v1/order/updateStatus`, {
+      params: {
+        id: id,
+        status: 'CANCELLED',
+      },
+    });
+    return response.data.data;
   },
-  completeOrder: async (id: number): Promise<Order> => {
+  completeOrder: async (id: string): Promise<Order> => {
     // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    const orderIndex = mockOrders.findIndex(order => order.id === id);
-    if (orderIndex === -1) {
-      throw new Error('Order not found');
-    }
-    const updatedOrder: Order = {
-      ...mockOrders[orderIndex],
-      status: 'completed' as const,
-      completed_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
-    mockOrders[orderIndex] = updatedOrder;
-    return updatedOrder;
+    const response = await axiosInstance.get(`/api/v1/order/updateStatus`, {
+    params: {
+      id: id,
+      status: 'COMPLETED',
+    },
+  });
+    return response.data.data;
   },
-  updateDeliveryInfo: async (id: number, deliveryInfo: {
+  updateDeliveryInfo: async (id: string, deliveryInfo: {
     delivery_at: string;
     shipping_fee: number;
     delivery_info_id: number;
@@ -204,13 +185,13 @@ export const orderService = {
     await new Promise(resolve => setTimeout(resolve, 1000));
     const filteredOrders = mockOrders.filter(order => {
       if (params.status && order.status !== params.status) return false;
-      if (params.startDate && new Date(order.created_at) < new Date(params.startDate)) return false;
-      if (params.endDate && new Date(order.created_at) > new Date(params.endDate)) return false;
+      if (params.startDate && new Date(order.createdAt) < new Date(params.startDate)) return false;
+      if (params.endDate && new Date(order.createdAt) > new Date(params.endDate)) return false;
       return true;
     });
 
     const total_orders = filteredOrders.length;
-    const total_revenue = filteredOrders.reduce((sum, order) => sum + order.total_fee, 0);
+    const total_revenue = filteredOrders.reduce((sum, order) => sum + order.totalFee, 0);
     const average_order_value = total_orders > 0 ? total_revenue / total_orders : 0;
 
     const statusCounts = mockOrders.reduce((acc, order) => {
@@ -265,7 +246,7 @@ export const statisticsService = {
     const response = await axiosInstance.get(`/api/v1/admin/statistics/revenue?period=${period}`);
     return response.data;
   },
-  getCategoryData: async (): Promise<CategoryData[]> => {
+  getCategoryData: async (): Promise<[]> => {
     const response = await axiosInstance.get('/api/v1/admin/statistics/categories');
     return response.data;
   },

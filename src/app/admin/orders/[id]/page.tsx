@@ -61,22 +61,22 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
     }
   };
 
-  const handleUpdateDelivery = async (deliveryInfo: {
-    delivery_at: string;
-    shipping_fee: number;
-    delivery_info_id: number;
-  }) => {
-    if (!order) return;
+  // const handleUpdateDelivery = async (deliveryInfo: {
+  //   delivery_at: string;
+  //   shipping_fee: number;
+  //   delivery_info_id: number;
+  // }) => {
+  //   if (!order) return;
 
-    try {
-      const updatedOrder = await orderService.updateDeliveryInfo(order.id, deliveryInfo);
-      setOrder(updatedOrder);
-      toast.success('Cập nhật thông tin giao hàng thành công');
-    } catch (error) {
-      console.error('Error updating delivery info:', error);
-      toast.error('Không thể cập nhật thông tin giao hàng');
-    }
-  };
+  //   try {
+  //     const updatedOrder = await orderService.updateDeliveryInfo(order.id, deliveryInfo);
+  //     setOrder(updatedOrder);
+  //     toast.success('Cập nhật thông tin giao hàng thành công');
+  //   } catch (error) {
+  //     console.error('Error updating delivery info:', error);
+  //     toast.error('Không thể cập nhật thông tin giao hàng');
+  //   }
+  // };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -186,7 +186,7 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
             <div>
               <div className="text-sm text-gray-500">Tổng tiền</div>
               <div className="mt-1 font-semibold">
-                {order.totalFee.toLocaleString('vi-VN')}đ
+                {order.totalFee.toLocaleString('vi-VN') || 0}đ
               </div>
             </div>
           </div>
@@ -291,10 +291,10 @@ export default function OrderDetailPage({ params }: OrderDetailPageProps) {
       {order.status !== 'COMPLETED' && order.status !== 'CANCELLED' && (
         <Card className="p-6">
           <h2 className="text-lg font-semibold mb-4">Cập nhật trạng thái</h2>
-          <div className="flex space-x-4">
+          <div className="flex space-x-4 cursor-pointer">
             {order.status === 'PENDING' && (
               <>
-                <Button onClick={() => handleStatusChange('PROCESSING')}>
+                <Button className='cursor-pointer' onClick={() => handleStatusChange('PROCESSING')}>
                   Xác nhận đơn hàng
                 </Button>
                 <Button

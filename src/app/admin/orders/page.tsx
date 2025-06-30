@@ -44,7 +44,7 @@ export default function OrdersPage() {
     }
   };
 
-  const handleStatusChange = async (id: number, status: Order['status']) => {
+  const handleStatusChange = async (id: string, status: Order['status']) => {
     try {
       await orderService.updateStatus(id, status);
       setOrders(orders.map(order => 
@@ -58,7 +58,7 @@ export default function OrdersPage() {
   };
 
   const filteredOrders = orders.filter(order =>
-    order?.customer?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    order?.customer?.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     order.id.toString().includes(searchTerm)
   );
 
@@ -121,7 +121,7 @@ export default function OrdersPage() {
               filteredOrders.map((order) => (
                 <TableRow key={order.id}>
                   <TableCell>#{order.id}</TableCell>
-                  <TableCell>{order?.customer}</TableCell>
+                  <TableCell>{order?.customerName}</TableCell>
                   <TableCell>{order?.totalFee.toLocaleString('vi-VN')}đ</TableCell>
                   <TableCell>
                     <span className={`px-2 py-1 rounded-full text-xs ${

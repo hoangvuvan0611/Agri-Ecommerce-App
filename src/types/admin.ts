@@ -14,9 +14,9 @@ export interface Product {
 }
 
 export interface Order {
-  id: number;
+  id: string;
   customerId: number;
-  status: 'PENDING' | 'PROCESSING'  | 'SHIPPED' | 'DELIVERED' | 'CANCELLED' | 'RETURNED' | 'REFUNDED' | 'ON_HOLD' | 'COMPLETED' | 'FAILED';
+  status: 'PENDING' | 'PROCESSING'  | 'SHIPPED' | 'CANCELLED' | 'RETURNED' | 'COMPLETED' ;
   shippingFee: number;
   deliveryInfoId: number;
   totalFee: number;
@@ -28,6 +28,7 @@ export interface Order {
   completedAt: string | null;
   deliveryAt: string | null;
   updatedAt: string;
+  customerName: string;
   customer: {
     id: string;
     username: string;
