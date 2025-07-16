@@ -59,7 +59,7 @@ export function Header() {
       </div>
       {/* Navbar desktop */}
       <div
-        className={`transition-all duration-300 ease-in-out hidden md:block ${
+        className={`transition-all duration-500 ease-in-out hidden md:block ${
           isScrolled
             ? 'h-0 opacity-0 invisible'
             : 'h-12 md:h-16 opacity-100 visible'
@@ -70,7 +70,15 @@ export function Header() {
       {/* Navbar mobile */}
       {showMobileNav && (
         <div className="block md:hidden fixed inset-0 z-[999] bg-black bg-opacity-40" onClick={() => setShowMobileNav(false)}>
-          <div className="absolute top-0 left-0 w-3/4 max-w-xs h-full bg-white shadow-lg p-4" onClick={e => e.stopPropagation()}>
+          <div
+            className="absolute top-0 left-0 h-full bg-white shadow-lg p-4 transition-transform duration-500 ease-in-out"
+            style={{
+              width: '75vw',
+              maxWidth: '320px',
+              transform: showMobileNav ? 'translateX(0)' : 'translateX(-100%)',
+            }}
+            onClick={e => e.stopPropagation()}
+          >
             <Navbar mobile={true} />
           </div>
         </div>

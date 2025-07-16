@@ -23,7 +23,7 @@ export default function HeroSection () {
     }, []);
 
     return (
-        <div className="p-10 gap-1 my-8 bg-cover bg-center rounded-xl relative">
+        <div className="md:p-10 p-2 gap-1 md:my-8 bg-cover bg-center rounded-xl relative">
             {/* Background image */}
             <div className="absolute inset-0 -z-10"> 
                 <Image
@@ -37,13 +37,13 @@ export default function HeroSection () {
                 />
             </div>
 
-            <div className="container grid grid-cols-12 h-[450] min-h-[450px]">
+            <div className="container grid grid-cols-1 md:grid-cols-12 min-h-[200px] md:min-h-[450px]">
                 {/* Left */}
-                <div className="col-span-8 bg-transparent relative h-full">
+                <div className="col-span-12 md:col-span-8 relative h-64 md:h-auto md:rounded-s-xl rounded-xl">
                     <AnimatePresence initial={true}>
                         <motion.img
                             key={currentImage}
-                            className="absolute inset-0 bg-cover bg-center rounded-s-xl w-full h-full object-cover"
+                            className="absolute inset-0 bg-cover bg-center w-full h-full object-cover md:rounded-s-xl rounded-xl"
                             src={imageList[currentImage]}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -52,7 +52,7 @@ export default function HeroSection () {
                         />
                     </AnimatePresence>
                     <div className="absolute right-[30%] top-[50%] transform translate-x-1/2 -translate-y-1/2 text-left">
-                        <h1 className="text-3xl font-bold mb-4">
+                        <h1 className="xl:text-3xl font-bold mb-4">
                             Trang trại 
                             <span className="text-lime-600 font-thin"> Thực phẩm  <br /> tươi sạch & </span>
                             100% Hữu cơ
@@ -62,7 +62,7 @@ export default function HeroSection () {
                 </div>
 
                 {/* Right */}
-                <div className="col-span-4 h-full bg-orange-300 p-8 rounded-e-xl text-white group overflow-hidden relative">
+                <div className="col-span-12 md:col-span-4 h-64 md:h-auto bg-orange-300 p-6 md:p-8 rounded-xl md:rounded-e-xl text-white group overflow-hidden relative mt-4 md:mt-0 hidden md:block">
                     {/* Layer background có hiệu ứng zoom */}
                     <div 
                         // absolute inset-0 : Đặt background phủ toàn bộ thẻ div cha
@@ -82,7 +82,7 @@ export default function HeroSection () {
 
                     {/* Nội dung bên trong */}
                     <div className="relative z-10">
-                        <h2 className="text-3xl font-bold">
+                        <h2 className="xl:text-3xl font-bold">
                             <span className="text-green-600">30% </span>
                             SALE OFF</h2>
                         <p>Spring Fresh Deal</p>
