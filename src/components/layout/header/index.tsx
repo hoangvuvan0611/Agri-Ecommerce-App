@@ -39,7 +39,7 @@ export function Header() {
         {/* control place */}
         <div className="flex items-end space-x-8">
           <CartDropdown />
-          <div className="relative">
+          {/* <div className="relative">
             {isLogin ? (
               <div
                 role="button"
@@ -56,7 +56,7 @@ export function Header() {
                 <a href="/register" className="block px-1 py-2 text-gray-800 hover:text-lime-400">Đăng ký</a>
               </div>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
 

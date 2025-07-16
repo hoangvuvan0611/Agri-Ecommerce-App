@@ -11,6 +11,11 @@ html {
   scroll-behavior: smooth;
 }
 
+/* An di thong tin loi tren moi truong develop */
+nextjs-portal {
+  display: none;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

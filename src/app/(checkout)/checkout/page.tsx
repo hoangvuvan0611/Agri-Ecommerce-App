@@ -51,12 +51,12 @@ export default function CheckoutPage() {
     }));
   };
 
-  const handleQuantityChange = (productId: number, newQuantity: number) => {
+  const handleQuantityChange = (productId: string, newQuantity: number) => {
     if (newQuantity < 1) return;
     updateQuantity(productId, newQuantity);
   };
 
-  const handleRemoveItem = (productId: number) => {
+  const handleRemoveItem = (productId: string) => {
     removeFromCart(productId);
     toast.success('Đã xóa sản phẩm khỏi giỏ hàng');
   };
@@ -298,6 +298,8 @@ export default function CheckoutPage() {
                     <Input
                       name="phone"
                       value={shippingInfo.phone}
+                      type="tel"
+                      pattern="[0-9]{10,11}"
                       onChange={handleInputChange}
                       required
                     />

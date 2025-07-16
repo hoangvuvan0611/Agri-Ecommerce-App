@@ -2,12 +2,12 @@ import axiosInstance from "@/utils/axiosInstance";
 
 interface UserInteraction {
   type: 'view' | 'cart' | 'purchase';
-  productId: number;
+  productId: string;
   timestamp: string;
 }
 
 class UserInteractionService {
-  private async recordInteraction(type: 'view' | 'cart' | 'purchase', userId: number | null, productId: number) {
+  private async recordInteraction(type: 'view' | 'cart' | 'purchase', userId: string | null, productId: string) {
     try {
       if (userId) {
         await axiosInstance.post(`/api/user-interactions/${type}`, {
@@ -29,19 +29,19 @@ class UserInteractionService {
     }
   }
 
-  async recordView(userId: number | null, productId: number) {
+  async recordView(userId: string | null, productId: string) {
     await this.recordInteraction('view', userId, productId);
   }
 
-  async recordCart(userId: number | null, productId: number) {
+  async recordCart(userId: string | null, productId: string) {
     await this.recordInteraction('cart', userId, productId);
   }
 
-  async recordPurchase(userId: number | null, productId: number) {
+  async recordPurchase(userId: string | null, productId: string) {
     await this.recordInteraction('purchase', userId, productId);
   }
 
-  async getRecommendations(userId: number | null): Promise<any[]> {
+  async getRecommendations(userId: string | null): Promise<any[]> {
     try {
       if (userId) {
         const response = await axiosInstance.get(`/api/user-interactions/recommendations?userId=${userId}`);

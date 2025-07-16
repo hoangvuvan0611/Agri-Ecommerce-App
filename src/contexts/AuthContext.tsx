@@ -4,7 +4,7 @@ import axiosInstance from '@/utils/axiosInstance';
 import { userInteractionService } from '@/services/userInteraction';
 
 interface User {
-  id: number;
+  id: string;
   name: string;
   email: string;
   role: 'admin' | 'user';
@@ -27,6 +27,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Kiểm tra trạng thái đăng nhập khi component mount
     checkAuthStatus();
   }, []);
+
+  useEffect(() => {
+  if (process.env.NODE_ENV === 'development') {
+    // Bắt lỗi JS runtime
+    window.onerror = () => {
+      return true; // chặn lỗi nổi
+    };
+
+    // Bắt lỗi promise chưa bắt (Axios thường dính cái này)
+    window.onunhandledrejection = () => {
+      return true;
+    };
+  }
+}, []);
+
 
   const checkAuthStatus = async () => {
     try {

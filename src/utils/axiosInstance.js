@@ -9,6 +9,28 @@ const axiosInstance = axios.create({
   // withCredentials: true, // <== Thêm dòng này nếu backend yêu cầu credentials
 });
 
+// Interceptor để bắt lỗi và xử lý yên lặng
+// Interceptor để log hoặc xử lý lỗi ngay lập tức
+axiosInstance.interceptors.response.use(
+  response => response,
+  error => {
+    // ✅ BẮT NGAY LỖI SỚM Ở ĐÂY
+    const errorMessage = error?.message || "Unknown error";
+
+    // 👉 Log ra console nhẹ nhàng
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[Axios Error]", errorMessage);
+    }
+
+    // 👉 Optional: dùng toast hoặc cảnh báo UI (nếu có setup sẵn)
+    // toast.error("Lỗi kết nối máy chủ");
+
+    // 👉 Optional: Nếu không muốn lan lỗi lên component (tùy bạn):
+    // return Promise.resolve(null); // trả về null để nơi dùng không lỗi
+    return Promise.reject(error); // hoặc vẫn ném lỗi để nơi gọi `try/catch`
+  }
+);
+
 // // Thêm interceptor cho request
 // axiosInstance.interceptors.request.use(
 //   (config) => {

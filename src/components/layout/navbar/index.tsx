@@ -2,7 +2,7 @@
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { List } from "lucide-react";
-import { PAGE_ABOUT, PAGE_CONTACT, PAGE_HOME, PAGE_NEWS, PAGE_PRODUCT, REF_ABOUT, REF_CONTACT, REF_HOME, REF_NEWS, REF_PRODUCT } from "@/lib/constants";
+import { PAGE_ABOUT, PAGE_CONTACT, PAGE_HOME, PAGE_NEWS, PAGE_PRODUCT, REF_ABOUT, REF_CONTACT, REF_HOME, REF_NEWS, REF_PRODUCT, REF_TEST, TEST } from "@/lib/constants";
 import { NavigationType } from "./type";
 import Link from 'next/link';
 

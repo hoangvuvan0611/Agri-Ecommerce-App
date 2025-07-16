@@ -1,7 +1,7 @@
 export default function NotFound() {
     return (
         <main className="grid min-h-full place-content-center">
-            Hoang dep trai nhat the gioi
+            Học viện Nông nghiệp việt nam
 
             <a href="#">
             <svg></svg>
