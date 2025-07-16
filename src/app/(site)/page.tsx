@@ -8,11 +8,11 @@ import RecommendedProducts from '@/components/product/RecommendedProducts';
 
 export default function FruitStorePage () {
   return (
-    <div className="mx-20">
+    <div className="mx-2 sm:mx-4 md:mx-10 lg:mx-20">
       {/* Hero Section */}
       <HeroSection/>
 
-      <section className='container'>
+      <section className='container px-0 sm:px-2 md:px-4'>
         {/* Features */}
         <Features/>
 
@@ -20,7 +20,7 @@ export default function FruitStorePage () {
           image={'/images/organic-product-banner-intro-1.png'} 
           title={"Sản phẩm chất lượng"}
           titleBgBanner={"Trái cây tự nhiên mỗi này"}
-          styleTitleBg={{color: 'white', fontSize: '1.7rem', fontWeight: 'lighter', width: '100px'}}
+          styleTitleBg={{color: 'white', fontSize: '1.1rem', fontWeight: 'lighter', width: '100px'}}
           hasButton={true}
           page={0}
           size={10}
@@ -29,18 +29,17 @@ export default function FruitStorePage () {
         {/* Promo Banner */}
         <BannerImage 
           title={'25% OFF'}
-          titleStyle={{color: 'red', fontSize: '1.5rem', fontWeight: 'lighter'}}
+          titleStyle={{color: 'red', fontSize: '1.1rem', fontWeight: 'lighter'}}
           content={'Rau quả bảo bảo cơ'}
-          contentStyle={{fontSize: '1rem', fontWeight: 'normal'}}
+          contentStyle={{fontSize: '0.9rem', fontWeight: 'normal'}}
           image={'/images/organic-banner-image-1.webp'}
-
         />
 
         <ProductsIntro 
           image={'/images/organic-product-banner-intro-2.png'} 
           title={"Bán chạy"}
           titleBgBanner={"Thực phẩm sạch bán chạy"}
-          styleTitleBg={{color: 'black', fontSize: '1.6rem', fontWeight: 'lighter', width: '150px'}}
+          styleTitleBg={{color: 'black', fontSize: '1.1rem', fontWeight: 'lighter', width: '150px'}}
           hasButton={true}
           page={1}
           size={10}
@@ -52,7 +51,7 @@ export default function FruitStorePage () {
             image={'/images/organic-product-banner-intro-3.png'}
             title={"Khuyến mãi"}
             titleBgBanner={""}
-            styleTitleBg={{color: 'black', fontSize: '1.6rem', fontWeight: 'lighter', width: '150px'}}
+            styleTitleBg={{color: 'black', fontSize: '1.1rem', fontWeight: 'lighter', width: '150px'}}
             hasButton={false}
             page={2}
             size={10}

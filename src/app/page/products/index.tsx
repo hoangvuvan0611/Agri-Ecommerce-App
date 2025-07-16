@@ -80,48 +80,46 @@ export default function ProductsIntro ({
     };
 
     return (
-        <div className="mt-20">
-            <h2 className="text-2xl font-bold text-gray-600">{title}</h2>
-            <div className="grid grid-cols-12 gap-4 h-[770px] py-[30px]">
-                <div className="col-span-3 relative bg-cover bg-center rounded-xl p-10">
+        <div className="mt-10 md:mt-20">
+            <h2 className="text-lg md:text-2xl font-bold text-gray-600 px-2 md:px-0">{title}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 min-h-[400px] md:min-h-[770px] py-4 md:py-[30px]">
+                <div className="col-span-1 md:col-span-3 relative bg-cover bg-center rounded-xl p-4 md:p-10 mb-4 md:mb-0 flex flex-col items-center justify-center">
                     {/* Background image */}
-                    <div className="absolute inset-0 -z-10"> 
+                    <div className="absolute inset-0 -z-10 rounded-md overflow-hidden"> 
                         <Image
                             src={image}
                             alt="Organic Farm"  
-                            height={700}
+                            height={400}
                             width={360}
-                            objectFit="cover"   // Chỉnh ảnh vừa khít với khung
-                            objectPosition="center" // Vị trí ảnh trong khung
-                            priority={false} // Ưu tiên tải ảnh
-                            quality={100} // Chất lượng ảnh
-                            className="rounded-md"
+                            style={{objectFit: 'cover', objectPosition: 'center'}}
+                            priority={false}
+                            quality={100}
+                            className="rounded-md w-full h-full"
                         />
                     </div>
-                    <div className="" style={styleTitleBg}>
+                    <div className="text-base md:text-lg font-semibold text-center" style={styleTitleBg}>
                         {titleBgBanner}
                     </div>
-                    {hasButton && <Button className="bg-white hover:bg-lime-600 hover:text-white text-black mt-4">Mua ngay</Button>}
+                    {hasButton && <Button className="bg-white hover:bg-lime-600 hover:text-white text-black mt-4 w-full md:w-auto">Mua ngay</Button>}
                 </div>
-                <div className="col-span-9">
-                    <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div className="col-span-1 md:col-span-9">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4">
                         {productList && productList?.map((product: ProductType) => (
                             <div key={product.id} 
-                                className="hover:shadow-lg rounded-xl cursor-pointer h-[340px]"
+                                className="hover:shadow-lg rounded-xl cursor-pointer h-[180px] sm:h-[220px] md:h-[340px] flex flex-col bg-white"
                                 onClick={() => handleProductClick(product.id)}
                             >
-                                <div className="p-4 h-full flex flex-col">
-                                    <Link href={`/san-pham/${product?.slug}`} className="group relative overflow-hidden rounded-md h-48">
+                                <div className="p-2 md:p-4 h-full flex flex-col">
+                                    <Link href={`/san-pham/${product?.slug}`} className="group relative overflow-hidden rounded-md h-24 sm:h-32 md:h-48">
                                         {/* Ảnh và hiệu ứng zoom */}
-                                        <div className="relative w-full h-48">
+                                        <div className="relative w-full h-24 sm:h-32 md:h-48">
                                             <Image
                                                 src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${product?.path}`}
                                                 alt={product.name}
-                                                layout="fill"
-                                                objectFit="cover"
-                                                objectPosition="center"
+                                                fill
+                                                style={{objectFit: 'cover', objectPosition: 'center'}}
                                                 quality={100}
-                                                className="transition-transform duration-1000 ease-in-out group-hover:scale-125"
+                                                className="transition-transform duration-1000 ease-in-out group-hover:scale-110"
                                             />
                                         </div>
 
@@ -130,7 +128,7 @@ export default function ProductsIntro ({
                                             title="Yêu thích"
                                             size="icon"
                                             variant="ghost"
-                                            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity"
                                         >
                                             <Heart className="w-5 h-5" />
                                         </Button>
@@ -138,33 +136,33 @@ export default function ProductsIntro ({
                                         {/* Thay thế Link bằng button hoặc div */}
                                         <div 
                                             title="Xem chi tiết"
-                                            className="absolute bottom-2 right-2 bg-white p-3 duration-150 rounded-md hover:bg-lime-600 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                            className="absolute bottom-1 right-1 bg-white p-2 duration-150 rounded-md hover:bg-lime-600 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
                                         >
                                             <Eye className="w-4 h-4" />
                                         </div>
                                     </Link>
 
                                     {/* Thông tin sản phẩm */}
-                                    <div className="flex flex-col flex-1 justify-between">
-                                        <h3 className="mt-2 font-medium text-sm line-clamp-2 h-10 overflow-hidden"
+                                    <div className="flex flex-col flex-1 justify-between mt-1 md:mt-2">
+                                        <h3 className="font-medium text-xs sm:text-sm line-clamp-2 h-8 sm:h-10 overflow-hidden"
                                             title={product.name}
                                         >
                                             {product.name}
                                         </h3>
                                         <div className="flex items-center justify-between mt-0">
-                                            <span className="text-sm font-semibold">
+                                            <span className="text-xs sm:text-sm font-semibold">
                                                 {product?.originalPrice?.toLocaleString()}đ
                                             </span>
                                             <Button 
                                                 size="sm" 
-                                                className="bg-lime-600 hover:bg-lime-700"
+                                                className="bg-lime-600 hover:bg-lime-700 px-2 md:px-4 text-xs sm:text-sm"
                                                 onClick={(e) => {
                                                     e.preventDefault();
                                                     handleAddToCart(product);
                                                     handleAddProductToCartClick(product.id);
                                                 }}
                                             >
-                                                <ShoppingCart className="w-4 h-4 mr-2" />
+                                                <ShoppingCart className="w-4 h-4 mr-1" />
                                                 Thêm
                                             </Button>
                                         </div>

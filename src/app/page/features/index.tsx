@@ -30,13 +30,13 @@ const features: FeaturesType[] = [
 
 export default function Features() {
     return (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-5 my-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 my-8">
             {features?.map((feature) => (
-                <div key={feature.id} className="flex items-center gap-6">
+                <div key={feature.id} className="flex flex-col md:flex-row items-center gap-3 md:gap-6 text-center md:text-left">
                     {/* Container cho phần ảnh */}
-                    <div className="relative w-40 h-40 flex items-center justify-center">
+                    <div className="relative w-24 h-24 sm:w-32 sm:h-32 flex items-center justify-center mb-2 md:mb-0">
                         {/* Box shadow container */}
-                        <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center relative shadow-lg"
+                        <div className="w-20 h-20 sm:w-32 sm:h-32 bg-white rounded-full flex items-center justify-center relative shadow-lg"
                              style={{ boxShadow: "0 0 10px 1px #CCCCCC" }}>
                             {/* Vòng tròn xanh quay */}
                             <div className="absolute inset-0 border-2 border-dashed border-green-500 rounded-full 
@@ -46,18 +46,18 @@ export default function Features() {
                             {/* Ảnh */}
                             <Image                          
                                 src={feature.imagePath}                         
-                                alt={feature.title}                          
+                                alt={feature.title}                         
                                 objectFit="cover"                         
-                                width={68}                          
-                                height={68}                      
+                                width={68}                         
+                                height={68}                     
                             />
                         </div>
                     </div>
                     
                     {/* Text content */}
                     <div>
-                        <h3 className="font-bold text-xl mb-3">{feature.title}</h3>
-                        <p className="font-normal text-xs text-gray-400">{feature.description}</p>
+                        <h3 className="font-bold text-base sm:text-lg md:text-xl mb-1 md:mb-3">{feature.title}</h3>
+                        <p className="font-normal text-xs sm:text-sm text-gray-400">{feature.description}</p>
                     </div>
                 </div>
             ))}

@@ -1,23 +1,19 @@
 'use client';
-import { User } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { Navbar } from "../navbar";
-import { useEffect, useState } from "react";
 import { CartDropdown } from '@/components/cart/CartDropdown';
 import { SearchBar } from '@/components/search/SearchBar';
+import { useEffect, useState } from "react";
+import { Menu } from 'lucide-react';
 
 export function Header() {
-  const [isLogin, setIsLogin] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-
-  const toggleDropdown = () => setDropdownOpen(true);
+  const [showMobileNav, setShowMobileNav] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 100);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -25,19 +21,21 @@ export function Header() {
   }, []);
 
   return (
-    <header className="container rounded-xl bg-white px-4">
-      {/* Main header content - always visible */}
-      <div className="flex h-16 items-center justify-between">
-        <div className="flex justify-around space-x-16">
-          {/* Logo app */}
+    <header className="w-full xl:container rounded-xl bg-white shadow-sm px-2 sm:px-4 z-50 relative">
+      <div className="w-full flex h-16 items-center justify-between">
+        {/* Bên trái: nút menu + logo */}
+        <div className="flex items-center gap-2 sm:gap-4">
+          <button className="md:hidden p-2 mr-1" onClick={() => setShowMobileNav(!showMobileNav)}>
+            <Menu size={28} />
+          </button>
           <Logo />
-
-          {/* Search place */}
+        </div>
+        {/* Search chỉ hiện trên desktop */}
+        <div className="hidden md:flex justify-center py-2">
           <SearchBar />
         </div>
-
-        {/* control place */}
-        <div className="flex items-end space-x-8">
+        {/* Bên phải: giỏ hàng */}
+        <div className="flex items-center gap-2 sm:gap-4">
           <CartDropdown />
           {/* <div className="relative">
             {isLogin ? (
@@ -59,17 +57,24 @@ export function Header() {
           </div> */}
         </div>
       </div>
-
-      {/* Navbar with animation: Thanh dieu huong cac page */}
-      <div 
-        className={`transition-all duration-300 ease-in-out ${
-          isScrolled 
-            ? 'h-0 opacity-0 invisible' 
-            : 'h-16 opacity-100 visible'
+      {/* Navbar desktop */}
+      <div
+        className={`transition-all duration-300 ease-in-out hidden md:block ${
+          isScrolled
+            ? 'h-0 opacity-0 invisible'
+            : 'h-12 md:h-16 opacity-100 visible'
         }`}
       >
         <Navbar/>
       </div>
+      {/* Navbar mobile */}
+      {showMobileNav && (
+        <div className="block md:hidden fixed inset-0 z-[999] bg-black bg-opacity-40" onClick={() => setShowMobileNav(false)}>
+          <div className="absolute top-0 left-0 w-3/4 max-w-xs h-full bg-white shadow-lg p-4" onClick={e => e.stopPropagation()}>
+            <Navbar mobile={true} />
+          </div>
+        </div>
+      )}
     </header>
   );
 }

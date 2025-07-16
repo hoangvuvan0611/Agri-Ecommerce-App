@@ -2,7 +2,7 @@
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { List } from "lucide-react";
-import { PAGE_ABOUT, PAGE_CONTACT, PAGE_HOME, PAGE_NEWS, PAGE_PRODUCT, REF_ABOUT, REF_CONTACT, REF_HOME, REF_NEWS, REF_PRODUCT, REF_TEST, TEST } from "@/lib/constants";
+import { PAGE_ABOUT, PAGE_CONTACT, PAGE_HOME, PAGE_NEWS, PAGE_PRODUCT, REF_ABOUT, REF_CONTACT, REF_HOME, REF_NEWS, REF_PRODUCT } from "@/lib/constants";
 import { NavigationType } from "./type";
 import Link from 'next/link';
 
@@ -27,9 +27,25 @@ const categories = [
     { id: 10, name: 'Grapes', icon: '🍇' },
 ];
 
-export function Navbar() {
+export function Navbar({ mobile = false }: { mobile?: boolean }) {
     const [isHovered, setIsHovered] = useState(false);
     const pathname = usePathname();
+
+    if (mobile) {
+        return (
+            <nav className="flex flex-col gap-4 mt-8">
+                {navigation.map((item: NavigationType) => (
+                    <Link
+                        href={item.href}
+                        key={item.id}
+                        className={`text-lg font-bold text-gray-700 hover:text-lime-600 px-4 py-3 rounded transition-all ${pathname === item.href ? 'bg-lime-100' : ''}`}
+                    >
+                        {item.name}
+                    </Link>
+                ))}
+            </nav>
+        );
+    }
 
     return (
         <div className="container mx-auto relative">
@@ -46,7 +62,7 @@ export function Navbar() {
                     </div>
 
                     {/* Dropdown menu with animation */}
-                    <div 
+                    <div
                         className={`absolute z-50 w-64 bg-white border border-gray-200 rounded-b-lg shadow-lg overflow-hidden transition-all duration-300 ease-in-out origin-top ${
                             isHovered 
                             ? 'opacity-100 scale-y-100 translate-y-0' 
@@ -79,7 +95,7 @@ export function Navbar() {
                 </div>
 
                 {/* Navigation links */}
-                <nav className="flex space-x-4">
+                <nav className="flex items-center gap-4">
                     {navigation.map((item: NavigationType) => (
                         <Link
                             href={item.href}
