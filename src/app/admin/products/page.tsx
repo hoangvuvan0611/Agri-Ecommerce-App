@@ -254,6 +254,7 @@ export default function ProductsPage() {
                       <Image
                         src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${product?.path}`}
                         alt={product.name}
+                        unoptimized
                         fill
                         className="object-cover rounded-t-lg"
                       />

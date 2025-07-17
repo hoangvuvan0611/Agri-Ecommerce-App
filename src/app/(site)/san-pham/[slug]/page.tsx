@@ -153,6 +153,7 @@ export default function ProductPage() {
                 src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${product?.path}`}
                 alt={product?.name || "Organic Farm"}
                 fill
+                unoptimized
                 className='object-cover hover:scale-105 transition-transform duration-300'
                 priority
                 quality={100}

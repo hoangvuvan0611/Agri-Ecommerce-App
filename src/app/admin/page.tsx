@@ -159,6 +159,7 @@ export default function AdminDashboard() {
                   src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${product?.path}`}
                   alt="Product"
                   fill
+                  unoptimized
                   className="w-full h-full object-cover"
                 />
               </div>

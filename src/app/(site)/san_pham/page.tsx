@@ -117,6 +117,7 @@ export default function ProductPage() {
                         src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${product?.path}`}
                         alt={product.name}
                         layout="fill"
+                        unoptimized
                         objectFit="cover"
                         objectPosition="center"
                         quality={100}
