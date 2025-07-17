@@ -121,8 +121,9 @@ export function SearchBar() {
                 >
                   <div className="relative w-12 h-12 mr-3">
                     <Image
-                      src={`http://116.104.51.101:8080/agri-shop/${result?.path}`}
+                      src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${result?.path}`}
                       alt={result.name}
+                      unoptimized
                       fill
                       className="object-cover rounded"
                     />

@@ -58,7 +58,8 @@ export default function RecommendedProducts() {
               <div className='group cursor-pointer bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200'>
                 <div className='relative aspect-square'>
                   <Image
-                    src={`http://116.104.51.101:8080/agri-shop/${item?.path}`}
+                    src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${item?.path}`}
+                    unoptimized
                     alt={`Recommended Product ${index}`}
                     fill
                     className='object-cover group-hover:scale-105 transition-transform duration-300'
