@@ -256,6 +256,7 @@ export default function ProductsPage() {
                         alt={product.name}
                         unoptimized
                         fill
+                        quality={100}
                         className="object-cover rounded-t-lg"
                       />
                     </div>

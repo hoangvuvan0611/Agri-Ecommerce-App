@@ -66,6 +66,7 @@ export function CartDropdown() {
                           alt={item.name}
                           unoptimized
                           fill
+                          quality={100}
                           className="object-cover rounded-md"
                         />
                       </div>

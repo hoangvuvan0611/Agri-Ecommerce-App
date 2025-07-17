@@ -99,6 +99,7 @@ interface Message {
           width={64}
           height={64}
           unoptimized
+          quality={100}
           className="w-16 h-16 object-cover rounded"
           onError={(e) => {
             (e.target as HTMLImageElement).src = '/placeholder-product.jpg';

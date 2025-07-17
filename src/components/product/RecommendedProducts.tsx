@@ -60,6 +60,7 @@ export default function RecommendedProducts() {
                   <Image
                     src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${item?.path}`}
                     unoptimized
+                    quality={100}
                     alt={`Recommended Product ${index}`}
                     fill
                     className='object-cover group-hover:scale-105 transition-transform duration-300'

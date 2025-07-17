@@ -160,6 +160,7 @@ export default function AdminDashboard() {
                   alt="Product"
                   fill
                   unoptimized
+                  quality={100}
                   className="w-full h-full object-cover"
                 />
               </div>

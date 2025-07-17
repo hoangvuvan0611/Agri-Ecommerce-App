@@ -241,6 +241,7 @@ export default function OrderDetailPage({ params }: Props) {
                         alt={item.productName}
                         width={84}
                         height={84}
+                        quality={100}
                         className="w-20 h-20 object-cover rounded"
                       />
                     </div>

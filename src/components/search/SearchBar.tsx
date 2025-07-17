@@ -125,6 +125,7 @@ export function SearchBar() {
                       alt={result.name}
                       unoptimized
                       fill
+                      quality={100}
                       className="object-cover rounded"
                     />
                   </div>
