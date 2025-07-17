@@ -237,6 +237,7 @@ export default function OrderDetailPage({ params }: Props) {
                     <div className="flex items-center">
                       <Image
                         src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${item?.path}`}
+                        unoptimized
                         alt={item.productName}
                         width={84}
                         height={84}

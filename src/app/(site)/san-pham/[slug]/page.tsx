@@ -235,6 +235,7 @@ export default function ProductPage() {
                       <Image
                         src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${item?.path}`}
                         alt={`Related Product ${index}`}
+                        unoptimized
                         fill
                         className='object-cover group-hover:scale-105 transition-transform duration-300'
                       />
@@ -301,6 +302,7 @@ export default function ProductPage() {
                         src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${item?.path}`}
                         alt={`Related Product ${index}`}
                         fill
+                        unoptimized
                         className='object-cover group-hover:scale-105 transition-transform duration-300'
                       />
                     </div>

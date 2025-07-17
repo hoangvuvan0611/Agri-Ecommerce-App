@@ -64,6 +64,7 @@ export function CartDropdown() {
                         <Image
                           src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${item?.path}`}
                           alt={item.name}
+                          unoptimized
                           fill
                           className="object-cover rounded-md"
                         />
