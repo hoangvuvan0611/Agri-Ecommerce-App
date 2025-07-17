@@ -79,6 +79,9 @@ export function Header() {
             }}
             onClick={e => e.stopPropagation()}
           >
+            <div className="flex items-center justify-between mb-4">
+              <Logo />
+            </div>
             <Navbar mobile={true} />
           </div>
         </div>

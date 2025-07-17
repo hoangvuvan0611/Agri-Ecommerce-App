@@ -230,7 +230,7 @@ export default function CheckoutPage() {
                   <div key={item.id} className="flex gap-4 py-4 border-b">
                     <div className="relative w-24 h-24">
                       <Image
-                        src={`http://116.104.51.101:8080/agri-shop/${item.path}`}
+                        src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${item.path}`}
                         alt={item.name}
                         fill
                         className="object-cover rounded-md"

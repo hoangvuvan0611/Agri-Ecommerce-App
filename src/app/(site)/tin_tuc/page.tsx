@@ -60,27 +60,27 @@ export default function NewsPage() {
   });
 
   return (
-    <div className='mx-20'>
+    <div className="mx-4 sm:mx-8 lg:mx-20">
       <div className="container mx-auto py-4">
         {/* Banner Section */}
-        <div className='relative w-full h-[100px] mb-4 rounded-2xl overflow-hidden'>
+        <div className="relative w-full h-[100px] mb-4 rounded-2xl overflow-hidden">
           <Image
             src={`/images/organic-breadcrumb.png`}
             alt={"Organic Farm"}
             fill
-            className='object-cover object-center rounded-2xl'
+            className="object-cover object-center rounded-2xl"
             priority
             quality={100}
           />
           {/* Overlay với breadcrumb */}
-          <div className='absolute inset-0 bg-black/40 flex items-center justify-center'>
-            <div className='text-white space-y-2 text-center'>
-              <div className='flex items-center gap-2 text-sm'>
-                <Link href="/" className='hover:text-green-400 transition-colors'>
+          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+            <div className="text-white space-y-2 text-center">
+              <div className="flex items-center gap-2 text-sm">
+                <Link href="/" className="hover:text-green-400 transition-colors">
                   Trang chủ
                 </Link>
                 <span>›</span>
-                <Link href="/tin_tuc" className='text-lime-400 transition-colors'>
+                <Link href="/tin_tuc" className="text-lime-400 transition-colors">
                   Tin tức
                 </Link>
               </div>

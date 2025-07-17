@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function BannerElement() {
     return (
-        <div className="grid grid-cols-12 gap-4 my-8">
+        <div className="grid grid-cols-12 gap-4 my-8 hide md:block">
             <div className="col-span-4 h-[258] bg-orange-300 p-8 rounded-e-xl text-white group overflow-hidden relative">
                 {/* Layer background có hiệu ứng zoom */}
                 <div 
