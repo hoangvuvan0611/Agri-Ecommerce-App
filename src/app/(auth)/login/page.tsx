@@ -25,6 +25,7 @@ export default function LoginPage() {
       }
     } catch (error) {
       toast.error('Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin!');
+      console.error('Login error:', error);
     }
   };
 

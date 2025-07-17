@@ -79,7 +79,7 @@ export default function AddressesPage() {
     }
   };
 
-  const handleEdit = (id: number) => {
+  const handleEdit = (id: string) => {
     router.push(`/admin/addresses/${activeTab}/${id}`);
   };
 

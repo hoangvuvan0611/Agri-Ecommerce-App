@@ -41,6 +41,7 @@ export default function RegisterPage() {
       }
     } catch (error) {
       toast.error('Đăng ký thất bại. Vui lòng thử lại!');
+      console.error('Register error:', error);
     }
   };
 

@@ -113,7 +113,7 @@ export interface Ward {
   id: string;
   name: string;
   code: string;
-  districtId: number;
+  districtId: string;
   status: 'ACTIVE' | 'INACTIVE';
   createdAt: string;
   updatedAt: string;

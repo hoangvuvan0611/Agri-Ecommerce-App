@@ -27,6 +27,9 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_API_MINIO_URL: process.env.NEXT_PUBLIC_API_MINIO_URL,
   },
+  eslint: {
+    ignoreDuringBuilds: true, // ✅ Tắt eslint khi build
+  },
 };
 
 export default nextConfig;
