@@ -10,7 +10,13 @@ import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 
-export default function OrderDetailPage({ params }: { params: { id: string } }) {
+interface Props {
+  params: {
+    id: string;
+  };
+}
+
+export default function OrderDetailPage({ params }: Props) {
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
