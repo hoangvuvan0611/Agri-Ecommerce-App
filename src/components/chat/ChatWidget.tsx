@@ -165,7 +165,7 @@ export default function ChatWidget() {
   }, [messages]);
 
   const callChatAPI = async (prompt: string) => {
-    const apiUrl = 'http://localhost:8000/chat';
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_CHATBOT_URL}/chat`;
     
     try {
       setIsLoading(true);
