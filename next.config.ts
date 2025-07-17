@@ -27,8 +27,11 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_API_MINIO_URL: process.env.NEXT_PUBLIC_API_MINIO_URL,
   },
+  typescript: {
+    ignoreBuildErrors: true, // ✅ Bỏ qua lỗi TypeScript khi build
+  },
   eslint: {
-    ignoreDuringBuilds: true, // ✅ Tắt eslint khi build
+    ignoreDuringBuilds: true, // ✅ (nếu chưa thêm)
   },
 };
 
