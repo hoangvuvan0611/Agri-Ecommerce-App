@@ -1,7 +1,9 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8081", // URL của API
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 
+  "https://https://unilife.io.vn/service",
+  // "http://localhost:8081", // URL của API
   timeout: 10000, // Thời gian timeout (ms)
   headers: {
     "Content-Type": "application/json",
