@@ -138,6 +138,7 @@ export default function ProductsIntro ({
                                     src={`${process.env.NEXT_PUBLIC_API_MINIO_URL}${product?.path}`}
                                     alt={product.name}
                                     fill
+                                    unoptimized
                                     style={{ objectFit: 'cover', objectPosition: 'center' }}
                                     quality={100}
                                     className="transition-transform duration-1000 ease-in-out group-hover:scale-110"
