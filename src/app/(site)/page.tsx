@@ -9,6 +9,8 @@ import RecommendedProducts from '@/components/product/RecommendedProducts';
 export default function FruitStorePage () {
   console.log('API_URL:', process.env.NEXT_PUBLIC_API_BASE_URL);
   console.log('API_URL:', process.env.NEXT_PUBLIC_API_MINIO_URL);
+  alert('API_URL: ' + process.env.NEXT_PUBLIC_API_BASE_URL);
+  alert('API_URL: ' + process.env.NEXT_PUBLIC_API_MINIO_URL);
   return (
     <div className="mx-2 sm:mx-4 md:mx-10 lg:mx-20">
       {/* Hero Section */}
