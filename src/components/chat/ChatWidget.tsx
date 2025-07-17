@@ -296,103 +296,104 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* Chat Button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 right-4 bg-lime-600 text-white p-4 rounded-full shadow-lg hover:bg-lime-700 transition-colors z-50"
-      >
-        <MessageSquare className="w-6 h-6" />
-      </button>
+  {/* Chat Button */}
+  <button
+    onClick={() => setIsOpen(true)}
+    className="fixed bottom-2 right-2 md:bottom-4 md:right-4 bg-lime-600 text-white p-4 rounded-full shadow-lg hover:bg-lime-700 transition-colors z-50"
+  >
+    <MessageSquare className="w-6 h-6" />
+  </button>
 
-      {/* Chat Popup */}
-      {isOpen && (
-        <div className="fixed bottom-4 right-4 w-96 rounded-lg shadow-xl z-50">
-          <div className="bg-lime-700 text-white p-4 rounded-t-lg flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <Bot className="w-5 h-5" />
-              <span className="font-semibold">AI Hỗ trợ hỏi đáp sản phẩm</span>
-            </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="hover:bg-lime-700 rounded-full p-1"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          <div className="h-96 overflow-y-auto p-4 space-y-4 bg-white">
-            {messages.length === 0 ? (
-              <div className="text-center text-gray-500 mt-8">
-                <Bot className="w-12 h-12 mx-auto mb-2 text-lime-600" />
-                <p>Xin chào! Tôi có thể giúp gì cho bạn?</p>
-              </div>
-            ) : (
-              messages.map((message) => (
-                <div key={message.id} className='mb-4 pb-4'>
-                  <div
-                    className={`flex ${
-                      message.sender === 'user' ? 'justify-end' : 'justify-start'
-                    }`}
-                  >
-                    <div
-                      className={`max-w-[80%] rounded-lg p-3 ${
-                        message.sender === 'user'
-                          ? 'bg-lime-600 text-white'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2 mb-1">
-                        {message.sender === 'user' ? (
-                          <User className="w-4 h-4" />
-                        ) : (
-                          <Bot className="w-4 h-4" />
-                        )}
-                        <span className="text-xs">
-                          {message.timestamp.toLocaleTimeString()}
-                        </span>
-                        {message.isStreaming && (
-                          <span className="ml-1 text-xs">đang trả lời...</span>
-                        )}
-                      </div>
-                      <p className="whitespace-pre-wrap">{message.text}</p>
-                    </div>
-                  </div>
-                  
-                  {/* Hiển thị component sản phẩm nếu có productIds */}
-                  {message.sender === 'bot' && message.productIds && message.productIds.length > 0 && (
-                    <div className="flex justify-start mt-1 mb-2">
-                      <div className="max-w-[80%]">
-                        <ProductList productIds={message.productIds} onAddToCart={handleAddToCart}/>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-
-          <div className="p-4 border-t bg-white">
-            <div className="flex gap-2">
-              <Input
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Nhập câu hỏi..."
-                className="flex-1"
-                disabled={isLoading}
-              />
-              <Button
-                onClick={handleSendMessage}
-                className="bg-lime-600 hover:bg-lime-700"
-                disabled={isLoading}
-              >
-                <Send className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
+  {/* Chat Popup */}
+  {isOpen && (
+    <div className="fixed bottom-2 right-2 md:bottom-4 md:right-4 w-full max-w-[95%] md:w-96 rounded-lg shadow-xl z-50">
+      <div className="bg-lime-700 text-white p-4 rounded-t-lg flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <Bot className="w-5 h-5" />
+          <span className="font-semibold text-sm md:text-base">AI Hỗ trợ hỏi đáp sản phẩm</span>
         </div>
-      )}
-    </>
+        <button
+          onClick={() => setIsOpen(false)}
+          className="hover:bg-lime-700 rounded-full p-1"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+
+      <div className="h-[40vh] md:h-96 overflow-y-auto p-4 space-y-4 bg-white">
+        {messages.length === 0 ? (
+          <div className="text-center text-gray-500 mt-8">
+            <Bot className="w-12 h-12 mx-auto mb-2 text-lime-600" />
+            <p>Xin chào! Tôi có thể giúp gì cho bạn?</p>
+          </div>
+        ) : (
+          messages.map((message) => (
+            <div key={message.id} className='mb-4 pb-4'>
+              <div
+                className={`flex ${
+                  message.sender === 'user' ? 'justify-end' : 'justify-start'
+                }`}
+              >
+                <div
+                  className={`max-w-[80%] rounded-lg p-3 ${
+                    message.sender === 'user'
+                      ? 'bg-lime-600 text-white'
+                      : 'bg-gray-100 text-gray-800'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    {message.sender === 'user' ? (
+                      <User className="w-4 h-4" />
+                    ) : (
+                      <Bot className="w-4 h-4" />
+                    )}
+                    <span className="text-xs">
+                      {message.timestamp.toLocaleTimeString()}
+                    </span>
+                    {message.isStreaming && (
+                      <span className="ml-1 text-xs">đang trả lời...</span>
+                    )}
+                  </div>
+                  <p className="whitespace-pre-wrap">{message.text}</p>
+                </div>
+              </div>
+
+              {/* Hiển thị component sản phẩm nếu có productIds */}
+              {message.sender === 'bot' && message.productIds && message.productIds.length > 0 && (
+                <div className="flex justify-start mt-1 mb-2">
+                  <div className="max-w-[80%]">
+                    <ProductList productIds={message.productIds} onAddToCart={handleAddToCart}/>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+
+      <div className="p-4 border-t bg-white">
+        <div className="flex gap-2">
+          <Input
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Nhập câu hỏi..."
+            className="flex-1"
+            disabled={isLoading}
+          />
+          <Button
+            onClick={handleSendMessage}
+            className="bg-lime-600 hover:bg-lime-700"
+            disabled={isLoading}
+          >
+            <Send className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  )}
+</>
+
   );
 }
